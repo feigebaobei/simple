@@ -1,0 +1,57 @@
+{
+  "name": "plugincomb",
+  "version": "0.1.0",
+  "description": "",
+  "exports": {
+    ".": {
+      "import": "./dist_esm/src/index.js",
+      "require": "./dist_cjs/index.js"
+    }
+  },
+  "type": "module",
+  "files": [
+    "src",
+    "dist_esm",
+    "dist_cjs",
+    "tscDist"
+  ],
+  "keywords": [
+    "plugin",
+    "SeriesPlugin",
+    "ParallelPlugin"
+  ],
+  "scripts": {
+    "test": "hi",
+    "jest": "jest",
+    "tsc": "tsc",
+    "rollup": "rollup -c",
+    "rollupTs2Esm": "rollup -c rollup_ts2esm.config.js",
+    "rollupTs2Cjs": "rollup -c rollup_ts2cjs.config.js",
+    "t": "node test/testesm.js",
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "clear": "rm -rf ./dist_cjs && rm -rf ./dist_esm",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint"
+  },
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "@rollup/plugin-typescript": "^10.0.1",
+    "@types/node": "^14.11.2",
+    "babel-jest": "^29.3.1",
+    "gts": "^3.1.1",
+    "jest": "^29.3.1",
+    "tslib": "^2.4.1",
+    "typescript": "~4.7.0"
+  }
+}
