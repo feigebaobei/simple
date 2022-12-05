@@ -1,0 +1,44 @@
+{
+  "name": "dogleg",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "file": [
+    "src",
+    "dist_cjs",
+    "dist_esm"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist_esm/index.js",
+      "require": "./dist_cjs/index.cjs"
+    }
+  },
+  "scripts": {
+    "test": "echo hi",
+    "p": "prettier --write .",
+    "pc": "prettier --check .",
+    "prepare": "husky install",
+    "rollup": "rollup --config"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feigebaobei/dogleg.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/feigebaobei/dogleg/issues"
+  },
+  "homepage": "https://github.com/feigebaobei/dogleg#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^17.2.0",
+    "@commitlint/config-conventional": "^17.2.0",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.0.3",
+    "prettier": "2.7.1",
+    "rollup": "^3.3.0"
+  }
+}
