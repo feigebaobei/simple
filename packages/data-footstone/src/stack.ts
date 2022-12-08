@@ -2,55 +2,11 @@
 /*
 栈
 */
+import { Stack as StackI, A } from '../typings'
 
-
-
-import {Stack as StackI} from '../typings'
-
-
-
-// let Stack = (function () {
-//     let items = new WeakMap()
-//     class Stack {
-//       constructor () {
-//         // this.items = []
-//         // this.length = this.items.length
-//         items.set(this, [])
-//       }
-//       // 得到数组
-//       getArray () {
-//         return items.get(this)
-//       }
-//       // 添加一个或多个元素
-//       push (...args) {
-//         // this.items.push(...args)
-//         // items.get(this).push(...args)
-//         this.getArray().push(...args)
-//       }
-//       // 弹出一个元素
-//       pop () {
-//         // return this.items.pop()
-//         return this.getArray().pop()
-//       }
-//       // 返回栈顶的元素
-//       peek () {
-//         return this.getArray()[this.size() - 1]
-//       }
-//       isEmpty () {
-//         return this.size() === 0
-//       }
-//       clear () {
-//         items.set(this, [])
-//       }
-//       size () {
-//         return items.get(this).length
-//       }
-//     }
-//     return Stack
-//   })()
 class Stack implements StackI {
+  private items: A // 即使这样写，也不会转换为js中私有的属性。
   constructor() {
-    private items: A
     this.items = []
   }
   getArray() {
@@ -71,20 +27,10 @@ class Stack implements StackI {
   clear() {
     this.items = []
   }
-  size() { // set/ map 都是size返回容量
+  size() {
+    // set/ map 都是size返回容量
     return this.items.length
   }
 }
-export Stack
-  // export default {
-  //   Stack
-  // }
 
-// export {
-//     bubbleSort,
-//     selectSort,
-//     insertSort,
-//     quickSort,
-//     quickSortSelf,
-//     binarySearch,
-// }
+export default Stack

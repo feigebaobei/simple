@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-module.exports = dataFootstone;
+module.exports = dataFootstone
 
 function dataFootstone() {
-    return "Hello from dataFootstone";
+  return 'Hello from dataFootstone'
 }

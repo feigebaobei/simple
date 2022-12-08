@@ -6,33 +6,30 @@ type B = boolean
 type A = any
 
 interface Stack {
-    getArray: () => {}
-    push: () => {}
-    pop: () => {}
-    peek: () => {}
-    isEmpty: () => {}
-    clear: () => {}
-    size: () => {}
+  getArray: () => A[]
+  push: () => void
+  pop: () => void
+  peek: () => void
+  isEmpty: () => void
+  clear: () => void
+  size: () => void
 }
 
 interface Queue {
-    getArray: () => {}
-    push: () => {}
-    pop: () => {}
-    peek: () => {}
-    isEmpty: () => {}
-    clear: () => {}
-    size: () => {}
+  getArray: () => {}
+  push: (...p: A) => void
+  pop: () => void
+  peek: () => void
+  isEmpty: () => void
+  clear: () => {}
+  size: () => void
 }
 
 export {
-    S,
-    N,
-    B,
-    A,
-    Stack,
-    Queue
-    // order,
-    // stack,
-    // queue,
+  S,
+  N,
+  B,
+  A,
+  Stack,
+  Queue,
 }
