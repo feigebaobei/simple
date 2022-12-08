@@ -41,11 +41,14 @@
     "test": "node ./__tests__/data-footstone.test.js",
     "jest": "jest",
     "tsc": "tsc",
+    "prettier": "prettier",
     "clean": "echo 'fo clean'",
     "compile": "tsc",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
-    "posttest": "npm run lint"
+    "posttest": "npm run lint",
+    "p": "prettier --write .",
+    "pc": "prettier --check ."
   },
   "bugs": {
     "url": "https://github.com/feigebaobei/simple/issues"
