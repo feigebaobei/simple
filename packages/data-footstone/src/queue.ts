@@ -1,101 +1,133 @@
-
-
 // 与队列相关的工具方法
 // 队列
-class Queue {
-    constructor () {
-        this.items = []
-    }
-    enqueue (...args) {
-        this.items.push(...args)
-    }
-    dequeue () {
-        return this.items.shift()
-    }
-    getAll () {
-        return this.items
-    }
-    head () {
-        return this.items[0]
-    }
-    tail () {
-        return this.items[this.size() - 1]
-    }
-    size () {
-        return this.items.length
-    }
-    isEmpty () {
-        return this.size() === 0
-    }
-    clear () {
-        return this.items = []
-    }
-    reverse () {
-        return this.items.reverse()
-    }
+import {
+  Queue as Q, PriorityQueue as PQ,
+  PriorityQueueElement as PQE,
+  N
+} from '../typings'
+
+class Queue<T> implements Q<T> {
+  items: T[]
+  constructor(...p: T[]) {
+    this.items = p
+  }
+  enqueue(...p) {
+    this.items.push(...p)
+  }
+  dequeue() {
+    return this.items.shift()
+  }
+  getArray() {
+    return this.items
+  }
+  getHead() {
+    // 有可能是undefined
+    return this.items[0]
+  }
+  getTail() {
+    return this.items[this.size() - 1]
+  }
+  size() {
+    return this.items.length
+  }
+  isEmpty() {
+    return this.size() === 0
+  }
+  clear() {
+    this.items = []
+  }
+  reverse() {
+    return this.items.reverse()
+  }
 }
 
 // 优先队列
-class PriorityQueue extends Queue {
-    constructor () {
-        super()
+class PriorityQueue<T> implements PQ<T> {
+  items: PQE<T>[]
+  defaultPriority: N
+  constructor(defaultPriority: N = 0) {
+    this.items = []
+    this.defaultPriority = defaultPriority
+  }
+  highestPriority() {
+    let temp = this._getHead()
+    let res: N | undefined
+    if (temp) {
+      res = temp.priority
+    } else {
+      res = undefined
     }
-    highestPriority () {
-        let ele = super.tail()
-        return ele ? ele.priority : 0
+    return res
+  }
+  lowestPriority() {
+    let temp = this._getTail()
+    let res: N | undefined
+    if (temp) {
+      res = temp.priority
+    } else {
+      res = undefined
     }
-    enqueue (element, priority = 0) {
-        let i = 0, len = super.size()
-        // while (i < len -)
-        // 0 add
-        // 1 比大小 add
-        // 2 二分查找 add
-        // 3 二分查找 add
-
-        // while add
-        // 0
-        if (!len) {
-            this.items.push({
-                element,
-                priority
-            })
+    return res
+  }
+  protected createElement(p: T, t: N) {
+    return {
+      value: p,
+      priority: t ?? this.lowestPriority()
+    }
+  }
+  // 使一个元素入队列
+  enqueue(element, priority: N = this.defaultPriority) {
+    let len = this.size()
+    let node = this.createElement(element, priority)
+    if (!len) {
+      this.items.push(node)
+      return
+    }
+    if (this._getHead().priority < node.priority) {
+      this.items.unshift(node)
+    } else if (this._getTail().priority >= node.priority) {
+      this.items.push(node)
+    } else {
+      let index = 0
+      while (index < len - 1) {
+        if (this.items[index].priority >= node.priority && this.items[index + 1].priority < node.priority) {
+          this.items.splice(index + 1, 0, node)
+          break
         } else {
-        // 1
-            if (len === 1) {
-                let oe = this.items[0]
-                if (oe.priority <= priority) {
-                    this.items.push({
-                        element,
-                        priority
-                    })
-                } else {
-                    this.items.shift({
-                        element,
-                        priority
-                    })
-                }
-            } else {
-        // 2
-                if (this.highestPriority() <= priority) {
-                    this.items.push({
-                        element,
-                        priority
-                    })
-                } else {
-                    let i = 0
-                    while (i < len - 1) {
-                        let arr = super.getAll(),
-                            left = arr[i],
-                            right = arr[i + 1]
-                        if (left.priority <= priority && right.priority > priority) {
-                            this.items.splice(i + 1, 0, {element, priority})
-                        }
-                        i++
-                    }
-                }
-            }
+          index++
         }
+      }
     }
+  }
+  dequeue() {
+    return this.items.shift()?.value
+  }
+  getArray() {
+    return this.items.map(ele => (ele.value))
+  }
+  protected _getHead() {
+    return this.items[0]
+  }
+  protected _getTail() {
+    return this.items[this.size() - 1]
+  }
+  getHead() {
+    return this._getHead()?.value
+  }
+  getTail() {
+    return this._getTail()?.value
+  }
+  size() {
+    return this.items.length
+  }
+  isEmpty() {
+    return this.size() === 0
+  }
+  clear() {
+    this.items = []
+  }
+  // 优先队列不能反转
+  // reverse() {}
 }
 
 export default {

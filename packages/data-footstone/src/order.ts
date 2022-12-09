@@ -6,10 +6,10 @@ let quickSortSelf = () => {}
 let binarySearch = () => {}
 
 export {
-    bubbleSort,
-    selectSort,
-    insertSort,
-    quickSort,
-    quickSortSelf,
-    binarySearch,
+  bubbleSort,
+  selectSort,
+  insertSort,
+  quickSort,
+  quickSortSelf,
+  binarySearch,
 }
