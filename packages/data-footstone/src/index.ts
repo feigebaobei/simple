@@ -1,5 +1,12 @@
-import * as order from './order'
-import * as stack from './stack'
-import * as queue from './queue'
+// import * as order from './order'
+import {Stack} from './stack'
+import {Queue, PriorityQueue} from './queue'
+import {SingleChain} from './chain'
 
-export { order, stack, queue }
+export {
+    // ...order,
+    Stack,
+    Queue,
+    PriorityQueue,
+    SingleChain
+}

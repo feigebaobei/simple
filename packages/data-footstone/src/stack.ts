@@ -9,7 +9,7 @@ class Stack implements StackI {
   constructor() {
     this.items = []
   }
-  getArray() {
+  toArray() {
     return this.items
   }
   push(...p) {
@@ -33,4 +33,5 @@ class Stack implements StackI {
   }
 }
 
-export default Stack
+// export default Stack
+export {Stack}

@@ -17,7 +17,7 @@ class Queue<T> implements Q<T> {
   dequeue() {
     return this.items.shift()
   }
-  getArray() {
+  toArray() {
     return this.items
   }
   getHead() {
@@ -102,7 +102,7 @@ class PriorityQueue<T> implements PQ<T> {
   dequeue() {
     return this.items.shift()?.value
   }
-  getArray() {
+  toArray() {
     return this.items.map(ele => (ele.value))
   }
   protected _getHead() {
@@ -129,8 +129,9 @@ class PriorityQueue<T> implements PQ<T> {
   // 优先队列不能反转
   // reverse() {}
 }
+// 不写循环队列。它应该写在循环链表。
 
-export default {
+export {
   Queue,
   PriorityQueue,
 }
