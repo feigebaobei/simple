@@ -31,7 +31,7 @@ class FortifiedSet<T> implements FS<T> {
         return this.box
     }
     // // 并集
-    concat(...v: ForifiedSet<T>[]) {
+    concat(...v: PSet<T>[]) {
         v.forEach(item => {
             item.forEach(subItem => {
                 this.add(subItem)
@@ -40,7 +40,7 @@ class FortifiedSet<T> implements FS<T> {
         return this
     }
     // // 交集
-    intersect(...v: ForifiedSet<T>[]) {
+    intersect(...v: PSet<T>[]) {
         v.forEach(item => {
             item.forEach(subItem => {
                 if (!this.has(subItem)) {
@@ -51,7 +51,7 @@ class FortifiedSet<T> implements FS<T> {
         return this
     }
     // // 差集
-    diffSet(...v: ForifiedSet<T>[]) {
+    diffSet(...v: PSet<T>[]) {
         v.forEach(item => {
             item.forEach(subItem => {
                 if (this.has(subItem)) {
@@ -61,7 +61,7 @@ class FortifiedSet<T> implements FS<T> {
         })
     }
     // // 子集
-    subSetOf(v: ForifiedSet<T>) {
+    subSetOf(v: PSet<T>) {
         return v.every(item => {
             return this.has(item)
         })

@@ -4,7 +4,7 @@ import {
     //  A, F
 } from './baseType'
 
-interface ForifiedMap<T, G> {
+interface PMap<T, G> {
     box: Map<T, G>
     set: (k: T, v: G) => {}
     delete: (k: T) => B
@@ -17,6 +17,6 @@ interface ForifiedMap<T, G> {
 }
 
 export {
-    ForifiedMap,
+    PMap,
   }
   

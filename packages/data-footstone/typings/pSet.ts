@@ -4,7 +4,7 @@ import {
     //  A, F
 } from './baseType'
 
-interface ForifiedSet<T> {
+interface PSet<T> {
     box: Set<T>
     add: (v: T) => {}
     delete: (v: T) => B
@@ -13,16 +13,16 @@ interface ForifiedSet<T> {
     size: () => N
     values: () => T[]
     // 并集
-    concat: (...v: ForifiedSet<T>[]) => ForifiedSet<T>
+    concat: (...v: PSet<T>[]) => PSet<T>
     // 交集
-    intersect: (...v: ForifiedSet<T>[]) => ForifiedSet<T>
+    intersect: (...v: PSet<T>[]) => PSet<T>
     // 差集
-    diffSet: (...v: ForifiedSet<T>[]) => ForifiedSet<T>
+    diffSet: (...v: PSet<T>[]) => PSet<T>
     // 子集
-    subSetOf: (v: ForifiedSet<T>) => B
+    subSetOf: (v: PSet<T>) => B
 }
 
 export {
-    ForifiedSet,
+    PSet,
   }
   

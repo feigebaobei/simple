@@ -1,7 +1,8 @@
 import {S, N, B, A, F} from './baseType'
-import { FortifiedSet } from './FortifiedSet'
-import { FortifiedMap } from './FortifiedMap'
+import { PSet } from './PSet'
+import { PMap } from './PMap'
 import { HashMap, HashMapKind, HashMapHash } from './HashMap'
+import { Tree } from './Tree'
 
 // 日后可能会拆为stack/queue/chain/...
 
@@ -196,9 +197,10 @@ export {
   SingleCircleChainElement,
   DoublyCircleChain,
   DoublyCircleChainElement,
-  FortifiedSet,
-  FortifiedMap,
+  PSet,
+  PMap,
   HashMap,
   HashMapKind,
   HashMapHash,
+  Tree,
 }
