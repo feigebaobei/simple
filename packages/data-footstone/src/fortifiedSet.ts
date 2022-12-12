@@ -1,4 +1,4 @@
-import { FortifiedSet as FS, A } from '../typings'
+import { FortifiedSet as FS } from '../typings'
 
 class FortifiedSet<T> implements FS<T> {
     box: Set<T>
@@ -34,7 +34,7 @@ class FortifiedSet<T> implements FS<T> {
     concat(...v: ForifiedSet<T>[]) {
         v.forEach(item => {
             item.forEach(subItem => {
-                this.box.add(subItem)
+                this.add(subItem)
             })
         })
         return this
