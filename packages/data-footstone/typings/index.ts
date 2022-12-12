@@ -1,6 +1,7 @@
 import {S, N, B, A, F} from './baseType'
 import { FortifiedSet } from './FortifiedSet'
 import { FortifiedMap } from './FortifiedMap'
+import { HashMap, HashMapKind, HashMapHash } from './HashMap'
 
 // 日后可能会拆为stack/queue/chain/...
 
@@ -197,4 +198,7 @@ export {
   DoublyCircleChainElement,
   FortifiedSet,
   FortifiedMap,
+  HashMap,
+  HashMapKind,
+  HashMapHash,
 }
