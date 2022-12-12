@@ -1,4 +1,5 @@
 import {S, N, B, A, F} from './baseType'
+import { FortifiedSet } from '../typings'
 
 // 日后可能会拆为stack/queue/chain/...
 
@@ -193,4 +194,5 @@ export {
   SingleCircleChainElement,
   DoublyCircleChain,
   DoublyCircleChainElement,
+  FortifiedSet,
 }
