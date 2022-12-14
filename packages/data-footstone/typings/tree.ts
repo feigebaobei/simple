@@ -18,6 +18,7 @@ interface BaseTree<T> {
     _postOrderTraverse: (cb: F, node: BaseTreeNode<T> | null) => void
     _remove: (node: BaseTreeNode<T> | null, v: T) => BaseTreeNode<T> | null
     _findMinNode: (node: BaseTreeNode<T> | null) => BaseTreeNode<T> | null
+    heightNode: (node: BaseTreeNode<T> | null) => N
 }
 
 type BinarySearchTreeOrder = 'preOrder' | 'inOrder' | 'postOrder'
@@ -32,13 +33,35 @@ interface BinarySearchTree<T> extends BaseTree<T> {
     remove: (v: T) => void
 }
 // Adelson-Velskii-Landi tree
-interface AVLTree<T> extends BaseTree<T> {}
+interface AVLTree<T> extends BinarySearchTree<T> {
+    insert: (v: T) => void
+    _insertNode: (n0: BaseTreeNode<T>, n1: BaseTreeNode<T>) => void
+    _rotationRR: (node: BaseTreeNode<T>) => void
+    _rotationLL: (node: BaseTreeNode<T>) => void
+    _rotationLR: (node: BaseTreeNode<T>) => void
+    _rotationRL: (node: BaseTreeNode<T>) => void
+}
+interface RedBackTree<T> extends BinarySearchTree<T> {
+    insert: (v: T) => void
+    _insertNode: (n0: BaseTreeNode<T>, n1: BaseTreeNode<T>) => void
+}
 
+// B+
+// 平衡二叉树
+    // 红黑树
+    // avl树
+// 霍夫曼树
+// 有序树
+// 无序树
+// 字典树
+// 后缀树
+// 广义后缀树
 
 export {
     BaseTreeNode,
     BaseTree,
     BinarySearchTree,
     AVLTree,
+    RedBackTree,
   }
   

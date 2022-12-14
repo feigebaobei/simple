@@ -2,7 +2,7 @@ import {S, N, B, A, F} from './baseType'
 import { PSet } from './PSet'
 import { PMap } from './PMap'
 import { HashMap, HashMapKind, HashMapHash } from './HashMap'
-import { BaseTreeNode, BaseTree, BinarySearchTree, AVLTree } from './Tree'
+import { BaseTreeNode, BaseTree, BinarySearchTree, AVLTree, RedBackTree } from './Tree'
 
 // 日后可能会拆为stack/queue/chain/...
 
@@ -206,4 +206,5 @@ export {
   BaseTree,
   BinarySearchTree,
   AVLTree,
+  RedBackTree,
 }
