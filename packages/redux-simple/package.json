@@ -15,9 +15,6 @@
   "files": [
     "lib"
   ],
-  "publishConfig": {
-    "registry": "http://npm.guazi-corp.com/"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/feigebaobei/simple.git"
