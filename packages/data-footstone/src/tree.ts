@@ -1,5 +1,3 @@
-// 与队列相关的工具方法
-// 队列
 import {
   BaseTreeNode as BTN,
   BaseTree as BT,

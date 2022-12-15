@@ -11,11 +11,9 @@ import {
   DoublyCircleChain as DCC,
   N,
   B,
-  // G, AI
 } from '../typings'
 
 class BaseChain<T> implements BC<T> {
-  // join() {}
   head: BCE<T>
   length: N
   constructor() {
