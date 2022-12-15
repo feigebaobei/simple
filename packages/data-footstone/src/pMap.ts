@@ -1,6 +1,6 @@
-import { FortifiedMap as FM, } from '../typings'
+import { PMap as FM, } from '../typings'
 
-class FortifiedMap<T, G> implements FM<T, G> {
+class PMap<T, G> implements FM<T, G> {
     box: Map<T, G>
     constructor () {
         this.box = new Map()
@@ -24,14 +24,14 @@ class FortifiedMap<T, G> implements FM<T, G> {
         return this.box.size
     }
     keys() {
-        return this.box.keys()
+        return Array.from(this.box.keys())
     }
     values() {
-        return this.box.values()
+        return Array.from(this.box.values())
     }
     getMap() {
         return this.box
     }
 }
 
-export {FortifiedMap}
+export {PMap}

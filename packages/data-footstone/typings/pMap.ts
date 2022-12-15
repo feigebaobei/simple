@@ -6,7 +6,7 @@ import {
 
 interface PMap<T, G> {
     box: Map<T, G>
-    set: (k: T, v: G) => {}
+    set: (k: T, v: G) => void
     delete: (k: T) => B
     has: (k: T) => B
     get: (k: T) => G

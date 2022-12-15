@@ -3,25 +3,33 @@ import {
     HashMap as HM,
     HashMapKind as HMK,
     HashMapHash as HMH,
+    N,
     S,
+    A,
 } from '../typings'
 
-class HashMap<S, G> implements HM<S, G> {
-    box: G[]
+class HashMap<G> implements HM<G> {
+    box: HM<G>['box'] // 日后都改为这种写法
     _size: N
     kind: HMK
     hash: HMH
-    constructor (kind = 'separate', hash = 'djb2') {
+    _put: (k: A, v: G) => void
+    _hashFn: (k: A) => N
+    _get: (k: A) => G
+    _remove: (k: A) => G
+    constructor (kind: HMK = 'separate', hash: HMH = 'djb2') {
         this.box = []
         this._size = 0
         this.kind = kind
-        this.hash = ''
-        this._put = () => {}
-        this._hashFn = () => ''
+        this.hash = hash
+        // this._put = () => {}
+        // this._hashFn = () => ''
+        // this._get = () => {}
+        // this._remove = () => {}
         switch (kind) {
             case 'separate':
             default:
-                this._put = (k, v) => {
+                this._put = (k: A, v: G) => {
                     let p = this.hashFn(k)
                     if (this.box[p] === undefined) {
                         this.box[p] = new SingleChain()
@@ -73,7 +81,7 @@ class HashMap<S, G> implements HM<S, G> {
                     while (this.box[p] !== undefined) {
                         p++
                     }
-                    this.box[p] = ths.createNode(k, v)
+                    this.box[p] = this.createNode(k, v)
                 }
                 this._get = (k) => {
                     let p = this.hashFn(k)
@@ -105,54 +113,47 @@ class HashMap<S, G> implements HM<S, G> {
         switch (hash) {
             case 'djb2':
             default:
-                this._hashFn = (k) => {
+                this._hashFn = (k: A) => {
                     let h = 5381
-                    let t = k
-                    if (typeof k === 'string') {} else {
-                        t = k.toString()
+                    let t = String(k)
+                    for (let i = 0; i < t.length; i++) {
+                        h = h * 33 + t.charCodeAt(i)
                     }
-                    h = t.reduce((r, c) => {
-                        r = r * 33 + c.charCodeAt(0)
-                        return r
-                    }, h)
                     return h % 1013
                 }
                 break;
             case 'loselose':
-                this._hashFn = (k) => {
+                this._hashFn = (k: A) => {
                     let h = 0
-                    let t = k
-                    if (typeof k === 'string') {} else {
-                        t = k.toString()
+                    let t = String(k)
+                    for (let i = 0; i < t.length; i++) {
+                        h = h + t.charCodeAt(i)
                     }
-                    h = t.reduce((r, c) => {
-                        return r += c.charCodeAt(0)
-                    }, h)
                     return h % 37
                 }
                 break;
         }
     }
-    createNode(k, v) {
+    createNode(k: A, v: G) {
         return {
             key: k,
             value: v
         }
     }
-    put(k: S, v: G) {
+    put(k: A, v: G) {
         this._put(k, v)
     }
-    get(k: S, v: G) {
-        this._get(k, v)
+    get(k: A) {
+        return this._get(k)
     }
-    remove(k: S, v: G) {
-        this._remove(k, v)
+    remove(k: A) {
+        return this._remove(k)
     }
     size() {
         return this._size
     }
-    hashFn(v: G) {
-        return this._hashFn(v)
+    hashFn(k: A) {
+        return this._hashFn(k)
     }
 }
 

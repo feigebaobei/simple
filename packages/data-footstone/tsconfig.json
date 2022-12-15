@@ -1,5 +1,4 @@
 {
-  "extends": "./node_modules/gts/tsconfig-google.json",
   "type": "modules",
   "compilerOptions": {
     "target": "es2020",

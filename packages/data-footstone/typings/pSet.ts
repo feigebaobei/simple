@@ -6,7 +6,8 @@ import {
 
 interface PSet<T> {
     box: Set<T>
-    add: (v: T) => {}
+    // [Symbol.iterator]: T[]
+    add: (v: T) => void
     delete: (v: T) => B
     has: (v: T) => B
     clear: () => void

@@ -1,14 +1,12 @@
-import { FortifiedSet as FS } from '../typings'
+import { PSet as PS } from '../typings'
 
-class FortifiedSet<T> implements FS<T> {
+class PSet<T> implements PS<T> {
     box: Set<T>
     constructor () {
         this.box = new Set()
         // this[Symbol.iterator]: a[Symbol.iterator].bind(a),
-        this[Symbol.iterator] = this.values()
+        // this[Symbol.iterator] = this.values()
     }
-    // box: Set<T>
-    // add: (v: T) => {}
     add(v: T) {
         this.box.add(v)
     }
@@ -25,15 +23,15 @@ class FortifiedSet<T> implements FS<T> {
         return this.box.size
     }
     values() {
-        return this.box.values()
+        return Array.from(this.box.values())
     }
     getSet() {
         return this.box
     }
     // // 并集
-    concat(...v: PSet<T>[]) {
+    concat(...v: PS<T>[]) {
         v.forEach(item => {
-            item.forEach(subItem => {
+            item.values().forEach(subItem => {
                 this.add(subItem)
             })
         })
@@ -42,7 +40,7 @@ class FortifiedSet<T> implements FS<T> {
     // // 交集
     intersect(...v: PSet<T>[]) {
         v.forEach(item => {
-            item.forEach(subItem => {
+            item.values().forEach(subItem => {
                 if (!this.has(subItem)) {
                     this.delete(subItem)
                 }
@@ -53,20 +51,21 @@ class FortifiedSet<T> implements FS<T> {
     // // 差集
     diffSet(...v: PSet<T>[]) {
         v.forEach(item => {
-            item.forEach(subItem => {
+            item.values().forEach(subItem => {
                 if (this.has(subItem)) {
                     this.delete(subItem)
                 }
             })
         })
+        return this
     }
     // // 子集
-    subSetOf(v: PSet<T>) {
-        return v.every(item => {
+    subSetOf(v: PS<T>) {
+        return v.values().every(item => {
             return this.has(item)
         })
     }
 
 }
 
-export {FortifiedSet}
+export {PSet}

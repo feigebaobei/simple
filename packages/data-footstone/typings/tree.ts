@@ -48,8 +48,8 @@ interface RedBackTree<T> extends BinarySearchTree<T> {
 
 // B+
 // 平衡二叉树
-    // 红黑树
     // avl树
+    // 红黑树
 // 霍夫曼树
 // 有序树
 // 无序树
