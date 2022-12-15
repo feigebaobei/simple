@@ -107,14 +107,14 @@ interface DoublyCircleChainElement<T> extends DoublyChainElement<T> {}
 interface DoublyCircleChain<T> {}
 
 export {
-    BaseChainElement,
-    BaseChain,
-    SingleChainElement,
-    SingleChain,
-    DoublyChainElement,
-    DoublyChain,
-    SingleCircleChainElement,
-    SingleCircleChain,
-    DoublyCircleChainElement,
-    DoublyCircleChain,
+  BaseChainElement,
+  BaseChain,
+  SingleChainElement,
+  SingleChain,
+  DoublyChainElement,
+  DoublyChain,
+  SingleCircleChainElement,
+  SingleCircleChain,
+  DoublyCircleChainElement,
+  DoublyCircleChain,
 }

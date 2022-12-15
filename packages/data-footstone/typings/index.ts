@@ -1,9 +1,26 @@
-import {S, N, B, A, F} from './baseType'
+import { S, N, B, A, F } from './baseType'
 import { PSet } from './PSet'
 import { PMap } from './PMap'
-import { BaseChainElement, BaseChain, SingleChainElement, SingleChain, DoublyChainElement, DoublyChain, SingleCircleChainElement, SingleCircleChain, DoublyCircleChainElement, DoublyCircleChain } from './chain'
+import {
+  BaseChainElement,
+  BaseChain,
+  SingleChainElement,
+  SingleChain,
+  DoublyChainElement,
+  DoublyChain,
+  SingleCircleChainElement,
+  SingleCircleChain,
+  DoublyCircleChainElement,
+  DoublyCircleChain,
+} from './chain'
 import { HashMap, HashMapKind, HashMapHash } from './hashMap'
-import { BaseTreeNode, BaseTree, BinarySearchTree, AVLTree, RedBackTree } from './Tree'
+import {
+  BaseTreeNode,
+  BaseTree,
+  BinarySearchTree,
+  AVLTree,
+  RedBackTree,
+} from './Tree'
 
 // 日后可能会拆为stack/queue/...
 

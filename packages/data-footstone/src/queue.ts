@@ -1,9 +1,10 @@
 // 与队列相关的工具方法
 // 队列
 import {
-  Queue as Q, PriorityQueue as PQ,
+  Queue as Q,
+  PriorityQueue as PQ,
   PriorityQueueElement as PQE,
-  N
+  N,
 } from '../typings'
 
 class Queue<T> implements Q<T> {
@@ -72,7 +73,7 @@ class PriorityQueue<T> implements PQ<T> {
   protected createElement(p: T, t: N) {
     return {
       value: p,
-      priority: t ?? this.lowestPriority()
+      priority: t ?? this.lowestPriority(),
     }
   }
   // 使一个元素入队列
@@ -90,7 +91,10 @@ class PriorityQueue<T> implements PQ<T> {
     } else {
       let index = 0
       while (index < len - 1) {
-        if (this.items[index].priority >= node.priority && this.items[index + 1].priority < node.priority) {
+        if (
+          this.items[index].priority >= node.priority &&
+          this.items[index + 1].priority < node.priority
+        ) {
           this.items.splice(index + 1, 0, node)
           break
         } else {
@@ -103,7 +107,7 @@ class PriorityQueue<T> implements PQ<T> {
     return this.items.shift()?.value
   }
   toArray() {
-    return this.items.map(ele => (ele.value))
+    return this.items.map((ele) => ele.value)
   }
   protected _getHead() {
     return this.items[0]
@@ -131,7 +135,4 @@ class PriorityQueue<T> implements PQ<T> {
 }
 // 不写循环队列。它应该写在循环链表。
 
-export {
-  Queue,
-  PriorityQueue,
-}
+export { Queue, PriorityQueue }

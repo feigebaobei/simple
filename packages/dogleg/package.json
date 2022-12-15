@@ -15,6 +15,9 @@
       "require": "./dist_cjs/index.cjs"
     }
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "scripts": {
     "test": "echo hi",
     "p": "prettier --write .",

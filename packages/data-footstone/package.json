@@ -25,6 +25,12 @@
     "lib": "lib",
     "test": "__tests__"
   },
+  "exports": {
+    ".": {
+      "import": "./dist_esm/index.js",
+      "require": "./dist_cjs/index.js"
+    }
+  },
   "files": [
     "lib",
     "tscDist",
@@ -39,7 +45,7 @@
     "test": "node ./__tests__/data-footstone.test.js",
     "jest": "jest",
     "tsc": "tsc",
-    "rollup": "rollup -c", 
+    "rollup": "rollup -c",
     "clean": "echo 'fo clean'",
     "compile": "tsc",
     "prepare": "npm run compile",
@@ -53,6 +59,9 @@
     "url": "https://github.com/feigebaobei/simple/issues"
   },
   "homepage": "https://github.com/feigebaobei/simple/tree/master/packages/data-footstone",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "devDependencies": {
     "@types/node": "^14.11.2",
     "prettier": "2.8.1",

@@ -8,9 +8,9 @@ import {
   RedBackTree as RBT,
   B,
   F,
-  N
-  } from '../typings'
-  
+  N,
+} from '../typings'
+
 class BaseTree<T> implements BT<T> {
   root: BTN<T> | null
   constructor() {
@@ -86,7 +86,9 @@ class BaseTree<T> implements BT<T> {
     }
   }
   heightNode(node: BTN<T>): N {
-    return node ? (Math.max(this.heightNode(node.left), this.heightNode(node.right)) + 1) : -1
+    return node
+      ? Math.max(this.heightNode(node.left), this.heightNode(node.right)) + 1
+      : -1
   }
 }
 class BinarySearchTree<T> extends BaseTree<T> implements BST<T> {
@@ -134,7 +136,7 @@ class BinarySearchTree<T> extends BaseTree<T> implements BST<T> {
     return res
   }
   traverse(cb: F, order = 'inOrder') {
-    switch(order) {
+    switch (order) {
       case 'preOrder':
         this._inOrderTraverse(cb, this.root)
         break
@@ -165,7 +167,7 @@ class BinarySearchTree<T> extends BaseTree<T> implements BST<T> {
   }
 }
 class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
-  constructor () {
+  constructor() {
     super()
   }
   insert(v: T): void {
@@ -228,14 +230,9 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
 }
 
 class RedBackTree<T> extends BinarySearchTree<T> implements RBT<T> {
-  constructor () {
+  constructor() {
     super()
   }
 }
 
-export {
-  BaseTree,
-  BinarySearchTree,
-  AVLTree,
-  RedBackTree,
-}
+export { BaseTree, BinarySearchTree, AVLTree, RedBackTree }

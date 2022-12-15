@@ -4,10 +4,4 @@ type B = boolean
 type A = any
 type F = Function
 
-export {
-  S,
-  N,
-  B,
-  A,
-  F,
-}
+export { S, N, B, A, F }

@@ -34,4 +34,4 @@ class Stack implements StackI {
 }
 
 // export default Stack
-export {Stack}
+export { Stack }
