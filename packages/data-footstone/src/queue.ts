@@ -11,7 +11,7 @@ class Queue<T> implements Q<T> {
   constructor(...p: T[]) {
     this.items = p
   }
-  enqueue(...p) {
+  enqueue(...p: T[]) {
     this.items.push(...p)
   }
   dequeue() {
