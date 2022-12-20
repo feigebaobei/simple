@@ -4,19 +4,20 @@
 */
 import { Stack as StackI, A } from '../typings'
 
-class Stack implements StackI {
-  private items: A // 即使这样写，也不会转换为js中私有的属性。
+class Stack<T> implements StackI<T> {
+  items: T[]
   constructor() {
     this.items = []
   }
   toArray() {
     return this.items
   }
-  push(...p) {
+  push(...p: T[]) {
     this.items.push(...p)
+    return this.size()
   }
   pop() {
-    this.items.pop()
+    return this.items.pop()
   }
   peek() {
     return this.items[this.size() - 1]
@@ -33,5 +34,4 @@ class Stack implements StackI {
   }
 }
 
-// export default Stack
 export { Stack }

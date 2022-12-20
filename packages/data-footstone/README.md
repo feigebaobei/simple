@@ -2,13 +2,15 @@
 
 ## overview
 
-> TODO: description
+> 使用ts编写基本的数据结构。
 
 ### feature
 
-- feature0
-- feature1
-- feature2
+- stack
+- queue
+- hashMap
+- tree
+- graph 简单
 
 ## install
 
@@ -16,28 +18,20 @@
 
 ## usage
 
-同`./demo.md`
-
 ```js
-const data-footstone = require('data-footstone');
-// or
-// import data-footstone from 'data-footstone';
-// TODO: DEMONSTRATE API
+import {Stack} from 'data-footstone'
+let s = new Stack()
+s.push(1,2,3,4)
+s.toArray()     // [1,2,3,4]
+s.pop()         // 4
+s.pop()         // 3
+s.peek()        // 2
+s.isEmpty()     // false
+s.clear()       // 清空栈
 ```
-
-## configuration
-
-默认配置文件：`path/to/file.json`。
-
-<!-- prettier-ignore-start -->
-|key|description|type|default|enum|demo|||
-|-|-|-|-|-|-|-|-|
-|||||||||
-|||||||||
-|||||||||
-<!-- prettier-ignore-end -->
 
 ## api
+详见[官网](https://lixiaodan.netlify.app/jspackages/data-footstone)  
 
 <!-- prettier-ignore-start -->
 |key|description|type|default|enum|demo|||
@@ -47,28 +41,7 @@ const data-footstone = require('data-footstone');
 |||||||||
 <!-- prettier-ignore-end -->
 
-`data-footstone.fn(param, first: string, second: boolean = true) => void`
-description
-
-`data-footstone.fn(param, [options: {a: string, b?: number}])`
-description
-
-## principle
-
-此包的处理逻辑。
-
-### uml
-
-```
-
-```
-
 ## todo
-
-### 心得
-
-数据结构要求越多越难实现，反之成立。  
-数据结构越灵活越难实现，反之成立。
 
 > 未来迭代计划。
 > 未来迭代计划。

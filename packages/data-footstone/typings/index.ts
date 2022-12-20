@@ -25,18 +25,7 @@ import {
   RedBackTree,
 } from './Tree'
 import {Graph, GraphColor} from './graph'
-
-// 日后可能会拆为stack/queue/...
-
-interface Stack {
-  toArray: () => A[]
-  push: () => void
-  pop: () => void
-  peek: () => void
-  isEmpty: () => void
-  clear: () => void
-  size: () => void
-}
+import {Stack} from './stack'
 
 export {
   S,
