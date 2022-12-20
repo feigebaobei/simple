@@ -1,6 +1,6 @@
 {
   "name": "dogleg",
-  "version": "0.0.2-alpha.1",
+  "version": "0.0.2-alpha.3",
   "description": "",
   "type": "module",
   "main": "index.js",
@@ -39,10 +39,9 @@
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
-    "husky": "^8.0.2",
     "lint-staged": "^13.0.3",
     "prettier": "2.7.1",
     "rollup": "^3.3.0"
   },
-  "gitHead": "8d143c73f6f6312aa344ff767941318947a0a331"
+  "gitHead": "c9936a8ec2cd0eeae10975ef255f26dee324e5e9"
 }

@@ -5,11 +5,19 @@
     "packages/*"
   ],
   "devDependencies": {
-    "lerna": "^5.5.1"
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
+    "husky": "^8.0.2",
+    "lerna": "^5.5.1",
+    "lint-staged": "^13.1.0"
   },
   "scripts": {
+    "test": "echo hi",
     "publish": "lerna publish",
     "publish:alpha": "lerna publish --dist-tag alpha --preid alpha",
-    "publish:beta": "lerna publish --dist-tag beta --preid beta"
+    "publish:beta": "lerna publish --dist-tag beta --preid beta",
+    "prepare": "husky install",
+    "p": "prettier --write .",
+    "pc": "prettier --check ."
   }
 }
