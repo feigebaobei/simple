@@ -1,4 +1,4 @@
-学习jest
+学习 jest
 &esm
 &cjs
 &ts

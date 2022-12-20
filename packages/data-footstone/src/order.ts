@@ -1,23 +1,19 @@
-import {
-  N,
-  S,
-  A,
-} from '../typings'
+import { N, S, A } from '../typings'
 
 // n^2
 let bubbleSort = (arr: A[], order = 'asc') => {
   let len = arr.length
   for (let i = 0; i < len; i++) {
-    for (let j = 0; j < len-i-1; j++) {
+    for (let j = 0; j < len - i - 1; j++) {
       switch (order) {
         case 'asc':
-          if (arr[j] > arr[j+1]) {
-            [arr[j], arr[j+1]] = [arr[j+1], arr[j]]
+          if (arr[j] > arr[j + 1]) {
+            ;[arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
           }
           break
         case 'des':
-          if (arr[j] > arr[j+1]) {
-            [arr[j], arr[j+1]] = [arr[j+1], arr[j]]
+          if (arr[j] > arr[j + 1]) {
+            ;[arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]
           }
           break
       }
@@ -27,13 +23,13 @@ let bubbleSort = (arr: A[], order = 'asc') => {
 let selectSort = (arr: A[]) => {
   for (let i = 0; i < arr.length - 1; i++) {
     let minIndex = i
-    for (let j = i+1; j < arr.length; j++) {
+    for (let j = i + 1; j < arr.length; j++) {
       if (arr[j] < arr[minIndex]) {
         minIndex = j
       }
     }
     if (minIndex !== i) {
-      [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]]
+      ;[arr[i], arr[minIndex]] = [arr[minIndex], arr[i]]
     }
   }
 }
@@ -70,7 +66,7 @@ let insertSort = (arr: A[]) => {
       arr[lastIndex + 1] = arr[lastIndex]
       lastIndex--
     }
-    arr[lastIndex+1] = cur
+    arr[lastIndex + 1] = cur
     return arr
   }
 }
@@ -82,23 +78,16 @@ let quickSort = (arr: A[]) => {
   let p: A = arr[arr.length >> 1]
   let left: A[]
   let right: A[]
-  arr.forEach(item => {
+  arr.forEach((item) => {
     if (item > p) {
       right.push(item)
     } else {
       left.push(item)
     }
   })
-  return [...(quickSort(left)), ...(quickSort(right))]
+  return [...quickSort(left), ...quickSort(right)]
 }
 let heapSort = () => {}
 let binarySearch = () => {}
 
-export {
-  bubbleSort,
-  selectSort,
-  insertSort,
-  quickSort,
-  heapSort,
-  binarySearch,
-}
+export { bubbleSort, selectSort, insertSort, quickSort, heapSort, binarySearch }

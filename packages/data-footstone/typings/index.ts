@@ -1,7 +1,5 @@
 import { S, N, B, A, F } from './baseType'
-import {Queue,
-  PriorityQueueElement,
-  PriorityQueue} from './queue'
+import { Queue, PriorityQueueElement, PriorityQueue } from './queue'
 import { PSet } from './pSet'
 import { PMap } from './pMap'
 import {
@@ -24,8 +22,8 @@ import {
   AVLTree,
   RedBackTree,
 } from './Tree'
-import {Graph, GraphColor} from './graph'
-import {Stack} from './stack'
+import { Graph, GraphColor } from './graph'
+import { Stack } from './stack'
 
 export {
   S,
@@ -59,5 +57,5 @@ export {
   AVLTree,
   RedBackTree,
   Graph,
-  GraphColor
+  GraphColor,
 }

@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
 module.exports = reduxSimple;
 
 function reduxSimple() {
-    return "Hello from reduxSimple";
+  return "Hello from reduxSimple";
 }
