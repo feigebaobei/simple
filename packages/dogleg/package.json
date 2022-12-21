@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/feigebaobei/dogleg.git"
+    "url": "git+https://github.com/feigebaobei/simple.git"
   },
   "keywords": [],
   "author": "",
@@ -32,12 +32,12 @@
   "bugs": {
     "url": "https://github.com/feigebaobei/dogleg/issues"
   },
-  "homepage": "https://github.com/feigebaobei/dogleg#readme",
+  "homepage": "https://github.com/feigebaobei/simple/tree/master/packages/dogleg",
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
     "lint-staged": "^13.0.3",
     "rollup": "^3.3.0"
   },
-  "gitHead": "fbcd214bd2283ce0cbb5370e21cc22c0eaf179f1"
+  "gitHead": "7a10032ce95bb2bd5ced12923ecd9dbae9467423"
 }
