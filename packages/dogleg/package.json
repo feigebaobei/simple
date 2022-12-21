@@ -20,8 +20,6 @@
   },
   "scripts": {
     "test": "echo hi",
-    "p": "prettier --write .",
-    "pc": "prettier --check .",
     "rollup": "rollup --config"
   },
   "repository": {
@@ -39,7 +37,6 @@
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
     "lint-staged": "^13.0.3",
-    "prettier": "2.7.1",
     "rollup": "^3.3.0"
   },
   "gitHead": "34637dca009d26d0614d1a2d8466febb00df0416"

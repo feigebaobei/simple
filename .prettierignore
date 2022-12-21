@@ -1,6 +1,8 @@
 # Ignore artifacts:
 build
 dist
+dist-ssr
+tscDist
 dist_cjs
 dist_esm
 coverage
