@@ -1,16 +1,16 @@
 // 并行执行
 // 待测试
-import BasicPlugin from "./basicPlugin";
+import BasicPlugin from './basicPlugin'
 // import Hooks from "./hooks";
 class BailPlugin extends BasicPlugin {
   constructor() {
-    super();
+    super()
   }
   // 执行钩子上的所有方法
   call(hookName, ...p) {
-    let hook = this._getHook(hookName);
+    let hook = this._getHook(hookName)
     if (hook) {
-      hook.getRegistrant(); // [fn, ...]
+      hook.getRegistrant() // [fn, ...]
 
       // let ps = hook.getRegistrant() // [fn, ...]
       //     .map(fn => {
@@ -22,4 +22,4 @@ class BailPlugin extends BasicPlugin {
     }
   }
 }
-export default BailPlugin;
+export default BailPlugin

@@ -2,14 +2,14 @@
 export default [
   {
     // input: ['src/index.ts'],
-    input: ["tscDist/src/index.js"],
+    input: ['tscDist/src/index.js'],
     // [
     output: {
-      dir: "dist_esm",
+      dir: 'dist_esm',
       // entryFileNames: [name].js,
-      assetFileNames: "[name]-[hash][extend]",
-      chunkFileNames: "[name]-[hash].js",
-      format: "esm",
+      assetFileNames: '[name]-[hash][extend]',
+      chunkFileNames: '[name]-[hash].js',
+      format: 'esm',
       sourcemap: true,
       compact: false,
       // plugins: [terser()],
@@ -21,4 +21,4 @@ export default [
       // typescript(),   // 使其可打包ts文件
     ],
   },
-];
+]

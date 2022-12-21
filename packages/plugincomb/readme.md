@@ -43,41 +43,41 @@ import {
   ParallelPlugin,
   seriesPlugin, // 是 SeriesPlugin 的实例。
   SeriesPlugin,
-} from "plugincomb";
+} from 'plugincomb'
 
 // 定义方法
 let fn1 = (...p) => {
-  console.log("fn1 params", ...p);
-};
+  console.log('fn1 params', ...p)
+}
 let fn2 = (...p) => {
-  console.log("fn2 params", ...p);
-};
+  console.log('fn2 params', ...p)
+}
 // 使用顺序插件
-seriesPlugin.register("hookName", fn1);
-seriesPlugin.register("hookName", fn2);
-seriesPlugin.call("callHook", "a", "b");
-seriesPlugin.logout("hookName", fn1); // 注销hookName钩子上的fn1方法。这是非等幂操作。
-seriesPlugin.call("callHook", "a", "b"); // 应该只执行fn2
-seriesPlugin.logout("hookName"); // 注销hookName钩子上的所有方法
+seriesPlugin.register('hookName', fn1)
+seriesPlugin.register('hookName', fn2)
+seriesPlugin.call('callHook', 'a', 'b')
+seriesPlugin.logout('hookName', fn1) // 注销hookName钩子上的fn1方法。这是非等幂操作。
+seriesPlugin.call('callHook', 'a', 'b') // 应该只执行fn2
+seriesPlugin.logout('hookName') // 注销hookName钩子上的所有方法
 
 // 定义方法
 let fn3 = (...p) => {
   setTimeout(() => {
-    fn1(...p);
-  }, 2000);
-};
+    fn1(...p)
+  }, 2000)
+}
 let fn4 = (...p) => {
   setTimeout(() => {
-    fn1(...p);
-  }, 1000);
-};
+    fn1(...p)
+  }, 1000)
+}
 // 使用平行插件
-parallelPlugin.register("hookName", fn3);
-parallelPlugin.register("hookName", fn4);
-parallelPlugin.call("callHook", "a", "b");
-parallelPlugin.logout("hookName", fn3); // 注销hookName钩子上的fn1方法。这是非等幂操作。
-parallelPlugin.call("callHook", "a", "b"); // 应该只执行fn4
-parallelPlugin.logout("hookName"); // 注销hookName钩子上的所有方法
+parallelPlugin.register('hookName', fn3)
+parallelPlugin.register('hookName', fn4)
+parallelPlugin.call('callHook', 'a', 'b')
+parallelPlugin.logout('hookName', fn3) // 注销hookName钩子上的fn1方法。这是非等幂操作。
+parallelPlugin.call('callHook', 'a', 'b') // 应该只执行fn4
+parallelPlugin.logout('hookName') // 注销hookName钩子上的所有方法
 ```
 
 ||插件种类|参数|说明||||

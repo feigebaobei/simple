@@ -1,29 +1,29 @@
-import { Store as S, State, Action, ReducerFn, Fn } from "../typings/interface";
+import { Store as S, State, Action, ReducerFn, Fn } from '../typings/interface'
 
-let state = undefined;
+let state = undefined
 
 class Store implements S {
-  subscribeMap: Map<any, any>;
-  reducerFn: ReducerFn;
+  subscribeMap: Map<any, any>
+  reducerFn: ReducerFn
   constructor(reducerFn) {
-    this.subscribeMap = new Map();
-    this.reducerFn = reducerFn;
+    this.subscribeMap = new Map()
+    this.reducerFn = reducerFn
   }
   subscribe(fn: Fn) {
-    this.subscribeMap.set(fn, Symbol());
+    this.subscribeMap.set(fn, Symbol())
     return () => {
-      this.subscribeMap.delete(fn);
-    };
+      this.subscribeMap.delete(fn)
+    }
   }
   dispatch(prevState: State, action: Action) {
-    state = this.reducerFn(prevState, action);
+    state = this.reducerFn(prevState, action)
     Array.from(this.subscribeMap.keys()).forEach((fn) => {
-      fn();
-    });
+      fn()
+    })
   }
   getState() {
-    return state;
+    return state
   }
 }
 
-export { Store };
+export { Store }

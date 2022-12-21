@@ -1,7 +1,7 @@
-"use strict";
+'use strict'
 
-module.exports = first;
+module.exports = first
 
 function first() {
-  return "Hello from first";
+  return 'Hello from first'
 }
