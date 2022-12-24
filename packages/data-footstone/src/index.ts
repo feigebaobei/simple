@@ -1,4 +1,4 @@
-// import * as order from './order'
+import * as order from './order'
 import { Stack } from './stack'
 import { Queue, PriorityQueue } from './queue'
 import {
@@ -13,7 +13,7 @@ import { HashMap } from './hashMap'
 import { BaseTree, BinarySearchTree, AVLTree, RedBackTree } from './tree'
 
 export {
-  // ...order,
+  order,
   Stack,
   Queue,
   PriorityQueue,

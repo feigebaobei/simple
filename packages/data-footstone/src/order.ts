@@ -20,58 +20,89 @@ let bubbleSort = (arr: A[], order = 'asc') => {
     }
   }
 }
-let selectSort = (arr: A[]) => {
+let selectSort = (arr: A[], order = 'asc') => {
   for (let i = 0; i < arr.length - 1; i++) {
-    let minIndex = i
+    let index = i
     for (let j = i + 1; j < arr.length; j++) {
-      if (arr[j] < arr[minIndex]) {
-        minIndex = j
+      switch (order) {
+        case 'asc':
+          if (arr[j] < arr[index]) {
+            index = j
+          }
+          break
+        case 'des':
+          if (arr[j] > arr[index]) {
+            index = j
+          }
+          break
       }
     }
-    if (minIndex !== i) {
-      ;[arr[i], arr[minIndex]] = [arr[minIndex], arr[i]]
+    if (index !== i) {
+      ;[arr[i], arr[index]] = [arr[index], arr[i]]
     }
   }
 }
 
-let merge = (leftArr, rightArr) => {
+let merge = (leftArr: A[], rightArr: A[], order: 'asc' | 'des') => {
   let tempArr = []
+  let res = []
   while (leftArr.length && rightArr.length) {
-    if (leftArr[0] < rightArr[0]) {
-      tempArr.push(leftArr.shift())
-    } else {
-      tempArr.push(rightArr.shift())
+    switch (order) {
+      case 'asc':
+        if (leftArr[0] < rightArr[0]) {
+          tempArr.push(leftArr.shift())
+        } else {
+          tempArr.push(rightArr.shift())
+        }
+        break
+      case 'des':
+        if (leftArr[0] < rightArr[0]) {
+          tempArr.push(rightArr.shift())
+        } else {
+          tempArr.push(leftArr.shift())
+        }
+        break
     }
   }
-  return [...tempArr, ...leftArr, ...rightArr]
+  return res
 }
-
 // nlogn
-let mergeSort = (arr: A[]) => {
+let mergeSort = (arr: A[], order: 'asc' | 'des' = 'asc') => {
   if (arr.length < 2) {
     return arr
   }
   let m = arr.length >> 1
   let left = arr.slice(0, m)
   let right = arr.slice(m)
-  return merge(mergeSort(left), mergeSort(right))
+  return merge(mergeSort(left), mergeSort(right), order)
 }
 
 // n^2
-let insertSort = (arr: A[]) => {
+let insertSort = (arr: A[], order = 'asc') => {
   for (let i = 1; i < arr.length; i++) {
     let cur = arr[i]
     let lastIndex = i - 1
-    while (lastIndex >= 0 && arr[lastIndex] > cur) {
-      arr[lastIndex + 1] = arr[lastIndex]
-      lastIndex--
+    switch (order) {
+      case 'asc':
+        while (lastIndex >= 0 && arr[lastIndex] > cur) {
+          arr[lastIndex + 1] = arr[lastIndex]
+          lastIndex--
+        }
+        arr[lastIndex + 1] = cur
+        break
+      case 'des':
+        while (lastIndex >= 0 && arr[lastIndex] < cur) {
+          arr[lastIndex + 1] = arr[lastIndex]
+          lastIndex--
+        }
+        arr[lastIndex + 1] = cur
+        break
     }
-    arr[lastIndex + 1] = cur
     return arr
   }
 }
 // nlogn
-let quickSort = (arr: A[]) => {
+let quickSort = (arr: A[], order = 'asc') => {
   if (arr.length < 1) {
     return arr
   }
@@ -79,13 +110,24 @@ let quickSort = (arr: A[]) => {
   let left: A[]
   let right: A[]
   arr.forEach((item) => {
-    if (item > p) {
-      right.push(item)
-    } else {
-      left.push(item)
+    switch (order) {
+      case 'asc':
+        if (item > p) {
+          right.push(item)
+        } else {
+          left.push(item)
+        }
+        break
+      case 'des':
+        if (item < p) {
+          right.push(item)
+        } else {
+          left.push(item)
+        }
+        break
     }
   })
-  return [...quickSort(left), ...quickSort(right)]
+  return [...quickSort(left, order), ...quickSort(right, order)]
 }
 let heapSort = () => {}
 let binarySearch = () => {}
