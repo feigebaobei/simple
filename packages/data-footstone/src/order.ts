@@ -1,5 +1,6 @@
 import { N, S, A } from '../typings'
 
+// 冒泡
 // n^2
 let bubbleSort = (arr: A[], order = 'asc') => {
   let len = arr.length
@@ -20,6 +21,7 @@ let bubbleSort = (arr: A[], order = 'asc') => {
     }
   }
 }
+// 选择
 let selectSort = (arr: A[], order = 'asc') => {
   for (let i = 0; i < arr.length - 1; i++) {
     let index = i
@@ -42,7 +44,7 @@ let selectSort = (arr: A[], order = 'asc') => {
     }
   }
 }
-
+// 归并
 let merge = (leftArr: A[], rightArr: A[], order: 'asc' | 'des') => {
   let tempArr = []
   let res = []
@@ -77,6 +79,7 @@ let mergeSort = (arr: A[], order: 'asc' | 'des' = 'asc') => {
   return merge(mergeSort(left), mergeSort(right), order)
 }
 
+// 插入
 // n^2
 let insertSort = (arr: A[], order = 'asc') => {
   for (let i = 1; i < arr.length; i++) {
@@ -101,6 +104,7 @@ let insertSort = (arr: A[], order = 'asc') => {
     return arr
   }
 }
+// 快速
 // nlogn
 let quickSort = (arr: A[], order = 'asc') => {
   if (arr.length < 1) {
@@ -129,7 +133,33 @@ let quickSort = (arr: A[], order = 'asc') => {
   })
   return [...quickSort(left, order), ...quickSort(right, order)]
 }
-let heapSort = () => {}
-let binarySearch = () => {}
+// 堆
+// let heapSort = () => {
 
-export { bubbleSort, selectSort, insertSort, quickSort, heapSort, binarySearch }
+// }
+// 计数（分布式排序）
+// 桶（分布式排序）
+// 基数（分布式排序）
+// let binarySearch = (arr: A[], item: A) => {
+//   let res = -1
+//   let left = 0
+//   let right = arr.length
+//   let mid: A
+//   while (left <= right) {
+//     mid = (left + right) >> 1
+//     if (arr[mid] === item) {
+//       res = mid
+//       break
+//     } else if (arr[mid] < item) {
+//       left = mid + 1
+//     } else if (arr[mid] > item) {
+//       right = mid - 1
+//     }
+//   }
+//   return res
+// }
+
+export { bubbleSort, selectSort, insertSort, quickSort, 
+  // heapSort, 
+  // binarySearch 
+}
