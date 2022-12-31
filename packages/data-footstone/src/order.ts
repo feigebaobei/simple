@@ -159,7 +159,11 @@ let quickSort = (arr: A[], order = 'asc') => {
 //   return res
 // }
 
-export { bubbleSort, selectSort, insertSort, quickSort, 
-  // heapSort, 
-  // binarySearch 
+export {
+  bubbleSort,
+  selectSort,
+  insertSort,
+  quickSort,
+  // heapSort,
+  // binarySearch
 }
