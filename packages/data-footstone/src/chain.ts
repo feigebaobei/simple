@@ -411,7 +411,6 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
       value: v,
       position: p,
       next: null,
-      prev: null,
     }
   }
   append(v: T) {
@@ -420,11 +419,9 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
       this.tail.next = node
       node.next = this.head
       this.tail = node
-      // console.log('this.tail', this.tail)
     } else {
       this.head = node
       this.tail = node
-      // node.prev = node
       node.next = node
     }
     this.length++
@@ -449,8 +446,8 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
         pre.next = node
         node.next = cur
       }
-      this.setPosition(p)
       this.length++
+      this.setPosition(p)
       return true
     } else {
       return false
@@ -475,8 +472,8 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
         }
         pre.next = cur.next
       }
-      this.setPosition(p)
       this.length--
+      this.setPosition(p)
       return res
     } else {
       return undefined
@@ -485,10 +482,9 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
   setPosition(from: N = 0) {
     let index = 0
     let cur = this.head
-    while (index <= this.length) { // to fix
+    while (index < this.length) {
       if (index >= from) {
         cur.position = index
-        // console.log('cur', cur)
       }
       index++
       cur = cur.next
