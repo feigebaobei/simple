@@ -15,6 +15,7 @@ interface BaseChain<T> {
 }
 interface SingleChainElement<T> {
   value: T
+  position: N // 标记出位置会方便一些
   next: SingleChainElement<T> | null
 }
 // 单向链表
@@ -22,37 +23,30 @@ interface SingleChainElement<T> {
 interface SingleChain<T> extends BaseChain<T> {
   head: SingleChainElement<T> | null
   length: N
-  createNode: (p: T) => SingleChainElement<T>
+  createNode: (v: T, p: N) => SingleChainElement<T>
   append: (p: T) => void
   insert: (p: T, position: N) => B
   removeAt: (position: N) => T | undefined
-  removeElement: (element: T, all: B) => B
+  // removeElement: (element: T, all: B) => B
   getEleByIndex: (index: N) => T | undefined
   reverseSelf: () => void
   reverse: () => SingleChain<T>
   clear: () => void
+  setPosition: (from: N) => void
 }
 
 interface DoublyChainElement<T> {
   value: T
+  position: N // 标记出位置会方便一些
   next: DoublyChainElement<T> | null
   prev: DoublyChainElement<T> | null
 }
 // 双向链表
 interface DoublyChain<T> {
+  createNode: (v: T, p: N) => DoublyChainElement<T>
   append: (p: T) => void
-  // getElementByPostion: () => {}
-  // getPositionByElement: () => {}
-  // existElement: () => {}
   insert: (v: T, p: N) => B
   removeAt: (p: N) => T | undefined
-  // removeAtRight: () => {}
-  // removeTail: () => {}
-  // removeHead: () => {}
-  // removeElement: () => {}
-  // join: () => {}
-  // slice: () => {}
-  // splice: () => {}
   toArray: () => T[]
   // getHead: () => {}
   // getTail: () => {}
@@ -60,13 +54,15 @@ interface DoublyChain<T> {
   // moveToHeadByPosition: () => {}
   // isEmpty: () => {}
   clear: () => void
+  setPosition: (from: N) => void
 }
 // 单向循环链表
 
 interface SingleCircleChainElement<T> {
   value: T
+  position: N // 标记出位置会方便一些
   next: SingleCircleChainElement<T> | null
-  prev: SingleCircleChainElement<T> | null
+  // prev: SingleCircleChainElement<T> | null
 }
 
 // interface SingleCircleChain<T> extends SingleChain<T> {
@@ -86,25 +82,36 @@ interface SingleCircleChainElement<T> {
 interface SingleCircleChain<T>
   extends Pick<
     SingleChain<T>,
-    // 'head' |
+    // 'head' // |
     | 'length'
     | 'createNode'
     | 'append'
     | 'insert'
     | 'removeAt'
-    | 'removeElement'
-    | 'indexOf'
-    | 'getEleByIndex'
-    | 'toArray'
-    | 'reverseSelf'
-    | 'reverse'
+    // | 'removeElement'
+    // | 'indexOf'
+    // | 'getEleByIndex'
+    // | 'toArray'
+    // | 'reverseSelf'
+    // | 'reverse'
   > {
   head: SingleCircleChainElement<T> | null
-  isValidRange: (p: N) => B
+  tail: SingleCircleChainElement<T> | null
+  // isValidRange: (p: N) => B
 }
 // 双向循环链表
-interface DoublyCircleChainElement<T> extends DoublyChainElement<T> {}
-interface DoublyCircleChain<T> {}
+interface DoublyCircleChainElement<T>  {
+  value: T
+  position: N // 标记出位置会方便一些
+  next: DoublyCircleChainElement<T> | null
+  prev: DoublyCircleChainElement<T> | null
+}
+interface DoublyCircleChain<T> {
+  createNode: (v: T, p: N) => DoublyCircleChainElement<T>
+  append: (v: T) => void
+  insert: (v: T, p: N) => B
+  removeAt: (p: N) => T | undefined
+}
 
 export {
   BaseChainElement,

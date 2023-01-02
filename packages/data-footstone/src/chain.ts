@@ -89,23 +89,25 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
   constructor(...p: T[]) {
     super()
     if (p.length) {
-      this.head = p.reduceRight((r: SCE<T>, c: T) => {
+      this.head = p.reduceRight((r: SCE<T>, c: T, index: N) => {
         return {
           value: c,
           next: r,
+          position: index,
         }
       }, null)
       this.length = p.length
     }
   }
-  createNode(p: T) {
+  createNode(v: T, p: N) {
     return {
-      value: p,
+      value: v,
       next: null,
+      position: p,
     }
   }
   append(p: T) {
-    let node = this.createNode(p)
+    let node = this.createNode(p, this.length)
     if (!this.head) {
       this.head = node
     } else {
@@ -120,7 +122,7 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
   insert(v: T, p: N) {
     if (this.isValidRange(p)) {
       let res: B
-      let node = this.createNode(v)
+      let node = this.createNode(v, p)
       if (p === 0) {
         node.next = this.head
         this.head = node
@@ -136,6 +138,7 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
         pre.next = node
         node.next = cur
       }
+      this.setPosition(p)
       this.length++
       return res
     } else {
@@ -161,50 +164,61 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
         pre.next = cur.next
         res = cur.value
       }
+      this.setPosition(p)
       this.length--
       return res
     } else {
       return undefined
     }
   }
-  removeElement(v: T, all = false) {
-    let res: B = false
-    if (this.length) {
-      if (this.head.value === v) {
-        this.head = this.head.next
-        this.length--
-        res = true
-      } else {
-        let cur = this.head.next
-        let pre = this.head
-        while (cur) {
-          if (cur.value === v) {
-            pre.next = cur.next
-            this.length--
-            res = true
-            if (!all) {
-              break
-            }
-          }
-          pre = cur
-          cur = cur.next
-        }
-      }
-    } else {
-      res = false
-    }
-    return res
-  }
+  // 删除此方法
+  // removeElement(v: T, all = false) {
+  //   let res: B = false
+  //   if (this.length) {
+  //     if (this.head.value === v) {
+  //       this.head = this.head.next
+  //       this.length--
+  //       res = true
+  //     } else {
+  //       let cur = this.head.next
+  //       let pre = this.head
+  //       while (cur) {
+  //         if (cur.value === v) {
+  //           pre.next = cur.next
+  //           this.length--
+  //           res = true
+  //           if (!all) {
+  //             break
+  //           }
+  //         }
+  //         pre = cur
+  //         cur = cur.next
+  //       }
+  //     }
+  //     let cur = this.head
+  //     let index = 0
+  //     while (cur) {
+  //       cur.position = index
+  //       index++
+  //       cur = cur.next
+  //     }
+  //   } else {
+  //     res = false
+  //   }
+  //   return res
+  // }
   // includes() {}
   reverseSelf() {
     let fn = (p: SCE<T> | null, q = null) => {
       if (p) {
-        return q
-      } else {
         return fn(p.next, { value: p.value, next: q })
+      } else {
+        return q
       }
     }
     this.head = fn(this.head)
+    this.setPosition()
+    return this
   }
   reverse() {
     return this.toArray().reduceRight((r, c) => {
@@ -216,6 +230,17 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
     this.head = null
     this.length = 0
   }
+  setPosition(from: N = 0) {
+    let cur = this.head
+    let index = 0
+    while (cur) {
+      if (index >= from) {
+        cur.position = index
+      }
+      index++
+      cur = cur.next
+    }
+  }
 }
 
 class DoublyChain<T> extends BaseChain<T> implements DC<T> {
@@ -224,20 +249,19 @@ class DoublyChain<T> extends BaseChain<T> implements DC<T> {
   length: N
   constructor(...p: T[]) {
     super()
-    // this.head = null
     this.tail = null
-    // this.length = 0
-    p.forEach(this.append)
+    p.forEach(this.append, this)
   }
-  createNode(p: T) {
+  createNode(v: T, p: N) {
     return {
-      value: p,
+      value: v,
+      position: p,
       prev: null,
       next: null,
     }
   }
-  append(p: T) {
-    let node = this.createNode(p)
+  append(v: T) {
+    let node = this.createNode(v, this.length)
     if (this.length) {
       node.prev = this.tail
       this.tail.next = node
@@ -251,7 +275,7 @@ class DoublyChain<T> extends BaseChain<T> implements DC<T> {
   insert(v: T, p: N) {
     let res = false
     if (this.isValidRange(p)) {
-      let node = this.createNode(v)
+      let node = this.createNode(v, p)
       if (p === 0) {
         node.next = this.head
         this.head.prev = node
@@ -268,6 +292,7 @@ class DoublyChain<T> extends BaseChain<T> implements DC<T> {
         node.next = cur
         cur.prev = node
       }
+      this.setPosition(p)
       this.length++
       res = true
     } else {
@@ -303,75 +328,103 @@ class DoublyChain<T> extends BaseChain<T> implements DC<T> {
         cur.prev.next = cur.next
         cur.next.prev = cur.prev
       }
+      this.setPosition(p)
       this.length--
       return res
     } else {
       return undefined
     }
   }
-  removeElement(v: T, all = false) {
-    let res: B = false
-    let cur = this.head
-    let index = 0
-    while (index < this.length) {
-      if (cur.value === v) {
-        if (index === 0) {
-          // op this.head
-          this.head = this.head.next
-          this.head.prev = null
-        } else if (index === this.length) {
-          // op this.tail
-          this.tail = this.tail.prev
-          this.tail.next = null
-        } else {
-          // op middle
-          cur.prev.next = cur.next
-          cur.next.prev = cur.prev
-        }
-        res = true
-        this.length--
-        if (!all) {
-          break
-        }
-      } else {
-        index++
-      }
-      cur = cur.next
-    }
-    return res
-  }
+  // removeElement(v: T, all = false) {
+  //   let res: B = false
+  //   let cur = this.head
+  //   let index = 0
+  //   while (index < this.length) {
+  //     if (cur.value === v) {
+  //       if (index === 0) {
+  //         // op this.head
+  //         this.head = this.head.next
+  //         this.head.prev = null
+  //       } else if (index === this.length) {
+  //         // op this.tail
+  //         this.tail = this.tail.prev
+  //         this.tail.next = null
+  //       } else {
+  //         // op middle
+  //         cur.prev.next = cur.next
+  //         cur.next.prev = cur.prev
+  //       }
+  //       res = true
+  //       this.length--
+  //       if (!all) {
+  //         break
+  //       }
+  //     } else {
+  //       index++
+  //     }
+  //     cur = cur.next
+  //   }
+  //   return res
+  // }
   clear() {
     this.head = null
     this.tail = null
     this.length = 0
+  }
+  setPosition(from: N = 0) {
+    let cur = this.head
+    let index = 0
+    while (cur) {
+      if (index >= from) {
+        cur.position = index
+      }
+      index++
+      cur = cur.next
+    }
   }
 }
 
 class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
   head: SCCE<T> | null
   length: N
+  tail: SCCE<T> | null
   constructor(...p: T[]) {
     super()
     this.head = null
+    this.tail = null
     this.length = 0
+    p.forEach(this.append, this)
   }
-  // head() {}
-  // length() {}
-  createNode(p: T): SCCE<T> {
+  toArray() {
+    let res = []
+    let index = 0
+    let cur = this.head
+    while (index < this.length) {
+      res.push(cur.value)
+      cur = cur.next
+      index++
+    }
+    return res
+  }
+  createNode(v: T, p: N): SCCE<T> {
     return {
-      value: p,
+      value: v,
+      position: p,
       next: null,
       prev: null,
     }
   }
   append(v: T) {
-    let node = this.createNode(v)
+    let node = this.createNode(v, this.length)
     if (this.length) {
-      this.head.prev = node
+      this.tail.next = node
       node.next = this.head
+      this.tail = node
+      // console.log('this.tail', this.tail)
     } else {
       this.head = node
-      node.prev = node
+      this.tail = node
+      // node.prev = node
       node.next = node
     }
     this.length++
@@ -379,10 +432,10 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
   // 允许的范围  [0, length)
   insert(v: T, p: N) {
     if (this.isValidRange(p)) {
-      let node = this.createNode(v)
+      let node = this.createNode(v, p)
       if (p === 0) {
+        this.tail.next = node
         node.next = this.head
-        this.head.prev = node
         this.head = node
       } else {
         let index = 0
@@ -394,10 +447,9 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
           index++
         }
         pre.next = node
-        node.prev = pre
         node.next = cur
-        cur.prev = node
       }
+      this.setPosition(p)
       this.length++
       return true
     } else {
@@ -410,8 +462,8 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
       let res: T
       if (p === 0) {
         res = this.head.value
-        this.head.prev.next = this.head.next
-        this.head.next.prev = this.head.prev
+        this.head = this.head.next
+        this.tail.next = this.head
       } else {
         let index = 0
         let cur = this.head
@@ -422,52 +474,72 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
           index++
         }
         pre.next = cur.next
-        cur.next.prev = pre
       }
+      this.setPosition(p)
       this.length--
       return res
     } else {
       return undefined
     }
   }
-  // 返回 boolean 表示是否删除
-  removeElement(v: T, all = false) {
-    let res: B = false
-    if (this.length) {
-      if ((this.head.value = v)) {
-        this.head.next.prev = this.head.prev
-        this.head.prev.next = this.head.next
-        this.length--
-        res = true
-      } else {
-        let cur = this.head.next
-        while (cur) {
-          if (cur.value === v) {
-            cur.prev.next = cur.next
-            cur.next.prev = cur.prev
-            this.length--
-            res = true
-            if (!all) {
-              break
-            }
-          }
-          cur = cur.next
-        }
+  setPosition(from: N = 0) {
+    let index = 0
+    let cur = this.head
+    while (index <= this.length) { // to fix
+      if (index >= from) {
+        cur.position = index
+        // console.log('cur', cur)
       }
-    } else {
-      res = false
+      index++
+      cur = cur.next
     }
-    return res
   }
+  // 返回 boolean 表示是否删除
+  // removeElement(v: T, all = false) {
+  //   let res: B = false
+  //   if (this.length) {
+  //     if ((this.head.value = v)) {
+  //       this.head.next.prev = this.head.prev
+  //       this.head.prev.next = this.head.next
+  //       this.length--
+  //       res = true
+  //     } else {
+  //       let cur = this.head.next
+  //       while (cur) {
+  //         if (cur.value === v) {
+  //           cur.prev.next = cur.next
+  //           cur.next.prev = cur.prev
+  //           this.length--
+  //           res = true
+  //           if (!all) {
+  //             break
+  //           }
+  //         }
+  //         cur = cur.next
+  //       }
+  //     }
+  //   } else {
+  //     res = false
+  //   }
+  //   return res
+  // }
 }
 
 class DoublyCircleChain<T> extends DoublyChain<T> implements DCC<T> {
   constructor(...p: T[]) {
     super()
+    p.forEach(this.append, this)
   }
-  // createNode()
+  createNode(v: T, p: number) {
+    return {
+      value: v,
+      position: p,
+      next: null,
+      prev: null,
+    }
+  }
   append(p: T) {
-    let node = this.createNode(p)
+    let node = this.createNode(p, this.length)
     if (this.length) {
       node.next = this.head
       this.head.prev = node
@@ -485,7 +557,7 @@ class DoublyCircleChain<T> extends DoublyChain<T> implements DCC<T> {
   insert(v: T, p: N) {
     let res = false
     if (this.isValidRange(p)) {
-      let node = this.createNode(v)
+      let node = this.createNode(v, p)
       if (p === 0) {
         node.prev = node
         node.next = node
@@ -504,6 +576,7 @@ class DoublyCircleChain<T> extends DoublyChain<T> implements DCC<T> {
         cur.prev = node
       }
       this.length++
+      this.setPosition(p)
       res = true
     } else {
       res = false
@@ -538,41 +611,64 @@ class DoublyCircleChain<T> extends DoublyChain<T> implements DCC<T> {
         cur.prev.next = cur.next
         cur.next.prev = cur.prev
       }
+      this.setPosition(p)
       this.length--
       return res
     } else {
       return undefined
     }
   }
-  removeElement(v: T, all = false) {
-    let res: B = false
-    let cur = this.head
+  // removeElement(v: T, all = false) {
+  //   let res: B = false
+  //   let cur = this.head
+  //   let index = 0
+  //   while (index < this.length) {
+  //     if (cur.value === v) {
+  //       if (index === 0) {
+  //         this.head = this.head.next
+  //         this.head.prev = this.tail
+  //         this.tail.next = this.head
+  //       } else if (index === this.length) {
+  //         this.tail = this.tail.prev
+  //         this.tail.next = this.head
+  //         this.head.prev = this.tail
+  //       } else {
+  //         cur.prev.next = cur.next
+  //         cur.next.prev = cur.prev
+  //       }
+  //       res = true
+  //       this.length--
+  //       if (!all) {
+  //         break
+  //       }
+  //     } else {
+  //       index++
+  //     }
+  //     cur = cur.next
+  //   }
+  //   return res
+  // }
+  toArray() {
+    let res = []
     let index = 0
+    let cur = this.head
     while (index < this.length) {
-      if (cur.value === v) {
-        if (index === 0) {
-          this.head = this.head.next
-          this.head.prev = this.tail
-          this.tail.next = this.head
-        } else if (index === this.length) {
-          this.tail = this.tail.prev
-          this.tail.next = this.head
-          this.head.prev = this.tail
-        } else {
-          cur.prev.next = cur.next
-          cur.next.prev = cur.prev
-        }
-        res = true
-        this.length--
-        if (!all) {
-          break
-        }
-      } else {
-        index++
-      }
+      res.push(cur.value)
+      index++
       cur = cur.next
     }
     return res
+  }
+  setPosition(from: N = 0) {
+    let index = 0
+    let cur = this.head
+    while (index < this.length) {
+      if (index >= from) {
+        cur.position = index
+      }
+      index++
+      cur = cur.next
+    }
   }
 }
 
