@@ -117,6 +117,8 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
       }
       cur.next = node
     }
+    this.length++
+    return this.length
   }
   // 不允许插入到最后一个
   insert(v: T, p: N) {
@@ -271,6 +273,7 @@ class DoublyChain<T> extends BaseChain<T> implements DC<T> {
       this.tail = node
     }
     this.length++
+    return this.length
   }
   insert(v: T, p: N) {
     let res = false
@@ -425,6 +428,7 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
       node.next = node
     }
     this.length++
+    return this.length
   }
   // 允许的范围  [0, length)
   insert(v: T, p: N) {
@@ -549,6 +553,7 @@ class DoublyCircleChain<T> extends DoublyChain<T> implements DCC<T> {
       this.tail = node
     }
     this.length++
+    return this.length
   }
   insert(v: T, p: N) {
     let res = false
