@@ -8,6 +8,23 @@ import {
   A,
 } from '../typings'
 
+let djb2HashFn = (k: A) => {
+  let h = 5381
+  let t = String(k)
+  for (let i = 0; i < t.length; i++) {
+    h = h * 33 + t.charCodeAt(i)
+  }
+  return h % 1013
+}
+let loseloseHashFn = (k: A) => {
+  let h = 0
+  let t = String(k)
+  for (let i = 0; i < t.length; i++) {
+    h = h + t.charCodeAt(i)
+  }
+  return h % 37
+}
+
 class HashMap<G> implements HM<G> {
   box: HM<G>['box'] // 日后都改为这种写法
   _size: N
@@ -113,24 +130,10 @@ class HashMap<G> implements HM<G> {
     switch (hash) {
       case 'djb2':
       default:
-        this._hashFn = (k: A) => {
-          let h = 5381
-          let t = String(k)
-          for (let i = 0; i < t.length; i++) {
-            h = h * 33 + t.charCodeAt(i)
-          }
-          return h % 1013
-        }
+        this._hashFn = djb2HashFn
         break
       case 'loselose':
-        this._hashFn = (k: A) => {
-          let h = 0
-          let t = String(k)
-          for (let i = 0; i < t.length; i++) {
-            h = h + t.charCodeAt(i)
-          }
-          return h % 37
-        }
+        this._hashFn = loseloseHashFn
         break
     }
   }
@@ -161,4 +164,4 @@ class HashMap<G> implements HM<G> {
 // 在基类中定义_hashFn等方法
 // 在扩展类中使用基类的方法
 
-export { HashMap }
+export { HashMap, djb2HashFn, loseloseHashFn }

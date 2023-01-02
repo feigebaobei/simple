@@ -83,11 +83,7 @@ interface SingleCircleChain<T>
   extends Pick<
     SingleChain<T>,
     // 'head' // |
-    | 'length'
-    | 'createNode'
-    | 'append'
-    | 'insert'
-    | 'removeAt'
+    'length' | 'createNode' | 'append' | 'insert' | 'removeAt'
     // | 'removeElement'
     // | 'indexOf'
     // | 'getEleByIndex'
@@ -100,7 +96,7 @@ interface SingleCircleChain<T>
   // isValidRange: (p: N) => B
 }
 // 双向循环链表
-interface DoublyCircleChainElement<T>  {
+interface DoublyCircleChainElement<T> {
   value: T
   position: N // 标记出位置会方便一些
   next: DoublyCircleChainElement<T> | null

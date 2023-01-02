@@ -9,7 +9,7 @@ import {
 } from './chain'
 import { PSet } from './pSet'
 import { PMap } from './pMap'
-import { HashMap } from './hashMap'
+import { HashMap, djb2HashFn, loseloseHashFn } from './hashMap'
 import { BaseTree, BinarySearchTree, AVLTree, RedBackTree } from './tree'
 
 export {
@@ -24,6 +24,8 @@ export {
   PSet,
   PMap,
   HashMap,
+  djb2HashFn,
+  loseloseHashFn,
   BaseTree,
   BinarySearchTree,
   AVLTree,
