@@ -13,6 +13,7 @@ class Queue<T> implements Q<T> {
   }
   enqueue(...p: T[]) {
     this.items.push(...p)
+    return this.size()
   }
   dequeue() {
     return this.items.shift()
@@ -37,7 +38,8 @@ class Queue<T> implements Q<T> {
     this.items = []
   }
   reverse() {
-    return this.items.reverse()
+    this.items.reverse()
+    return this
   }
 }
 
@@ -76,7 +78,7 @@ class PriorityQueue<T> implements PQ<T> {
     }
   }
   // 使一个元素入队列
-  enqueue(element, priority: N = this.defaultPriority) {
+  enqueue(element: T, priority: N = this.defaultPriority) {
     let len = this.size()
     let node = this.createElement(element, priority)
     if (!len) {
@@ -101,6 +103,7 @@ class PriorityQueue<T> implements PQ<T> {
         }
       }
     }
+    return this.size()
   }
   dequeue() {
     return this.items.shift()?.value

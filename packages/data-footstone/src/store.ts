@@ -119,8 +119,8 @@ class Lru<K, V> {
 class Lfu {
   constructor() {}
 }
-export { 
-  // Cache, 
+export {
+  // Cache,
   Lru,
   //  Lfu
-   }
+}
