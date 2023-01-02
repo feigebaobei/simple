@@ -24,7 +24,7 @@ import {
 } from './Tree'
 import { Graph, GraphColor } from './graph'
 import { Stack } from './stack'
-import { Cache, CacheNode, CacheOption } from './store'
+import { Cache, CacheNode, CacheOption, FifoNode, Fifo } from './store'
 
 export {
   S,
@@ -62,4 +62,6 @@ export {
   Cache,
   CacheNode,
   CacheOption,
+  FifoNode,
+  Fifo,
 }

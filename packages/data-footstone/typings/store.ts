@@ -1,4 +1,5 @@
 import { S, N, B, A, F } from './baseType'
+import { SingleChain } from './chain'
 
 interface CacheNode<K, V> {
   flushTime: N
@@ -21,6 +22,20 @@ interface Cache<K, V> {
   _setIntervalFlush: () => void
   //   _createNode: () => void
 }
-// 链表基类
 
-export { Cache, CacheOption, CacheNode }
+interface FifoNode<K, V> {
+  key: K
+  value: V
+}
+interface Fifo<K, V> {
+  capacity: N
+  chain: SingleChain<FifoNode<K, V>>
+  _createNode: (k: K, v: V) => FifoNode<K, V>
+  get: (k: K) => V | undefined
+  put: (k: K, v: V) => N
+  size: () => N
+  keys: () => K[]
+  values: () => V[]
+}
+
+export { Cache, CacheOption, CacheNode, FifoNode, Fifo }

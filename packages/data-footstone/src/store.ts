@@ -6,7 +6,11 @@ import {
   CacheOption as CO,
   DoublyChainElement as DCE,
   N,
+  FifoNode as FFN,
+  Fifo as FF,
+  SingleChain as SC,
 } from '../typings'
+// import { Queue } from './queue'
 
 // 未测试完
 class Cache<K, V> implements C<K, V> {
@@ -60,8 +64,64 @@ class Cache<K, V> implements C<K, V> {
   }
 }
 
-// fifo 不开发，请使用队列。
-// 日后可再扩展
+// fifo
+// 先进先出
+// 这个写法可以证明链与队列是一样的。
+class Fifo<K, V> implements FF<K, V> {
+  capacity: N
+  chain: SC<FFN<K, V>>
+  // 参数可以考虑兼容 number / {capacity: number}
+  constructor(capacity: N) {
+    this.capacity = capacity
+    this.chain = new SingleChain<FFN<K, V>>()
+  }
+  _createNode(k: K, v: V) {
+    return {
+      key: k,
+      value: v,
+    }
+  }
+  get(k: K) {
+    let cur = this.chain.head
+    let res = undefined
+    while (cur) {
+      if (cur.value.key === k) {
+        res = cur.value.value
+        break
+      }
+      cur = cur.next
+    }
+    return res
+  }
+  put(k: K, v: V) {
+    this.chain.append(this._createNode(k, v))
+    while (this.chain.length > this.capacity) {
+      this.chain.removeAt(0)
+    }
+    return this.chain.length
+  }
+  size() {
+    return this.chain.length
+  }
+  keys() {
+    let res = []
+    let cur = this.chain.head
+    while (cur) {
+      res.push(cur.value.key)
+      cur = cur.next
+    }
+    return res
+  }
+  values() {
+    let res = []
+    let cur = this.chain.head
+    while (cur) {
+      res.push(cur.value.value)
+      cur = cur.next
+    }
+    return res
+  }
+}
 
 // 最近最少使用算法
 // 如果数据最近被访问过，那么将来被访问的几率也更高
@@ -121,6 +181,7 @@ class Lfu {
 }
 export {
   // Cache,
+  Fifo,
   Lru,
   //  Lfu
 }

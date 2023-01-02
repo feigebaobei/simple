@@ -1,4 +1,4 @@
-import { Cache, Lru, Lfu } from '../src/store'
+import { Cache, Fifo, Lru, Lfu } from '../src/store'
 
 describe('Cache', () => {
   it('Cache', () => {
@@ -18,8 +18,25 @@ describe('Cache', () => {
   })
 })
 
+describe('Fifo', () => {
+  it('Fifo', () => {
+    let f = new Fifo(4)
+    expect(f.put('a', 1)).toBe(1)
+    expect(f.put('b', 2)).toBe(2)
+    expect(f.put('c', 3)).toBe(3)
+    expect(f.put('d', 4)).toBe(4)
+    expect(f.put('e', 5)).toBe(4)
+    expect(f.put('f', 6)).toBe(4)
+    expect(f.keys()).toEqual(['c', 'd', 'e', 'f'])
+    expect(f.values()).toEqual([3, 4, 5, 6])
+    expect(f.size()).toBe(4)
+    expect(f.get('a')).toBeUndefined()
+    expect(f.get('d')).toBe(4)
+  })
+})
+
 describe('Lru', () => {
-  it.only('Lru', () => {
+  it('Lru', () => {
     let l = new Lru(4)
     l.put('a', 1)
     l.put('b', 2)
