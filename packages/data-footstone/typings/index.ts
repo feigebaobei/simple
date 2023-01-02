@@ -24,6 +24,7 @@ import {
 } from './Tree'
 import { Graph, GraphColor } from './graph'
 import { Stack } from './stack'
+import { Cache, CacheNode, CacheOption } from './store'
 
 export {
   S,
@@ -58,4 +59,7 @@ export {
   RedBackTree,
   Graph,
   GraphColor,
+  Cache,
+  CacheNode,
+  CacheOption,
 }
