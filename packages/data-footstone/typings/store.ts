@@ -1,5 +1,6 @@
 import { S, N, B, A, F } from './baseType'
 import { SingleChain, DoublyChain } from './chain'
+import { DoublyChainElement } from './chain'
 
 interface CacheNode<K, V> {
   flushTime: N
@@ -49,6 +50,7 @@ interface Lfu<K, V> {
   capacity: N
   chain: DoublyChain<LfuNode<K, V>>
   _createNode: (k: K, v: V, c: N) => LfuNode<K, V>
+  _get: (k: K) => DoublyChainElement<LfuNode<K, V>> | undefined
   get: (k: K) => V | undefined
   put: (k: K, v: V) => N
   size: () => N

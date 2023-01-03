@@ -12,6 +12,7 @@ import {
   DoublyChain as DC,
   LfuNode as LN,
   Lfu as L,
+  // DoublyChainElement,
 } from '../typings'
 
 // 未测试完
@@ -185,14 +186,14 @@ class Lfu<K, V> implements L<K, V> {
     this.capacity = capacity
     this.chain = new DoublyChain<LN<K, V>>()
   }
-  _createNode(k: K, v: V, count: N = 0) {
+  _createNode(k: K, v: V, count: N = 0): LN<K, V> {
     return {
       key: k,
       value: v,
       count,
     }
   }
-  _get(k: K) {
+  _get(k: K): DCE<LN<K,V>> {
     let res = undefined
     let cur = this.chain.head
     if (cur) {
@@ -217,22 +218,25 @@ class Lfu<K, V> implements L<K, V> {
       let newNode = this._createNode(node.value.key, node.value.value, newCount)
       if (this.chain.length) {
         if (this.chain.tail.value.count > newCount) {
-          this.chain.append(newCount)
+          this.chain.append(newNode)
         } else {
-          let cur = this.chain.head
-          while (cur) {
-            if (cur.value.count <= newCount) {
-              break
-            }
-            cur = cur.next
-          }
-          this.chain.insert(newNode, cur.position)
+          this._insert(newNode)
         }
       } else {
         this.chain.append(newNode)
       }
     }
     return res
+  }
+  _insert(node: LN<K, V>) {
+    let cur = this.chain.head
+    while (cur) {
+      if (cur.value.count <= node.count) {
+        break
+      }
+      cur = cur.next
+    }
+    this.chain.insert(node, cur.position)
   }
   put(k: K, v: V) {
     let node = this._get(k)
@@ -241,21 +245,18 @@ class Lfu<K, V> implements L<K, V> {
       this.chain.removeAt(node.position)
       node.value.count++
       node.value.value = v
-      let cur = this.chain.head
-      while (cur) {
-        if (cur.value.count <= node.value.count) {
-          break
-        }
-        cur = cur.next
-      }
-      this.chain.insert(node, cur.position)
+      this._insert(node.value)
     } else {
       // 没有
       while (this.chain.length >= this.capacity) {
         this.chain.removeAt(this.chain.length - 1)
       }
       let newNode = this._createNode(k, v, 1)
-      this.chain.append(newNode)
+      if (this.chain.head) {
+        this._insert(newNode)
+      } else {
+        this.chain.append(newNode)
+      }
     }
     return this.size()
   }
@@ -280,7 +281,6 @@ class Lfu<K, V> implements L<K, V> {
     }
     return res
   }
-
 }
 export {
   // Cache,

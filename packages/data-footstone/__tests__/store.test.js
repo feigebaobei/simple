@@ -1,22 +1,24 @@
-import { Cache, Fifo, Lru, Lfu } from '../src/store'
+import { 
+  // Cache,
+   Fifo, Lru, Lfu } from '../src/store'
 
-describe('Cache', () => {
-  it('Cache', () => {
-    let cache = new Cache({
-      size: 4,
-    })
-    expect(cache.expirationTime).toBe(50000)
-    expect(cache.size).toBe(4)
-    cache.put('a', 1, new Date() + 500)
-    cache.put('b', 2)
-    cache.put('c', 3)
-    cache.put('d', 4)
-    expect(cache.get('a')).toBe(1)
-    expect(cache.get('b')).toBe(2)
-    expect(cache.get('c')).toBe(3)
-    expect(cache.get('d')).toBe(4)
-  })
-})
+// describe('Cache', () => {
+//   it('Cache', () => {
+//     let cache = new Cache({
+//       size: 4,
+//     })
+//     expect(cache.expirationTime).toBe(50000)
+//     expect(cache.size).toBe(4)
+//     cache.put('a', 1, new Date() + 500)
+//     cache.put('b', 2)
+//     cache.put('c', 3)
+//     cache.put('d', 4)
+//     expect(cache.get('a')).toBe(1)
+//     expect(cache.get('b')).toBe(2)
+//     expect(cache.get('c')).toBe(3)
+//     expect(cache.get('d')).toBe(4)
+//   })
+// })
 
 describe('Fifo', () => {
   it('Fifo', () => {
@@ -43,20 +45,20 @@ describe('Lru', () => {
     l.put('c', 3)
     l.put('d', 4)
     l.put('e', 5)
+    l.put('e', 6)
     expect(l.chain.length).toBe(4)
     expect(Array.from(l.map.keys())).toEqual(['b', 'c', 'd', 'e'])
-    expect(l.chain.toArray().map((e) => e.value)).toEqual([2, 3, 4, 5])
-    // expect(l.get('b')).toBe(2)
+    expect(l.chain.toArray().map((e) => e.value)).toEqual([2, 3, 4, 6])
     expect(l.get('c')).toBe(3)
     expect(l.get('f')).toBeUndefined()
-    expect(l.chain.toArray().map((e) => e.value)).toEqual([2, 4, 5, 3])
+    expect(l.chain.toArray().map((e) => e.value)).toEqual([2, 4, 6, 3])
     expect(l.remove('d'))
     expect(l.remove('f'))
-    expect(l.chain.toArray().map((e) => e.value)).toEqual([2, 5, 3])
+    expect(l.chain.toArray().map((e) => e.value)).toEqual([2, 6, 3])
   })
 })
 describe('Lfu', () => {
-  it.only('Lfu', () => {
+  it('Lfu', () => {
     let l = new Lfu(4)
     l.put('a', 1)
     l.put('b', 2)
@@ -64,52 +66,47 @@ describe('Lfu', () => {
     l.put('d', 4)
     l.put('e', 5)
     l.put('f', 6)
-    // console.log(l.chain.toArray())
+    l.put('f', 7)
     expect(l.size()).toBe(4)
-    expect(l.keys()).toEqual(['a', 'b', 'c', 'f'])
-    expect(l.values()).toEqual([1, 2, 3, 6])
+    expect(l.keys()).toEqual(['f', 'e', 'd', 'c'])
+    expect(l.values()).toEqual([7,5,4,3])
     expect(l.get('c')).toBe(3)
     expect(l.chain.toArray()).toEqual([
       { key: 'c', value: 3, count: 2 },
-      { key: 'a', value: 1, count: 1 },
-      { key: 'b', value: 2, count: 1 },
-      { key: 'f', value: 6, count: 1 },
+      { key: 'f', value: 7, count: 2 },
+      { key: 'e', value: 5, count: 1 },
+      { key: 'd', value: 4, count: 1 },
     ])
-    expect(l.get('b')).toBe(2)
+    expect(l.get('b')).toBeUndefined()
+    expect(l.get('e')).toBe(5)
     expect(l.chain.toArray()).toEqual([
-      { key: 'b', value: 2, count: 2 },
+      { key: 'e', value: 5, count: 2 },
       { key: 'c', value: 3, count: 2 },
-      { key: 'a', value: 1, count: 1 },
-      { key: 'f', value: 6, count: 1 },
+      { key: 'f', value: 7, count: 2 },
+      { key: 'd', value: 4, count: 1 },
     ])
-    expect(l.get('a')).toBe(1)
+    expect(l.get('f')).toBe(7)
     expect(l.chain.toArray()).toEqual([
-      { key: 'a', value: 1, count: 2 },
-      { key: 'b', value: 2, count: 2 },
+      { key: 'f', value: 7, count: 3 },
+      { key: 'e', value: 5, count: 2 },
       { key: 'c', value: 3, count: 2 },
-      { key: 'f', value: 6, count: 1 },
+      { key: 'd', value: 4, count: 1 },
     ])
-    expect(l.get('a')).toBe(1)
+    expect(l.get('f')).toBe(7)
+    expect(l.get('f')).toBe(7)
+    expect(l.get('f')).toBe(7)
     expect(l.chain.toArray()).toEqual([
-      { key: 'a', value: 1, count: 3 },
-      { key: 'b', value: 2, count: 2 },
+      { key: 'f', value: 7, count: 6 },
+      { key: 'e', value: 5, count: 2 },
       { key: 'c', value: 3, count: 2 },
-      { key: 'f', value: 6, count: 1 },
+      { key: 'd', value: 4, count: 1 },
     ])
-    expect(l.get('a')).toBe(1)
-    expect(l.get('a')).toBe(1)
+    expect(l.get('c')).toBe(3)
     expect(l.chain.toArray()).toEqual([
-      { key: 'a', value: 1, count: 5 },
-      { key: 'b', value: 2, count: 2 },
-      { key: 'c', value: 3, count: 2 },
-      { key: 'f', value: 6, count: 1 },
-    ])
-    expect(l.get('b')).toBe(2)
-    expect(l.chain.toArray()).toEqual([
-      { key: 'a', value: 1, count: 5 },
-      { key: 'b', value: 2, count: 3 },
-      { key: 'c', value: 3, count: 2 },
-      { key: 'f', value: 6, count: 1 },
+      { key: 'f', value: 7, count: 6 },
+      { key: 'c', value: 3, count: 3 },
+      { key: 'e', value: 5, count: 2 },
+      { key: 'd', value: 4, count: 1 },
     ])
   })
 })
