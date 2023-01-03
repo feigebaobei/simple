@@ -2,25 +2,25 @@ import {
   // S,
   N,
   B,
-  //  A, F
+   A,//  F
 } from './baseType'
 
-// interface BaseQueue<T> {
-//   items: T[]
-//   // enqueue: (...p: T[]) => void
-//   dequeue: () => T
-//   toArray: () => T[]
-//   getHead: () => T
-//   getTail: () => T
-//   size: () => N
-//   isEmpty: () => B
-//   clear: () => void
-//   reverse: () => void
-// }
+interface BaseQueue{
+  items: A[]
+  // enqueue: (...p: T[]) => void
+  // dequeue: () => T
+  // toArray: () => A[]
+  getHead: () => A
+  getTail: () => A
+  size: () => N
+  isEmpty: () => B
+  clear: () => void
+  // reverse: () => void
+}
 // interface Queue<T> extends BaseQueue<T> {
 interface Queue<T> {
   items: T[]
-  enqueue: (...p: T[]) => void
+  enqueue: (...p: T[]) => N
   dequeue: () => T
   toArray: () => T[]
   getHead: () => T
@@ -34,15 +34,17 @@ interface Queue<T> {
 //   highestPriority: () => N | undefined
 //   enqueue: (element: T, priority: N) => void
 // }
-interface PriorityQueueElement<T> {
+interface PriorityQueueNode<T> {
   value: T
+  position: N
   priority: N
 }
 
 interface PriorityQueue<T> {
-  items: PriorityQueueElement<T>[]
+  items: PriorityQueueNode<T>[]
   defaultPriority: N
-  enqueue: (element: T, priority: N) => void
+  // protected createNode: (v: T, priority?: N, position?: N) => PriorityQueueNode<T>
+  enqueue: (element: T, priority: N, positionFlag: B, needSetPosition: B) => N
   dequeue: () => T
   highestPriority: () => N | undefined
   toArray: () => T[]
@@ -51,7 +53,9 @@ interface PriorityQueue<T> {
   size: () => N
   isEmpty: () => B
   clear: () => void
-  // reverse: () => void
+  // jump: (p: N) => T
+  updatePriorityAt: (p: N, v: N, positionFlag?: B) => B
+  updateDimension: (v: N) => void
 }
 
-export { Queue, PriorityQueueElement, PriorityQueue }
+export { BaseQueue, Queue, PriorityQueueNode, PriorityQueue }

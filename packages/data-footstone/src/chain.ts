@@ -106,6 +106,7 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
       position: p,
     }
   }
+  // 对外不暴露数据结构。所心不提供appendNode方法。
   append(p: T) {
     let node = this.createNode(p, this.length)
     if (!this.head) {

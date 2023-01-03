@@ -1,5 +1,5 @@
 import { S, N, B, A, F } from './baseType'
-import { Queue, PriorityQueueElement, PriorityQueue } from './queue'
+import {BaseQueue, Queue, PriorityQueueNode, PriorityQueue } from './queue'
 import { PSet } from './pSet'
 import { PMap } from './pMap'
 import {
@@ -24,7 +24,7 @@ import {
 } from './Tree'
 import { Graph, GraphColor } from './graph'
 import { Stack } from './stack'
-import { Cache, CacheNode, CacheOption, FifoNode, Fifo } from './store'
+import { Cache, CacheNode, CacheOption, FifoNode, Fifo, LfuNode, Lfu } from './store'
 
 export {
   S,
@@ -33,10 +33,10 @@ export {
   A,
   F,
   Stack,
-  // BaseQueue,
+  BaseQueue,
   Queue,
   PriorityQueue,
-  PriorityQueueElement,
+  PriorityQueueNode,
   BaseChainElement,
   BaseChain,
   SingleChainElement,
@@ -64,4 +64,6 @@ export {
   CacheOption,
   FifoNode,
   Fifo,
+  LfuNode,
+  Lfu,
 }

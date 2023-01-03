@@ -1,28 +1,21 @@
 // 队列
 import {
+  BaseQueue as BQ,
   Queue as Q,
   PriorityQueue as PQ,
-  PriorityQueueElement as PQE,
+  PriorityQueueNode as PQE,
+  A,
   N,
+  B,
 } from '../typings'
 
-class Queue<T> implements Q<T> {
-  items: T[]
-  constructor(...p: T[]) {
-    this.items = p
-  }
-  enqueue(...p: T[]) {
-    this.items.push(...p)
-    return this.size()
-  }
-  dequeue() {
-    return this.items.shift()
-  }
-  toArray() {
-    return this.items
+// 可以抽象出BaseQueue
+class BaseQueue implements BQ {
+  items: A[]
+  constructor() {
+    this.items = []
   }
   getHead() {
-    // 有可能是undefined
     return this.items[0]
   }
   getTail() {
@@ -35,7 +28,26 @@ class Queue<T> implements Q<T> {
     return this.size() === 0
   }
   clear() {
+    // return 
     this.items = []
+  }
+}
+
+class Queue<T> extends BaseQueue implements Q<T> {
+  items: T[]
+  constructor(...p: T[]) {
+    super()
+    this.enqueue(...p)
+  }
+  enqueue(...p: T[]) {
+    this.items.push(...p)
+    return this.size()
+  }
+  dequeue() {
+    return this.items.shift()
+  }
+  toArray() {
+    return this.items
   }
   reverse() {
     this.items.reverse()
@@ -44,11 +56,12 @@ class Queue<T> implements Q<T> {
 }
 
 // 优先队列
-class PriorityQueue<T> implements PQ<T> {
+class PriorityQueue<T> extends BaseQueue implements PQ<T> {
   items: PQE<T>[]
   defaultPriority: N
   constructor(defaultPriority: N = 0) {
-    this.items = []
+    super()
+    // this.items = []
     this.defaultPriority = defaultPriority
   }
   highestPriority() {
@@ -71,36 +84,45 @@ class PriorityQueue<T> implements PQ<T> {
     }
     return res
   }
-  protected createElement(p: T, t: N) {
+  protected createNode(v: T, p: N = this.defaultPriority, position: N = -1) {
     return {
-      value: p,
-      priority: t ?? this.lowestPriority(),
+      value: v,
+      position: position,
+      priority: p,
     }
   }
   // 使一个元素入队列
-  enqueue(element: T, priority: N = this.defaultPriority) {
+  // 优先级高在前面
+  // positionFlag 是否放在同优先级的后面
+  // 考虑把参数处理为options
+  enqueue(element: T, priority: N = this.defaultPriority, positionFlag: B = true, needSetPosition: B = true) {
     let len = this.size()
-    let node = this.createElement(element, priority)
+    let node = this.createNode(element, priority)
     if (!len) {
       this.items.push(node)
-      return
-    }
-    if (this._getHead().priority < node.priority) {
-      this.items.unshift(node)
-    } else if (this._getTail().priority >= node.priority) {
-      this.items.push(node)
+      needSetPosition && this.setPosition()
     } else {
-      let index = 0
-      while (index < len - 1) {
-        if (
-          this.items[index].priority >= node.priority &&
-          this.items[index + 1].priority < node.priority
-        ) {
-          this.items.splice(index + 1, 0, node)
-          break
-        } else {
-          index++
+      let positionPriority = positionFlag ? node.priority : (node.priority + 1)
+      if (this._getHead().priority < positionPriority) {
+        this.items.unshift(node)
+        needSetPosition && this.setPosition()
+      } else if (this._getTail().priority >= positionPriority) {
+        this.items.push(node)
+        needSetPosition && this.setPosition(this.size() - 1)
+      } else {
+        let index = 0
+        while (index < len - 1) {
+          if (
+            this.items[index].priority >= positionPriority &&
+            this.items[index + 1].priority < positionPriority
+          ) {
+            this.items.splice(index + 1, 0, node)
+            break
+          } else {
+            index++
+          }
         }
+        needSetPosition && this.setPosition(index + 1)
       }
     }
     return this.size()
@@ -132,8 +154,35 @@ class PriorityQueue<T> implements PQ<T> {
   clear() {
     this.items = []
   }
+  setPosition(from: N = 0) {
+    let index = 0
+    let size = this.size()
+    while (index < size) {
+      if (index >= from) {
+        this.items[index].position = index
+      }
+      index++
+    }
+  }
+  isValidRange(p: N) {
+    return 0 <= p && p < this.items.length
+  }
+  updatePriorityAt(p: N, priority: N, positionFlag: B = false) {
+    let res = false
+    if (this.isValidRange(p)) {
+      let [node] = this.items.splice(p, 1)
+      this.enqueue(node.value, node.priority + priority, positionFlag, false)
+      this.setPosition()
+      res = true
+    }
+    return res
+  }
+  updateDimension(v: N) {
+    this.items.forEach(item => {
+      item.priority += v
+    })
+  }
   // 优先队列不能反转
-  // reverse() {}
 }
 // 不写循环队列。它应该写在循环链表。
 
