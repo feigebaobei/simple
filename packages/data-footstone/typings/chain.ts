@@ -43,6 +43,9 @@ interface DoublyChainElement<T> {
 }
 // 双向链表
 interface DoublyChain<T> {
+  head: DoublyChainElement<T> | null
+  tail: DoublyChainElement<T> | null
+  length: N
   createNode: (v: T, p: N) => DoublyChainElement<T>
   append: (p: T) => void
   insert: (v: T, p: N) => B

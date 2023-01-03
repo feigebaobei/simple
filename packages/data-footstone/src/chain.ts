@@ -13,6 +13,9 @@ import {
   B,
 } from '../typings'
 
+// 考虑添加exchange功能
+// 可以使用removeAt() + insert()实现
+
 class BaseChain<T> implements BC<T> {
   head: BCE<T>
   length: N

@@ -28,7 +28,7 @@ class BaseQueue implements BQ {
     return this.size() === 0
   }
   clear() {
-    // return 
+    // return
     this.items = []
   }
 }
@@ -95,14 +95,19 @@ class PriorityQueue<T> extends BaseQueue implements PQ<T> {
   // 优先级高在前面
   // positionFlag 是否放在同优先级的后面
   // 考虑把参数处理为options
-  enqueue(element: T, priority: N = this.defaultPriority, positionFlag: B = true, needSetPosition: B = true) {
+  enqueue(
+    element: T,
+    priority: N = this.defaultPriority,
+    positionFlag: B = true,
+    needSetPosition: B = true
+  ) {
     let len = this.size()
     let node = this.createNode(element, priority)
     if (!len) {
       this.items.push(node)
       needSetPosition && this.setPosition()
     } else {
-      let positionPriority = positionFlag ? node.priority : (node.priority + 1)
+      let positionPriority = positionFlag ? node.priority : node.priority + 1
       if (this._getHead().priority < positionPriority) {
         this.items.unshift(node)
         needSetPosition && this.setPosition()
@@ -178,7 +183,7 @@ class PriorityQueue<T> extends BaseQueue implements PQ<T> {
     return res
   }
   updateDimension(v: N) {
-    this.items.forEach(item => {
+    this.items.forEach((item) => {
       item.priority += v
     })
   }
