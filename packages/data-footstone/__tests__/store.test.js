@@ -55,3 +55,61 @@ describe('Lru', () => {
     expect(l.chain.toArray().map((e) => e.value)).toEqual([2, 5, 3])
   })
 })
+describe('Lfu', () => {
+  it.only('Lfu', () => {
+    let l = new Lfu(4)
+    l.put('a', 1)
+    l.put('b', 2)
+    l.put('c', 3)
+    l.put('d', 4)
+    l.put('e', 5)
+    l.put('f', 6)
+    // console.log(l.chain.toArray())
+    expect(l.size()).toBe(4)
+    expect(l.keys()).toEqual(['a', 'b', 'c', 'f'])
+    expect(l.values()).toEqual([1, 2, 3, 6])
+    expect(l.get('c')).toBe(3)
+    expect(l.chain.toArray()).toEqual([
+      { key: 'c', value: 3, count: 2 },
+      { key: 'a', value: 1, count: 1 },
+      { key: 'b', value: 2, count: 1 },
+      { key: 'f', value: 6, count: 1 },
+    ])
+    expect(l.get('b')).toBe(2)
+    expect(l.chain.toArray()).toEqual([
+      { key: 'b', value: 2, count: 2 },
+      { key: 'c', value: 3, count: 2 },
+      { key: 'a', value: 1, count: 1 },
+      { key: 'f', value: 6, count: 1 },
+    ])
+    expect(l.get('a')).toBe(1)
+    expect(l.chain.toArray()).toEqual([
+      { key: 'a', value: 1, count: 2 },
+      { key: 'b', value: 2, count: 2 },
+      { key: 'c', value: 3, count: 2 },
+      { key: 'f', value: 6, count: 1 },
+    ])
+    expect(l.get('a')).toBe(1)
+    expect(l.chain.toArray()).toEqual([
+      { key: 'a', value: 1, count: 3 },
+      { key: 'b', value: 2, count: 2 },
+      { key: 'c', value: 3, count: 2 },
+      { key: 'f', value: 6, count: 1 },
+    ])
+    expect(l.get('a')).toBe(1)
+    expect(l.get('a')).toBe(1)
+    expect(l.chain.toArray()).toEqual([
+      { key: 'a', value: 1, count: 5 },
+      { key: 'b', value: 2, count: 2 },
+      { key: 'c', value: 3, count: 2 },
+      { key: 'f', value: 6, count: 1 },
+    ])
+    expect(l.get('b')).toBe(2)
+    expect(l.chain.toArray()).toEqual([
+      { key: 'a', value: 1, count: 5 },
+      { key: 'b', value: 2, count: 3 },
+      { key: 'c', value: 3, count: 2 },
+      { key: 'f', value: 6, count: 1 },
+    ])
+  })
+})

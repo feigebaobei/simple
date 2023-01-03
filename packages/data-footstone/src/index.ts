@@ -11,7 +11,7 @@ import { PMap } from './pMap'
 import { HashMap, djb2HashFn, loseloseHashFn } from './hashMap'
 import { BaseTree, BinarySearchTree, AVLTree, RedBackTree } from './tree'
 import * as order from './order'
-import { Lru, Fifo } from './store'
+import { Lru, Fifo, Lfu } from './store'
 
 export {
   Stack,
@@ -33,4 +33,5 @@ export {
   order,
   Lru,
   Fifo,
+  Lfu,
 }

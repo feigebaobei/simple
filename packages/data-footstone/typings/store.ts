@@ -1,5 +1,5 @@
 import { S, N, B, A, F } from './baseType'
-import { SingleChain } from './chain'
+import { SingleChain, DoublyChain } from './chain'
 
 interface CacheNode<K, V> {
   flushTime: N
@@ -38,4 +38,21 @@ interface Fifo<K, V> {
   values: () => V[]
 }
 
-export { Cache, CacheOption, CacheNode, FifoNode, Fifo }
+// 还需要添加Lru
+// type LfuNode<K, V> = FifoNode<K, V>
+interface LfuNode<K, V> {
+  key: K
+  value: V
+  count: N
+}
+interface Lfu<K, V> {
+  capacity: N
+  chain: DoublyChain<LfuNode<K, V>>
+  _createNode: (k: K, v: V, c: N) => LfuNode<K, V>
+  get: (k: K) => V | undefined
+  put: (k: K, v: V) => N
+  size: () => N
+  keys: () => K[]
+  values: () => V[]
+}
+export { Cache, CacheOption, CacheNode, FifoNode, Fifo, LfuNode, Lfu }

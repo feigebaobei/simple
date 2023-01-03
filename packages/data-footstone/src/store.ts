@@ -9,8 +9,10 @@ import {
   FifoNode as FFN,
   Fifo as FF,
   SingleChain as SC,
+  DoublyChain as DC,
+  LfuNode as LN,
+  Lfu as L,
 } from '../typings'
-// import { Queue } from './queue'
 
 // 未测试完
 class Cache<K, V> implements C<K, V> {
@@ -174,14 +176,115 @@ class Lru<K, V> {
     }
   }
 }
-// 待测试
+// 最近多频使用
 // 如果数据过去被访问多次，那么将来被访问的频率也更高
-class Lfu {
-  constructor() {}
+class Lfu<K, V> implements L<K, V> {
+  capacity: N
+  chain: DC<LN<K, V>>
+  constructor(capacity: N) {
+    this.capacity = capacity
+    this.chain = new DoublyChain<LN<K, V>>()
+  }
+  _createNode(k: K, v: V, count: N = 0) {
+    return {
+      key: k,
+      value: v,
+      count,
+    }
+  }
+  _get(k: K) {
+    let res = undefined
+    let cur = this.chain.head
+    if (cur) {
+      while (cur) {
+        if (cur.value.key === k) {
+          break
+        }
+        cur = cur.next
+      }
+      res = cur
+    }
+    return res
+  }
+  get(k: K) {
+    let node = this._get(k)
+    let res = undefined
+    if (node) {
+      res = node.value.value
+      // 整理结构
+      this.chain.removeAt(node.position)
+      let newCount = node.value.count + 1
+      let newNode = this._createNode(node.value.key, node.value.value, newCount)
+      if (this.chain.length) {
+        if (this.chain.tail.value.count > newCount) {
+          this.chain.append(newCount)
+        } else {
+          let cur = this.chain.head
+          while (cur) {
+            if (cur.value.count <= newCount) {
+              break
+            }
+            cur = cur.next
+          }
+          this.chain.insert(newNode, cur.position)
+        }
+      } else {
+        this.chain.append(newNode)
+      }
+    }
+    return res
+  }
+  put(k: K, v: V) {
+    let node = this._get(k)
+    if (node) {
+      // 有
+      this.chain.removeAt(node.position)
+      node.value.count++
+      node.value.value = v
+      let cur = this.chain.head
+      while (cur) {
+        if (cur.value.count <= node.value.count) {
+          break
+        }
+        cur = cur.next
+      }
+      this.chain.insert(node, cur.position)
+    } else {
+      // 没有
+      while (this.chain.length >= this.capacity) {
+        this.chain.removeAt(this.chain.length - 1)
+      }
+      let newNode = this._createNode(k, v, 1)
+      this.chain.append(newNode)
+    }
+    return this.size()
+  }
+  size() {
+    return this.chain.length
+  }
+  keys() {
+    let cur = this.chain.head
+    let res = []
+    while (cur) {
+      res.push(cur.value.key)
+      cur = cur.next
+    }
+    return res
+  }
+  values() {
+    let cur = this.chain.head
+    let res = []
+    while (cur) {
+      res.push(cur.value.value)
+      cur = cur.next
+    }
+    return res
+  }
+
 }
 export {
   // Cache,
   Fifo,
   Lru,
-  //  Lfu
+  Lfu,
 }

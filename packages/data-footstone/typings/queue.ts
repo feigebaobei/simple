@@ -44,7 +44,12 @@ interface PriorityQueue<T> {
   items: PriorityQueueNode<T>[]
   defaultPriority: N
   // protected createNode: (v: T, priority?: N, position?: N) => PriorityQueueNode<T>
-  enqueue: (element: T, priority?: N, positionFlag?: B, needSetPosition?: B) => N
+  enqueue: (
+    element: T,
+    priority?: N,
+    positionFlag?: B,
+    needSetPosition?: B
+  ) => N
   dequeue: () => T
   highestPriority: () => N | undefined
   toArray: () => T[]
