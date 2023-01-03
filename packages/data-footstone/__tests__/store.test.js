@@ -1,6 +1,9 @@
-import { 
+import {
   // Cache,
-   Fifo, Lru, Lfu } from '../src/store'
+  Fifo,
+  Lru,
+  Lfu,
+} from '../src/store'
 
 // describe('Cache', () => {
 //   it('Cache', () => {
@@ -69,7 +72,7 @@ describe('Lfu', () => {
     l.put('f', 7)
     expect(l.size()).toBe(4)
     expect(l.keys()).toEqual(['f', 'e', 'd', 'c'])
-    expect(l.values()).toEqual([7,5,4,3])
+    expect(l.values()).toEqual([7, 5, 4, 3])
     expect(l.get('c')).toBe(3)
     expect(l.chain.toArray()).toEqual([
       { key: 'c', value: 3, count: 2 },

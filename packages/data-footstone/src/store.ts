@@ -193,7 +193,7 @@ class Lfu<K, V> implements L<K, V> {
       count,
     }
   }
-  _get(k: K): DCE<LN<K,V>> {
+  _get(k: K): DCE<LN<K, V>> {
     let res = undefined
     let cur = this.chain.head
     if (cur) {
