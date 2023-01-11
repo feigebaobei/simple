@@ -18,7 +18,7 @@ class PMap<T, G> implements FM<T, G> {
     return this.box.get(k)
   }
   clear() {
-    return (this.box = new Map())
+    return this.box.clear()
   }
   size() {
     return this.box.size
@@ -29,6 +29,7 @@ class PMap<T, G> implements FM<T, G> {
   values() {
     return Array.from(this.box.values())
   }
+  // 考虑删除此api
   getMap() {
     return this.box
   }

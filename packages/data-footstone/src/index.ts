@@ -6,8 +6,10 @@ import {
   SingleCircleChain,
   DoublyCircleChain,
 } from './chain'
-import { PSet } from './pSet'
-import { PMap } from './pMap'
+// 它太简单，考虑不暴露它。
+// import { PSet } from './pSet'
+// 它太简单，考虑不暴露它。
+// import { PMap } from './pMap'
 import { HashMap, djb2HashFn, loseloseHashFn } from './hashMap'
 import { BaseTree, BinarySearchTree, AVLTree, RedBackTree } from './tree'
 import * as order from './order'
@@ -21,8 +23,8 @@ export {
   DoublyChain,
   SingleCircleChain,
   DoublyCircleChain,
-  PSet,
-  PMap,
+  // PSet,
+  // PMap,
   HashMap,
   djb2HashFn,
   loseloseHashFn,

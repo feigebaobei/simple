@@ -17,7 +17,7 @@ class PSet<T> implements PS<T> {
     return this.box.has(v)
   }
   clear() {
-    return (this.box = new Set())
+    return this.box.clear()
   }
   size() {
     return this.box.size
@@ -25,6 +25,7 @@ class PSet<T> implements PS<T> {
   values() {
     return Array.from(this.box.values())
   }
+  // 考虑删除此api
   getSet() {
     return this.box
   }
