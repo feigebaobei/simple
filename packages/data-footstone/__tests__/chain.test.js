@@ -23,6 +23,20 @@ describe('SingleChain', () => {
     chain.clear()
     expect(chain.toArray()).toEqual([])
   })
+  test('SingleChain slice', () => {
+    let originChain = new SingleChain(1, 2, 3, 4)
+    let newChain = originChain.slice(1,3)
+    expect(newChain.length).toEqual(2)
+    newChain = originChain.slice(1,2)
+    expect(newChain.toArray()).toEqual([2])
+    newChain = originChain.slice(1, 1)
+    expect(newChain.length).toEqual(0)
+    expect(newChain.toArray()).toEqual([])
+    newChain = originChain.slice(1)
+    expect(newChain.toArray()).toEqual([2,3,4])
+    newChain = originChain.slice(1, 9) // 因to越界了，所以返回空链表
+    expect(newChain.toArray()).toEqual([])
+  })
 })
 
 describe('DoublyChain', () => {
@@ -64,6 +78,21 @@ describe('SingleCircleChain', () => {
     expect(chain.toArray()).toEqual([1, 6, 5, 3, 4])
     expect(chain.head.next.next.next.value).toBe(3)
     expect(chain.head.next.next.next.position).toBe(3)
+  })
+
+  test('SingleCircleChain slice', () => {
+    let originChain = new SingleCircleChain(1, 2, 3, 4)
+    let newChain = originChain.slice(1,3)
+    expect(newChain.length).toEqual(2)
+    newChain = originChain.slice(1,2)
+    expect(newChain.toArray()).toEqual([2])
+    newChain = originChain.slice(1, 1)
+    expect(newChain.length).toEqual(0)
+    expect(newChain.toArray()).toEqual([])
+    newChain = originChain.slice(1)
+    expect(newChain.toArray()).toEqual([2,3,4])
+    newChain = originChain.slice(1, 9)
+    expect(newChain.toArray()).toEqual([])
   })
 })
 

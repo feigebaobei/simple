@@ -67,7 +67,7 @@ let merge = (leftArr: A[], rightArr: A[], order: OrderType = 'asc') => {
         break
     }
   }
-  res = [ ...res, ...leftArr, ...rightArr]
+  res = [...res, ...leftArr, ...rightArr]
   return res
 }
 // nlogn
@@ -186,7 +186,6 @@ let versionOrder = (arr: S[]) => {
     return 0
   })
 }
-
 
 export {
   bubbleSort,

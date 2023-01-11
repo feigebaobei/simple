@@ -10,8 +10,9 @@ interface BaseChain<T> {
   head: BaseChainElement<T> | null
   toArray: () => T[]
   isValidRange: (p: N) => B
-  indexOf: (v: T, all: B) => N[] | N
-  getEleByIndex: (i: N) => T | undefined
+  // for delelte after 2023/02/11
+  // indexOf: (v: T, all: B) => N[] | N
+  // getEleByIndex: (i: N) => T | undefined
 }
 interface SingleChainElement<T> {
   value: T
@@ -28,11 +29,12 @@ interface SingleChain<T> extends BaseChain<T> {
   insert: (p: T, position: N) => B
   removeAt: (position: N) => T | undefined
   // removeElement: (element: T, all: B) => B
-  getEleByIndex: (index: N) => T | undefined
+  // getEleByIndex: (index: N) => T | undefined
   reverseSelf: () => void
   reverse: () => SingleChain<T>
   clear: () => void
   setPosition: (from: N) => void
+  slice: (from: N, to: N) => void
 }
 
 interface DoublyChainElement<T> {
@@ -58,9 +60,8 @@ interface DoublyChain<T> {
 
 interface SingleCircleChainElement<T> {
   value: T
-  position: N // 标记出位置会方便一些
+  position: N
   next: SingleCircleChainElement<T> | null
-  // prev: SingleCircleChainElement<T> | null
 }
 
 // interface SingleCircleChain<T> extends SingleChain<T> {
@@ -80,14 +81,7 @@ interface SingleCircleChainElement<T> {
 interface SingleCircleChain<T>
   extends Pick<
     SingleChain<T>,
-    // 'head' // |
-    'length' | 'createNode' | 'append' | 'insert' | 'removeAt'
-    // | 'removeElement'
-    // | 'indexOf'
-    // | 'getEleByIndex'
-    // | 'toArray'
-    // | 'reverseSelf'
-    // | 'reverse'
+    'length' | 'createNode' | 'append' | 'insert' | 'removeAt' | 'slice'
   > {
   head: SingleCircleChainElement<T> | null
   tail: SingleCircleChainElement<T> | null

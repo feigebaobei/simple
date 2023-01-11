@@ -36,54 +36,56 @@ class BaseChain<T> implements BC<T> {
   isValidRange(p: N) {
     return 0 <= p && p < this.length
   }
+  // for delelte after 2023/02/11
   // 返回匹配元素的下标
-  indexOf(v: T, all = false) {
-    if (this.length) {
-      let index = 0
-      let cur = this.head
-      let res: N[] | N // = []
-      if (all) {
-        res = []
-        while (cur) {
-          if (cur.value === v) {
-            res.push(index)
-          }
-          cur = cur.next
-          index++
-        }
-      } else {
-        res = -1
-        while (cur) {
-          if (cur.value === v) {
-            res = index
-            break
-          }
-          cur = cur.next
-          index++
-        }
-      }
-      return res
-    } else {
-      return -1
-    }
-  }
-  getEleByIndex(i: N) {
-    if (this.isValidRange(i)) {
-      let index = 0
-      let cur = this.head
-      let res: T | undefined
-      while (cur) {
-        if (index === i) {
-          res = cur.value
-        }
-        cur = cur.next
-        index++
-      }
-      return res
-    } else {
-      return undefined
-    }
-  }
+  // indexOf(v: T, all = false) {
+  //   if (this.length) {
+  //     let index = 0
+  //     let cur = this.head
+  //     let res: N[] | N // = []
+  //     if (all) {
+  //       res = []
+  //       while (cur) {
+  //         if (cur.value === v) {
+  //           res.push(index)
+  //         }
+  //         cur = cur.next
+  //         index++
+  //       }
+  //     } else {
+  //       res = -1
+  //       while (cur) {
+  //         if (cur.value === v) {
+  //           res = index
+  //           break
+  //         }
+  //         cur = cur.next
+  //         index++
+  //       }
+  //     }
+  //     return res
+  //   } else {
+  //     return -1
+  //   }
+  // }
+  // 是否要暴露此api
+  // getEleByIndex(i: N) {
+  //   if (this.isValidRange(i)) {
+  //     let index = 0
+  //     let cur = this.head
+  //     let res: T | undefined
+  //     while (cur) {
+  //       if (index === i) {
+  //         res = cur.value
+  //       }
+  //       cur = cur.next
+  //       index++
+  //     }
+  //     return res
+  //   } else {
+  //     return undefined
+  //   }
+  // }
 }
 
 class SingleChain<T> extends BaseChain<T> implements SC<T> {
@@ -115,6 +117,7 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
     if (!this.head) {
       this.head = node
     } else {
+      // todo 可以为单向链表添加tail属性。方便添加元素。
       let cur = this.head
       while (cur.next) {
         cur = cur.next
@@ -245,6 +248,29 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
       }
       index++
       cur = cur.next
+    }
+  }
+  // 这里不能使用浅复制，必须使用深复制。
+  slice(from: N = 0, to: N = this.length) {
+    if (from >= 0 && to <= this.length && from < to) {
+      let sc = new SingleChain()
+      let cur = this.head
+      let index = 0
+      while (cur) {
+        if (index === from) {
+          break
+        }
+        index++
+        cur = cur.next
+      }
+      while (cur && index < to) {
+        sc.append(cur.value)
+        index++
+        cur = cur.next
+      }
+      return sc
+    } else {
+      return new SingleChain()
     }
   }
 }
