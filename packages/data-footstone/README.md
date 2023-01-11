@@ -2,7 +2,8 @@
 
 ## overview
 
-> 使用 ts 编写基本的数据结构。
+> 使用 ts 编写基本的数据结构。  
+> 0.1.x-版本中api变动较大，使用时请锁定版本号。  
 
 ### feature
 
@@ -10,6 +11,7 @@
 - queue
 - hashMap
 - tree
+- ……  
 - graph 简单
 
 ## install
@@ -33,17 +35,3 @@ s.clear() // 清空栈
 ## api
 
 详见[官网](https://lixiaodan.netlify.app/jspackages/data-footstone)
-
-<!-- prettier-ignore-start -->
-|key|description|type|default|enum|demo|||
-|-|-|-|-|-|-|-|-|
-|||||||||
-|||||||||
-|||||||||
-<!-- prettier-ignore-end -->
-
-## todo
-
-> 未来迭代计划。
-> 未来迭代计划。
-> 未来迭代计划。

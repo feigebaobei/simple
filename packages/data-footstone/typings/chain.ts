@@ -51,11 +51,6 @@ interface DoublyChain<T> {
   insert: (v: T, p: N) => B
   removeAt: (p: N) => T | undefined
   toArray: () => T[]
-  // getHead: () => {}
-  // getTail: () => {}
-  // moveToHeadByElement: () => {}
-  // moveToHeadByPosition: () => {}
-  // isEmpty: () => {}
   clear: () => void
   setPosition: (from: N) => void
 }

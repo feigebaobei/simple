@@ -168,13 +168,20 @@ class Lru<K, V> {
         this.chain.removeAt(0)
       }
     }
+    return this.size()
   }
   remove(k: K) {
     let node = this.map.get(k)
+    let res = undefined
     if (node) {
       this.chain.removeAt(node.position)
       this.map.delete(node.value.key)
+      res = node.value.value
     }
+    return res
+  }
+  size() {
+    return this.chain.length
   }
 }
 // 最近多频使用

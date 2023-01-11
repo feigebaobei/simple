@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Order Order 1`] = `
+[
+  1,
+  1,
+  2,
+  3,
+  3,
+  5,
+  6,
+  6,
+  6,
+  6,
+  9,
+  90,
+]
+`;
+
+exports[`Order selectSort 1`] = `undefined`;

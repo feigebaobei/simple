@@ -33,6 +33,7 @@ import {
   LfuNode,
   Lfu,
 } from './store'
+import {OrderType} from './order'
 
 export {
   S,
@@ -74,4 +75,5 @@ export {
   Fifo,
   LfuNode,
   Lfu,
+  OrderType,
 }
