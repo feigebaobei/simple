@@ -140,7 +140,9 @@ class BinarySearchTree<T> implements BST<T> {
       // }
       node.left ? this._insertNode(node.left, newNode) : (node.left = newNode)
     } else {
-      node.right ? this._insertNode(node.right, newNode) : (node.right = newNode)
+      node.right
+        ? this._insertNode(node.right, newNode)
+        : (node.right = newNode)
       // if (!node.right) {
       //   node.right = newNode
       // } else {
@@ -185,13 +187,15 @@ class BinarySearchTree<T> implements BST<T> {
       this._inOrderTraverse(cb, node.left)
       cb(node.value)
       this._inOrderTraverse(cb, node.right)
-    }}
+    }
+  }
   _postOrderTraverse(cb: F, node: BinarySearchTreeNodeOrNull<T>) {
     if (node) {
       this._postOrderTraverse(cb, node.left)
       this._postOrderTraverse(cb, node.right)
       cb(node.value)
-    }}
+    }
+  }
   traverse(cb: F, order = 'inOrder') {
     switch (order) {
       case 'preOrder':
@@ -349,6 +353,9 @@ class RedBackTree<T> extends BinarySearchTree<T> implements RBT<T> {
   }
 }
 
-export { 
-  // BaseTree, 
-  BinarySearchTree, AVLTree, RedBackTree }
+export {
+  // BaseTree,
+  BinarySearchTree,
+  AVLTree,
+  RedBackTree,
+}

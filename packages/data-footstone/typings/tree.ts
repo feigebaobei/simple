@@ -25,16 +25,19 @@ import {
 
 type BinarySearchTreeOrder = 'preOrder' | 'inOrder' | 'postOrder'
 type BinarySearchTreeNode<T> = {
-    value: T
-    left: BinarySearchTreeNodeOrNull<T>
-    right: BinarySearchTreeNodeOrNull<T>
-  }
+  value: T
+  left: BinarySearchTreeNodeOrNull<T>
+  right: BinarySearchTreeNodeOrNull<T>
+}
 type BinarySearchTreeNodeOrNull<T> = BinarySearchTreeNode<T> | null
 interface BinarySearchTree<T> {
   root: BinarySearchTreeNodeOrNull<T>
   createNode: (v: T) => BinarySearchTreeNode<T>
   insert: (v: T) => void
-  _insertNode: (n0: BinarySearchTreeNode<T>, n1: BinarySearchTreeNode<T>) => void
+  _insertNode: (
+    n0: BinarySearchTreeNode<T>,
+    n1: BinarySearchTreeNode<T>
+  ) => void
   search: (v: T) => B
   _preOrderTraverse: (cb: F, node: BinarySearchTreeNodeOrNull<T>) => void
   _inOrderTraverse: (cb: F, node: BinarySearchTreeNodeOrNull<T>) => void
@@ -42,7 +45,10 @@ interface BinarySearchTree<T> {
   traverse: (fn: F, order: BinarySearchTreeOrder) => void
   min: () => T | undefined
   max: () => T | undefined
-  _remove: (node: BinarySearchTreeNodeOrNull<T>, v: T) => BinarySearchTreeNodeOrNull<T>
+  _remove: (
+    node: BinarySearchTreeNodeOrNull<T>,
+    v: T
+  ) => BinarySearchTreeNodeOrNull<T>
   remove: (v: T) => void
 }
 // Adelson-Velskii-Landi tree
@@ -77,4 +83,7 @@ export {
   // BaseTreeNode, BaseTree,
   BinarySearchTreeNode,
   BinarySearchTreeNodeOrNull,
-  BinarySearchTree, AVLTree, RedBackTree }
+  BinarySearchTree,
+  AVLTree,
+  RedBackTree,
+}

@@ -11,9 +11,12 @@ import {
 // 它太简单，考虑不暴露它。
 // import { PMap } from './pMap'
 import { HashMap, djb2HashFn, loseloseHashFn } from './hashMap'
-import { 
-  // BaseTree, 
-  BinarySearchTree, AVLTree, RedBackTree } from './tree'
+import {
+  // BaseTree,
+  BinarySearchTree,
+  AVLTree,
+  RedBackTree,
+} from './tree'
 import * as order from './order'
 import { Lru, Fifo, Lfu } from './store'
 
