@@ -16,8 +16,11 @@ import {
 } from './chain'
 import { HashMap, HashMapKind, HashMapHash } from './hashMap'
 import {
-  BaseTreeNode,
-  BaseTree,
+  // BaseTreeNode,
+  // BaseTree,
+  // BinarySearchTreeNode,
+  BinarySearchTreeNode,
+  BinarySearchTreeNodeOrNull,
   BinarySearchTree,
   AVLTree,
   RedBackTree,
@@ -61,8 +64,10 @@ export {
   HashMap,
   HashMapKind,
   HashMapHash,
-  BaseTreeNode,
-  BaseTree,
+  // BaseTreeNode,
+  // BaseTree,
+  BinarySearchTreeNode,
+  BinarySearchTreeNodeOrNull,
   BinarySearchTree,
   AVLTree,
   RedBackTree,
