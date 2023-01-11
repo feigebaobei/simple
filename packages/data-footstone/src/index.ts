@@ -14,8 +14,8 @@ import { HashMap, djb2HashFn, loseloseHashFn } from './hashMap'
 import {
   // BaseTree,
   BinarySearchTree,
-  AVLTree,
-  RedBackTree,
+  // AVLTree,
+  // RedBackTree,
 } from './tree'
 import * as order from './order'
 import { Lru, Fifo, Lfu } from './store'
@@ -35,8 +35,8 @@ export {
   loseloseHashFn,
   // BaseTree,
   BinarySearchTree,
-  AVLTree,
-  RedBackTree,
+  // AVLTree,
+  // RedBackTree,
   order,
   Lru,
   Fifo,
