@@ -284,78 +284,78 @@ class BinarySearchTree<T> implements BST<T> {
     this.root = this._remove(this.root, v)
   }
 }
-class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
-  constructor() {
-    super()
-  }
-  insert(v: T): void {
-    this._insertNode(this.root, this.createNode(v))
-  }
-  _insertNode(node: BTN<T>, newNode: BTN<T>): BTN<T> {
-    if (!node) {
-      node = newNode
-    } else if (newNode.value < node.value) {
-      node.left = this._insertNode(node.left, newNode)
-      if (node.left) {
-        // 是否需要平衡
-        if (this.heightNode(node.left) - this.heightNode(node.right) > 1) {
-          if (newNode.value < node.left.value) {
-            node = this._rotationLL(node)
-          } else {
-            node = this._rotationLR(node)
-          }
-        }
-      }
-    } else if (newNode.value > node.value) {
-      node.right = this._insertNode(node.right, newNode)
-      if (node.right) {
-        // 是否需要平衡
-        if (this.heightNode(node.right) - this.heightNode(node.left) > 1) {
-          if (newNode.value > node.right.value) {
-            node = this._rotationRR(node)
-          } else {
-            node = this._rotationRL(node)
-          }
-        }
-      }
-    }
-    return node
-  }
-  // 向左的单旋转
-  _rotationRR(node: BTN<T>) {
-    let t = node.right
-    node.right = t.left
-    t.left = node
-    return t
-  }
-  // 向右的单旋转
-  _rotationLL(node: BTN<T>) {
-    let t = node.left
-    node.left = t.right
-    t.right = node
-    return t
-  }
-  // 向右的双旋转
-  _rotationLR(node: BTN<T>) {
-    node.left = this._rotationRR(node.left)
-    return this._rotationLL(node)
-  }
-  // 向左的双旋转
-  _rotationRL(node: BTN<T>) {
-    node.right = this._rotationLL(node.right)
-    return this._rotationRR(node)
-  }
-}
+// class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
+//   constructor() {
+//     super()
+//   }
+//   insert(v: T): void {
+//     this._insertNode(this.root, this.createNode(v))
+//   }
+//   _insertNode(node: BTN<T>, newNode: BTN<T>): BTN<T> {
+//     if (!node) {
+//       node = newNode
+//     } else if (newNode.value < node.value) {
+//       node.left = this._insertNode(node.left, newNode)
+//       if (node.left) {
+//         // 是否需要平衡
+//         if (this.heightNode(node.left) - this.heightNode(node.right) > 1) {
+//           if (newNode.value < node.left.value) {
+//             node = this._rotationLL(node)
+//           } else {
+//             node = this._rotationLR(node)
+//           }
+//         }
+//       }
+//     } else if (newNode.value > node.value) {
+//       node.right = this._insertNode(node.right, newNode)
+//       if (node.right) {
+//         // 是否需要平衡
+//         if (this.heightNode(node.right) - this.heightNode(node.left) > 1) {
+//           if (newNode.value > node.right.value) {
+//             node = this._rotationRR(node)
+//           } else {
+//             node = this._rotationRL(node)
+//           }
+//         }
+//       }
+//     }
+//     return node
+//   }
+//   // 向左的单旋转
+//   _rotationRR(node: BTN<T>) {
+//     let t = node.right
+//     node.right = t.left
+//     t.left = node
+//     return t
+//   }
+//   // 向右的单旋转
+//   _rotationLL(node: BTN<T>) {
+//     let t = node.left
+//     node.left = t.right
+//     t.right = node
+//     return t
+//   }
+//   // 向右的双旋转
+//   _rotationLR(node: BTN<T>) {
+//     node.left = this._rotationRR(node.left)
+//     return this._rotationLL(node)
+//   }
+//   // 向左的双旋转
+//   _rotationRL(node: BTN<T>) {
+//     node.right = this._rotationLL(node.right)
+//     return this._rotationRR(node)
+//   }
+// }
 
-class RedBackTree<T> extends BinarySearchTree<T> implements RBT<T> {
-  constructor() {
-    super()
-  }
-}
+// class RedBackTree<T> extends BinarySearchTree<T> implements RBT<T> {
+//   constructor() {
+//     super()
+//   }
+// }
 
 export {
   // BaseTree,
   BinarySearchTree,
-  AVLTree,
-  RedBackTree,
+  // AVLTree,
+  // RedBackTree,
 }
