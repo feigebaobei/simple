@@ -19,6 +19,7 @@
     "publish:beta": "lerna publish --dist-tag beta --preid beta",
     "prepare": "husky install",
     "p": "prettier --write .",
-    "pc": "prettier --check ."
+    "pc": "prettier --check .",
+    "l": "npx lint-staged"
   }
 }
