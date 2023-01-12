@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`djb2HashFn djb2HashFn 1`] = `395`;
+
+exports[`djb2HashFn djb2HashFn 2`] = `396`;
+
+exports[`djb2HashFn djb2HashFn 3`] = `278`;
+
+exports[`djb2HashFn djb2HashFn 4`] = `925`;
+
+exports[`djb2HashFn djb2HashFn 5`] = `624`;
+
+exports[`djb2HashFn djb2HashFn 6`] = `215`;
+
+exports[`djb2HashFn djb2HashFn conflict 1`] = `278`;
+
+exports[`djb2HashFn djb2HashFn conflict 2`] = `925`;
+
+exports[`djb2HashFn djb2HashFn conflict 3`] = `624`;
+
+exports[`djb2HashFn djb2HashFn conflict 4`] = `215`;
+
+exports[`loseloseHashFn loseloseHashFn 1`] = `23`;
+
+exports[`loseloseHashFn loseloseHashFn 2`] = `24`;
+
+exports[`loseloseHashFn loseloseHashFn conflict 1`] = `13`;
+
+exports[`loseloseHashFn loseloseHashFn conflict 2`] = `13`;
+
+exports[`loseloseHashFn loseloseHashFn conflict 3`] = `16`;
+
+exports[`loseloseHashFn loseloseHashFn conflict 4`] = `16`;

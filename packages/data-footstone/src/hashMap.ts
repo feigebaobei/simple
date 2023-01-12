@@ -3,12 +3,13 @@ import {
   HashMap as HM,
   HashMapKind as HMK,
   HashMapHash as HMH,
+  HashFn,
   N,
   S,
   A,
 } from '../typings'
 
-let djb2HashFn = (k: A) => {
+let djb2HashFn: HashFn = (k: A) => {
   let h = 5381
   let t = String(k)
   for (let i = 0; i < t.length; i++) {
@@ -16,7 +17,7 @@ let djb2HashFn = (k: A) => {
   }
   return h % 1013
 }
-let loseloseHashFn = (k: A) => {
+let loseloseHashFn: HashFn = (k: A) => {
   let h = 0
   let t = String(k)
   for (let i = 0; i < t.length; i++) {
@@ -30,29 +31,32 @@ class HashMap<G> implements HM<G> {
   _size: N
   kind: HMK
   hash: HMH
-  _put: (k: A, v: G) => void
+  _put: HM<G>['_put']
   _hashFn: (k: A) => N
-  _get: (k: A) => G
+  // _get: (k: A) => N
+  _get: HM<G>['_get']
   _remove: (k: A) => G
   constructor(kind: HMK = 'separate', hash: HMH = 'djb2') {
     this.box = []
     this._size = 0
     this.kind = kind
     this.hash = hash
-    // this._put = () => {}
-    // this._hashFn = () => ''
-    // this._get = () => {}
-    // this._remove = () => {}
     switch (kind) {
       case 'separate':
       default:
         this._put = (k: A, v: G) => {
-          let p = this.hashFn(k)
-          if (this.box[p] === undefined) {
-            this.box[p] = new SingleChain()
+          let node = this._get(k)
+          if (node) {
+            node.value = v
+          } else {
+            let p = this.hashFn(k)
+            if (this.box[p] === undefined) {
+              this.box[p] = new SingleChain()
+            }
+            this.box[p].append(this.createNode(k, v))
+            this._size++
           }
-          this._size++
-          return this.box[p].append(this.createNode(k, v))
+          return this._size
         }
         this._get = (k) => {
           let p = this.hashFn(k)
@@ -63,7 +67,9 @@ class HashMap<G> implements HM<G> {
             let res = undefined
             while (cur) {
               if (cur.value.key === k) {
-                res = cur.value.value
+                // res = cur.value.value
+                // 改为返回节点
+                res = cur.value
                 break
               }
               cur = cur.next
@@ -94,18 +100,27 @@ class HashMap<G> implements HM<G> {
         break
       case 'line':
         this._put = (k: S, v: G) => {
-          let p = this.hashFn(k)
-          while (this.box[p] !== undefined) {
-            p++
+          let node = this._get(k)
+          if (node) {
+            node.value = v
+          } else {
+            let p = this.hashFn(k)
+            while (this.box[p] !== undefined) {
+              p++
+            }
+            this.box[p] = this.createNode(k, v)
+            this._size++
           }
-          this.box[p] = this.createNode(k, v)
+          return this._size
         }
         this._get = (k) => {
           let p = this.hashFn(k)
           let res = undefined
           while (this.box[p] !== undefined) {
             if (this.box[p].key === k) {
-              res = this.box[p].value
+              // res = this.box[p].value
+              // 改为返回节点
+              res = this.box[p]
               break
             }
             p++
@@ -123,6 +138,7 @@ class HashMap<G> implements HM<G> {
             }
             p++
           }
+          this._size--
           return res
         }
         break
@@ -144,10 +160,11 @@ class HashMap<G> implements HM<G> {
     }
   }
   put(k: A, v: G) {
-    this._put(k, v)
+    return this._put(k, v)
   }
   get(k: A) {
-    return this._get(k)
+    let res = this._get(k)
+    return res ? res.value : undefined
   }
   remove(k: A) {
     return this._remove(k)

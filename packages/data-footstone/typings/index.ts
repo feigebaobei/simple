@@ -14,7 +14,7 @@ import {
   DoublyCircleChainElement,
   DoublyCircleChain,
 } from './chain'
-import { HashMap, HashMapKind, HashMapHash } from './hashMap'
+import { HashMap, HashMapKind, HashMapHash, HashFn } from './hashMap'
 import {
   // BaseTreeNode,
   // BaseTree,
@@ -64,6 +64,7 @@ export {
   HashMap,
   HashMapKind,
   HashMapHash,
+  HashFn,
   // BaseTreeNode,
   // BaseTree,
   BinarySearchTreeNode,

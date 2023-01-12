@@ -45,6 +45,12 @@ interface BinarySearchTree<T> {
   traverse: (fn: F, order: BinarySearchTreeOrder) => void
   min: () => T | undefined
   max: () => T | undefined
+  findMinNode: (
+    node: BinarySearchTreeNodeOrNull<T>
+  ) => BinarySearchTreeNodeOrNull<T>
+  findMaxNode: (
+    node: BinarySearchTreeNodeOrNull<T>
+  ) => BinarySearchTreeNodeOrNull<T>
   _remove: (
     node: BinarySearchTreeNodeOrNull<T>,
     v: T
