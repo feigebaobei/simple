@@ -53,6 +53,9 @@ class Queue<T> extends BaseQueue implements Q<T> {
     this.items.reverse()
     return this
   }
+  peek() {
+    return this.items[0]
+  }
 }
 
 // 优先队列
@@ -188,6 +191,10 @@ class PriorityQueue<T> extends BaseQueue implements PQ<T> {
     })
   }
   // 优先队列不能反转
+  peek() {
+    let t = this.items[0]
+    return t ? t.value : undefined
+  }
 }
 // 不写循环队列。它应该写在循环链表。
 

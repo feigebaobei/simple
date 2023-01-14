@@ -29,6 +29,7 @@ interface Queue<T> {
   isEmpty: () => B
   clear: () => void
   reverse: () => void
+  peek: () => T | undefined
 }
 // interface PriorityQueue<T extends {priority: N}> extends BaseQueue<T> {
 //   highestPriority: () => N | undefined
@@ -61,6 +62,7 @@ interface PriorityQueue<T> {
   // jump: (p: N) => T
   updatePriorityAt: (p: N, v: N, positionFlag?: B) => B
   updateDimension: (v: N) => void
+  peek: () => T | undefined
 }
 
 export { BaseQueue, Queue, PriorityQueueNode, PriorityQueue }
