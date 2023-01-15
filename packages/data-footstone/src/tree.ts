@@ -1,7 +1,13 @@
 import { Queue } from './queue'
+import { Stack } from './stack'
 import {
   // BaseTreeNode as BTN,
   // BaseTree as BT,
+
+  BinaryTreeNode,
+  //  as BTN,
+  BinaryTreeNodeOrNull,
+  BinaryTree as BT,
   BinarySearchTreeNode,
   BinarySearchTreeNodeOrNull,
   BinarySearchTree as BST,
@@ -119,6 +125,116 @@ import {
 //     }
 //   }
 // }
+
+// 待测试
+// class BinaryTreeNode<T> implements BTN<T> {
+//   value: T
+//   left: BinaryTreeNodeOrNull<T>
+//   right: BinaryTreeNodeOrNull<T>
+//   parent: BinaryTreeNodeOrNull<T>
+//   constructor(v: T) {
+//     this.value = v
+//     this.left = null
+//     this.right = null
+//     this.parent = null
+//   }
+//   _height(node: BTN<T>, h = 0) {
+//     if (node.left && node.right) {
+//       return Math.max(this._height(node.left, h + 1), this._height(node.right, h + 1)) + 1
+//     } else if (node.left) {
+//       return this._height(node.left, h++)
+//     } else if (node.right) {
+//       return this._height(node.right, h++)
+//     } else {
+//       return h
+//     }
+//   }
+//   height() {
+//     return this._height(this)
+//   }
+//   _size(node: BTN<T>, size = 0) {
+//     if (node.left && node.right) {
+//       return this._size(node.left, size) + this._size(node.right, size) + 1
+//     } else if (node.left) {
+//       return this._size(node.left, size)
+//     } else if (node.right) {
+//       return this._size(node.right, size)
+//     } else {
+//       return size + 1
+//     }
+//   }
+//   size() {
+//     return this._size(this)
+//   }
+// }
+class BinaryTree<T> implements BT<T> {
+  root: BinaryTreeNode<T>
+  // private insertAsLeft: (parent: BinaryTreeNode<T>, current: T) => void
+  constructor() {
+    this.root = null
+  }
+  createNode(v: T) {
+    return {
+      value: v,
+      left: null,
+      right: null,
+      parent: null,
+    }
+  }
+  // 感觉不好用。
+  protected insertAsLeft(parent: BinaryTreeNode<T>, current: T) {
+    let left = this.createNode(current)
+    parent.left = left
+    left.parent = parent
+  }
+  protected insertAsRight(parent: BinaryTreeNode<T>, current: T) {
+    let right = this.createNode(current)
+    parent.right = right
+    right.parent = parent
+  }
+  _preOrderTraverse(cb: F, node: BinaryTreeNodeOrNull<T>) {
+    if (node) {
+      let stack = new Stack<BinaryTreeNode<T>>()
+      stack.push(node)
+      while (stack.size()) {
+        let n = stack.pop()
+        cb(n.value)
+        n.right && stack.push(n.right)
+        n.left && stack.push(n.left)
+      }
+    }
+  }
+  _inOrderTraverse(cb: F, node: BinaryTreeNodeOrNull<T>) {
+    if (node) {
+      this._inOrderTraverse(cb, node.left)
+      cb(node.value)
+      this._inOrderTraverse(cb, node.right)
+    }
+  }
+  _postOrderTraverse(cb: F, node: BinaryTreeNodeOrNull<T>) {
+    if (node) {
+      this._postOrderTraverse(cb, node.left)
+      this._postOrderTraverse(cb, node.right)
+      cb(node.value)
+    }
+  }
+  _size(node: BinaryTreeNodeOrNull<T>, size: N = 0) {
+    if (!node) {
+      return size
+    } else if (node.left && node.right) {
+      return this._size(node.left) + this._size(node.right) + 1
+    } else if (node.left) {
+      return this._size(node.left) + 1
+    } else(node.right)
+    return this._size(node.right) + 1
+  }
+  size() {
+    return this._size(this.root)
+  }
+  isEmpty() {
+    return !this.root
+  }
+}
 class BinarySearchTree<T> implements BST<T> {
   root: BinarySearchTreeNodeOrNull<T>
   constructor() {
@@ -175,11 +291,26 @@ class BinarySearchTree<T> implements BST<T> {
     }
     return res
   }
+  // for del 2023/02/15
+  // T<n> = O(1) +  T(a) + T(n-a-1) = O(n)
+  // _preOrderTraverse(cb: F, node: BinarySearchTreeNodeOrNull<T>) {
+  //   if (node) {
+  //     cb(node.value)
+  //     this._preOrderTraverse(cb, node.left)
+  //     this._preOrderTraverse(cb, node.right)
+  //   }
+  // }
+  // 递归 =》 迭代
   _preOrderTraverse(cb: F, node: BinarySearchTreeNodeOrNull<T>) {
     if (node) {
-      cb(node.value)
-      this._preOrderTraverse(cb, node.left)
-      this._preOrderTraverse(cb, node.right)
+      let stack = new Stack<BinarySearchTreeNode<T>>()
+      stack.push(node)
+      while (!stack.isEmpty()) {
+        let n = stack.pop()
+        cb(n.value)
+        n.right && stack.push(n.right)
+        n.left && stack.push(n.left)
+      }
     }
   }
   _inOrderTraverse(cb: F, node: BinarySearchTreeNodeOrNull<T>) {
@@ -283,6 +414,23 @@ class BinarySearchTree<T> implements BST<T> {
   remove(v: T) {
     this.root = this._remove(this.root, v)
   }
+  // static height(node: )
+  // 待测试
+  _height(node: BinarySearchTreeNodeOrNull<T>, h: N = 0) {
+    if (node.left && node.right) {
+      return Math.max(this._height(node.left, h + 1), this._height(node.right, h + 1))
+    } else if (node.left) {
+      return this._height(node.left, h++)
+    } else if (node.right) {
+      return this._height(node.right, h++)
+    } else {
+      return h
+    }
+  }
+  height(node: BinarySearchTreeNode<T>) {
+    return this._height(node, 0)
+  }
+
 }
 // class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
 //   constructor() {
@@ -355,6 +503,8 @@ class BinarySearchTree<T> implements BST<T> {
 
 export {
   // BaseTree,
+  // BinaryTreeNode,
+  BinaryTree,
   BinarySearchTree,
   // AVLTree,
   // RedBackTree,

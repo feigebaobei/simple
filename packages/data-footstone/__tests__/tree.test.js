@@ -1,9 +1,14 @@
 import {
   // BaseTree,
+  BinaryTree,
+  // BinaryTreeNode,
   BinarySearchTree,
   AVLTree,
   RedBackTree,
 } from '../src/tree'
+
+// let arr = []
+
 
 describe('BinarySearchTree', () => {
   it('BinarySearchTree', () => {
@@ -120,3 +125,72 @@ describe('BinarySearchTree', () => {
     })
   })
 })
+
+// 不再使用该类了。
+// describe('BinaryTreeNode', () => {
+//   test.only('BinaryTreeNode', () => {
+//     let treeNode = new BinaryTreeNode(3)
+//     // treeNode
+//     expect(treeNode.value).toBe(3)
+//     expect(treeNode.left).toBeNull()
+//     expect(treeNode.right).toBeNull()
+//     expect(treeNode.parent).toBeNull()
+//     expect(treeNode.height()).toBe(1)
+//     expect(treeNode.size()).toBe(1)
+//   })
+// })
+
+describe('BinaryTree', () => {
+  test('BinaryTree 结构', () => {
+    //     2
+    //  1     3
+    let tree = new BinaryTree()
+    tree.root = tree.createNode(2)
+    tree.insertAsLeft(tree.root, 1)
+    tree.insertAsRight(tree.root, 3)
+    expect(tree.root.value).toBe(2)
+    expect(tree.root.left.value).toBe(1)
+    expect(tree.root.right.value).toBe(3)
+    expect(tree.root.left.parent.value).toBe(2)
+    expect(tree.root.right.parent.value).toBe(2)
+  })
+  // beforeEach(() => {
+  //   arr = []
+  // })
+  test('BinaryTree 遍历', () => {
+    //     2
+    //  1     3
+    // 4 5   6 7 
+    let tree = new BinaryTree()
+    tree.root = tree.createNode(2)
+    tree.insertAsLeft(tree.root, 1)
+    tree.insertAsRight(tree.root, 3)
+    tree.insertAsLeft(tree.root.left, 4)
+    tree.insertAsRight(tree.root.left, 5)
+    tree.insertAsLeft(tree.root.right, 6)
+    tree.insertAsRight(tree.root.right, 7)
+    let arr = []
+    tree._preOrderTraverse((item) => {arr.push(item)}, tree.root)
+    expect(arr).toEqual([2,1,4,5,3,6,7])
+    arr = []
+    tree._inOrderTraverse((item) => {arr.push(item)}, tree.root)
+    expect(arr).toEqual([4,1,5,2,6,3,7])
+    arr = []
+    tree._postOrderTraverse((item) => {arr.push(item)}, tree.root)
+    expect(arr).toEqual([4,5,1,6,7,3,2])
+  })
+})
+
+// describe('BinaryTree', () => {
+//   test('BinaryTree', () => {
+//     let tree = new BinaryTree()
+//     tree.root = tree.createNode(2)
+//     tree.insertAsLeft(tree.root, 1)
+//     tree.insertAsRight(tree.root, 3)
+//     expect(tree.root.value).toBe(2)
+//     expect(tree.root.left.value).toBe(1)
+//     expect(tree.root.right.value).toBe(3)
+//     expect(tree.root.left.parent.value).toBe(2)
+//     expect(tree.root.right.parent.value).toBe(2)
+//   })
+// })

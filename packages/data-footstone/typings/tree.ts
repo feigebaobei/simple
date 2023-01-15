@@ -23,11 +23,37 @@ import {
 // //   shortPathNodeLength: (node: BaseTreeNode<T> | null, deep: N) => N
 // }
 
+interface BinaryTreeNode<T> {
+  value: T,
+  left: BinaryTreeNodeOrNull<T>
+  right: BinaryTreeNodeOrNull<T>
+  parent: BinaryTreeNodeOrNull<T>
+  // _height: (n: BinaryTreeNodeOrNull<T>, h: N) => N,
+  // height: () => N,
+  // _size: (n: BinaryTreeNodeOrNull<T>, size: N) => N,
+  // size: () => N,
+}
+
+type BinaryTreeNodeOrNull<T> = (BinaryTreeNode<T> | null)
+interface BinaryTree<T> {
+  root: BinaryTreeNodeOrNull<T>
+  createNode: (v: T) => BinaryTreeNode<T>
+  // insertAsLeft: (parent: BinaryTreeNode<T>, current: T) => void
+  // insertAsRight: (parent: BinaryTreeNode<T>, current: T) => void
+  _preOrderTraverse: (cb: F, node: BinaryTreeNodeOrNull<T>) => void
+  _inOrderTraverse: (cb: F, node: BinaryTreeNodeOrNull<T>) => void
+  _postOrderTraverse: (cb: F, node: BinaryTreeNodeOrNull<T>) => void
+  _size: (node: BinaryTreeNodeOrNull<T>, size: N) => N
+  size: () => N
+  isEmpty: () => B
+}
+
 type BinarySearchTreeOrder = 'preOrder' | 'inOrder' | 'postOrder'
 type BinarySearchTreeNode<T> = {
   value: T
   left: BinarySearchTreeNodeOrNull<T>
   right: BinarySearchTreeNodeOrNull<T>
+  // 可能需要指向父节点的指针
 }
 type BinarySearchTreeNodeOrNull<T> = BinarySearchTreeNode<T> | null
 interface BinarySearchTree<T> {
@@ -56,6 +82,9 @@ interface BinarySearchTree<T> {
     v: T
   ) => BinarySearchTreeNodeOrNull<T>
   remove: (v: T) => void
+  // static 
+  _height: (node: BinarySearchTreeNode<T>, h: N) => N
+  height: (node: BinarySearchTreeNode<T>) => N
 }
 // Adelson-Velskii-Landi tree
 type AVLTreeNode<T> = BinarySearchTreeNode<T>
@@ -87,6 +116,9 @@ interface RedBackTree<T> extends BinarySearchTree<T> {
 
 export {
   // BaseTreeNode, BaseTree,
+  BinaryTreeNode,
+  BinaryTreeNodeOrNull,
+  BinaryTree,
   BinarySearchTreeNode,
   BinarySearchTreeNodeOrNull,
   BinarySearchTree,
