@@ -167,9 +167,10 @@ import {
 //     return this._size(this)
 //   }
 // }
+
+// 未测完
 class BinaryTree<T> implements BT<T> {
-  root: BinaryTreeNode<T>
-  // private insertAsLeft: (parent: BinaryTreeNode<T>, current: T) => void
+  root: BinaryTreeNodeOrNull<T>
   constructor() {
     this.root = null
   }
@@ -181,16 +182,32 @@ class BinaryTree<T> implements BT<T> {
       parent: null,
     }
   }
-  // 感觉不好用。
+  // 还缺少设置根节点的方法
   protected insertAsLeft(parent: BinaryTreeNode<T>, current: T) {
-    let left = this.createNode(current)
-    parent.left = left
-    left.parent = parent
+    let cur = this.createNode(current)
+    let oldLeft = parent.left
+    if (oldLeft) {
+      oldLeft.parent = cur
+      cur.left = oldLeft
+      cur.parent = parent
+      parent.left = cur
+    } else {
+      parent.left = cur
+      cur.parent = parent
+    }
   }
   protected insertAsRight(parent: BinaryTreeNode<T>, current: T) {
-    let right = this.createNode(current)
-    parent.right = right
-    right.parent = parent
+    let cur = this.createNode(current)
+    let oldRight = parent.right
+    if (oldRight) {
+      oldRight.parent = cur
+      cur.right = oldRight
+      cur.parent = parent
+      parent.right = cur
+    } else {
+      parent.right = cur
+      cur.parent = parent
+    }
   }
   _preOrderTraverse(cb: F, node: BinaryTreeNodeOrNull<T>) {
     if (node) {
@@ -218,6 +235,18 @@ class BinaryTree<T> implements BT<T> {
       cb(node.value)
     }
   }
+  _levelTraverse(cb: F, node: BinaryTreeNodeOrNull<T>) {
+    if (node) {
+      let queue = new Queue<BinaryTreeNodeOrNull<T>>()
+      queue.enqueue(node)
+      while (!queue.isEmpty()) {
+        let n = queue.dequeue()
+        cb(n.value)
+        n.left && queue.enqueue(n.left)
+        n.right && queue.enqueue(n.right)
+      }
+    }
+  }
   _size(node: BinaryTreeNodeOrNull<T>, size: N = 0) {
     if (!node) {
       return size
@@ -234,6 +263,119 @@ class BinaryTree<T> implements BT<T> {
   isEmpty() {
     return !this.root
   }
+  _height(node: BinaryTreeNodeOrNull<T>, h: N = 0) {
+    let res: N
+    if (!node) {
+      res = h
+    } else if (node.left && node.right) {
+      res = Math.max(this._height(node.left, h + 1), this._height(node.right, h + 1))
+    } else if (node.left) {
+      res = this._height(node.left, h++)
+    } else if (node.right) {
+      res = this._height(node.right, h++)
+    } else {
+      res = h + 1
+    }
+    return res
+  }
+  height(node: BinaryTreeNodeOrNull<T>) {
+    return this._height(node)
+  }
+  deep(node: BinaryTreeNodeOrNull<T> = this.root) {
+    let d = -1
+    if (node) {
+      let cur = node
+      while (cur) {
+        d++
+        cur = cur.parent
+      }
+    }
+    return d
+  }
+  // 得到最小深度
+  // 认为深度与层数 值相等。
+  minDeep() {
+    if (this.root) {
+      let queue = new Queue<BinaryTreeNodeOrNull<T>>()
+      queue.enqueue(this.root)
+      let len = queue.size()
+      let deep = 0 // 认为根节点的深度是0
+      while (len) {
+        for (let i = 0; i < len; i++) {
+          let n = queue.dequeue()
+          if (!n.left && !n.right) {
+            return deep
+          }
+          n.left && queue.enqueue(n.left)
+          n.right && queue.enqueue(n.right)
+        }
+        len = queue.size()
+        deep++
+      }
+    } else {
+      return -1
+    }
+  }
+  // 得到最大深度 就是 根节点的深度
+  // 得到指定层数的节点
+  // 层数从0开始数
+  getLevelNode(p: N) {
+    if (this.root) {
+      return []
+    }
+    let maxDeep = this.height(this.root)
+    if (0 <= p && p <= maxDeep) {
+      let level = 0
+      let queue = new Queue<BinaryTreeNodeOrNull<T>>()
+      queue.enqueue(this.root)
+      while (level < p) {
+        let len = queue.size()
+        for (let i = 0; i < len; i++) {
+          let n = queue.dequeue()
+          n.left && queue.enqueue(n.left)
+          n.right && queue.enqueue(n.right)
+        }
+        level++
+      }
+      return queue.toArray()
+    } else {
+      p = maxDeep + p
+      if (0 <= p && p <= maxDeep) {
+        return this.getLevelNode(maxDeep + p)
+      } else {
+        return []
+      }
+    }
+  }
+  // 是否是真二叉树
+  // 每个节点的出度是 0 或 2.  
+  // to test
+  isProper() {
+    let stack = new Stack<BinaryTreeNodeOrNull<T>>()
+    stack.push(this.root)
+    let res = true
+    while (!stack.isEmpty()) {
+      let n = stack.pop()
+      if ((n.left && n.right) || (!n.left && !n.right)) {
+        stack.push(n.left)
+        stack.push(n.right)
+      } else {
+        res = false
+        break
+      }
+    }
+    return res
+  }
+  // 是否是满二叉树
+  // 叶子节点在最后一层上的真二叉树。
+  // to test
+  isFull() {
+    
+  }
+  // 是否是完全二叉树
+  // 非最后一层为满二叉树，最后一层从左到右分布。
+  // to test
+  isComplete() {}
 }
 class BinarySearchTree<T> implements BST<T> {
   root: BinarySearchTreeNodeOrNull<T>

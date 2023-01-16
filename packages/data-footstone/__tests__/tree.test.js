@@ -200,8 +200,13 @@ describe('BinaryTree', () => {
     expect(tree.deep(tree.root.left.left)).toBe(2)
     expect(tree.deep(tree.root.left.right)).toBe(2)
     expect(tree.deep(tree.root.left.left.left)).toBe(-1)
+    expect(tree.minDeep()).toBe(1)
+    tree = new BinaryTree()
+    expect(tree.minDeep()).toBe(-1)
+    tree.root = tree.createNode(2)
+    expect(tree.minDeep()).toBe(0)
   })
-  test.only('BinaryTree height', () => {
+  test('BinaryTree height', () => {
     //     2
     //  1     3
     // 4 5
@@ -222,6 +227,7 @@ describe('BinaryTree', () => {
     expect(tree.height(tree.root.left.left)).toBe(1)
     expect(tree.height(tree.root.left.right)).toBe(1)
   })
+  test.only('BinaryTree ', () => { second })
 })
 
 // describe('BinaryTree', () => {
