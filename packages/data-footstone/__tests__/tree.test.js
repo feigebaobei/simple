@@ -158,7 +158,7 @@ describe('BinaryTree', () => {
     expect(tree.root.right.right.value).toBe(7)
     expect(tree.root.right.right.right.value).toBe(10)
   })
-  test.only('BinaryTree 遍历', () => {
+  test('BinaryTree 遍历', () => {
     //     2
     //  1     3
     // 4 5   6 7 
@@ -183,10 +183,10 @@ describe('BinaryTree', () => {
     tree._levelTraverse(item => {arr.push(item)}, tree.root)
     expect(arr).toEqual([2,1,3,4,5,6,7])
   })
-  test('BinaryTree deep & height', () => {
+  test('BinaryTree deep', () => {
     //     2
     //  1     3
-    // 4 5   6 7 
+    // 4 5
     let tree = new BinaryTree()
     tree.root = tree.createNode(2)
     tree.insertAsLeft(tree.root, 1)
@@ -194,13 +194,33 @@ describe('BinaryTree', () => {
     tree.insertAsLeft(tree.root.left, 4)
     tree.insertAsRight(tree.root.left, 5)
     expect(tree.deep()).toBe(0)
+    expect(tree.deep(tree.root)).toBe(0)
+    expect(tree.deep(tree.root.left)).toBe(1)
+    expect(tree.deep(tree.root.right)).toBe(1)
+    expect(tree.deep(tree.root.left.left)).toBe(2)
+    expect(tree.deep(tree.root.left.right)).toBe(2)
+    expect(tree.deep(tree.root.left.left.left)).toBe(-1)
+  })
+  test.only('BinaryTree height', () => {
+    //     2
+    //  1     3
+    // 4 5
+    let tree = new BinaryTree()
+    tree.root = tree.createNode(2)
+    tree.insertAsLeft(tree.root, 1)
+    tree.insertAsRight(tree.root, 3)
+    tree.insertAsLeft(tree.root.left, 4)
+    tree.insertAsRight(tree.root.left, 5)
     expect(tree.height()).toBe(0)
     expect(tree.height(tree.root)).toBe(3)
     tree.insertAsLeft(tree.root.right, 6)
     expect(tree.height(tree.root)).toBe(3)
     tree.insertAsRight(tree.root.right, 7)
     expect(tree.height(tree.root)).toBe(3)
-    tree.insertAsLeft(tree.root.right.right, 8)
+    expect(tree.height(tree.root.left)).toBe(2)
+    expect(tree.height(tree.root.right)).toBe(2)
+    expect(tree.height(tree.root.left.left)).toBe(1)
+    expect(tree.height(tree.root.left.right)).toBe(1)
   })
 })
 
