@@ -127,7 +127,7 @@ describe('BinarySearchTree', () => {
 })
 
 describe('BinaryTree', () => {
-  test.only('BinaryTree 结构', () => {
+  test('BinaryTree 结构', () => {
     //     2
     //  1     3
     let tree = new BinaryTree()
@@ -158,7 +158,7 @@ describe('BinaryTree', () => {
     expect(tree.root.right.right.value).toBe(7)
     expect(tree.root.right.right.right.value).toBe(10)
   })
-  test('BinaryTree 遍历', () => {
+  test.only('BinaryTree 遍历', () => {
     //     2
     //  1     3
     // 4 5   6 7 
@@ -179,6 +179,9 @@ describe('BinaryTree', () => {
     arr = []
     tree._postOrderTraverse((item) => {arr.push(item)}, tree.root)
     expect(arr).toEqual([4,5,1,6,7,3,2])
+    arr = []
+    tree._levelTraverse(item => {arr.push(item)}, tree.root)
+    expect(arr).toEqual([2,1,3,4,5,6,7])
   })
   test('BinaryTree deep & height', () => {
     //     2
