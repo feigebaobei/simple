@@ -38,36 +38,45 @@ type BinaryTreeNodeOrNull<T> = (BinaryTreeNode<T> | null)
 interface BinaryTree<T> {
   root: BinaryTreeNodeOrNull<T>
   createNode: (v: T) => BinaryTreeNode<T>
-  // insertAsLeft: (parent: BinaryTreeNode<T>, current: T) => void
-  // insertAsRight: (parent: BinaryTreeNode<T>, current: T) => void
+  insertAsLeft: (parent: BinaryTreeNode<T>, current: T) => void
+  insertAsRight: (parent: BinaryTreeNode<T>, current: T) => void
   _preOrderTraverse: (cb: F, node: BinaryTreeNodeOrNull<T>) => void
   _inOrderTraverse: (cb: F, node: BinaryTreeNodeOrNull<T>) => void
   _postOrderTraverse: (cb: F, node: BinaryTreeNodeOrNull<T>) => void
-  _size: (node: BinaryTreeNodeOrNull<T>, size: N) => N
-  size: () => N
+  _levelTraverse: (cb: F, node: BinaryTreeNodeOrNull<T>) => void
   isEmpty: () => B
+  _height: (node: BinaryTreeNodeOrNull<T>, h: N) => N
+  height: (node: BinaryTreeNodeOrNull<T>) => N
+  deep: (node: BinaryTreeNodeOrNull<T>) => N
+  minDeep: () => N
+  getLevelNode: (p: N) => N
+  isProper: () => B
+  vertexCount: () => N
+  isFull: () => B
+  isComplete: () => B
 }
 
-type BinarySearchTreeOrder = 'preOrder' | 'inOrder' | 'postOrder'
-type BinarySearchTreeNode<T> = {
-  value: T
-  left: BinarySearchTreeNodeOrNull<T>
-  right: BinarySearchTreeNodeOrNull<T>
-  // 可能需要指向父节点的指针
-}
-type BinarySearchTreeNodeOrNull<T> = BinarySearchTreeNode<T> | null
-interface BinarySearchTree<T> {
-  root: BinarySearchTreeNodeOrNull<T>
-  createNode: (v: T) => BinarySearchTreeNode<T>
+type BinarySearchTreeOrder = 'preOrder' | 'inOrder' | 'postOrder' | 'level'
+type BinarySearchTreeNode<T> = BinaryTreeNode<T>
+// type BinarySearchTreeNode<T> = {
+//   value: T
+//   left: BinarySearchTreeNodeOrNull<T>
+//   right: BinarySearchTreeNodeOrNull<T>
+//   // 可能需要指向父节点的指针
+// }
+type BinarySearchTreeNodeOrNull<T> = BinaryTreeNodeOrNull<T>
+interface BinarySearchTree<T> extends Pick<BinaryTree<T>, 'root' | 'createNode' | '_preOrderTraverse' | '_inOrderTraverse' | '_postOrderTraverse'> {
+  // root: BinarySearchTreeNodeOrNull<T>
+  // createNode: (v: T) => BinarySearchTreeNode<T>
   insert: (v: T) => void
   _insertNode: (
     n0: BinarySearchTreeNode<T>,
     n1: BinarySearchTreeNode<T>
   ) => void
   search: (v: T) => B
-  _preOrderTraverse: (cb: F, node: BinarySearchTreeNodeOrNull<T>) => void
-  _inOrderTraverse: (cb: F, node: BinarySearchTreeNodeOrNull<T>) => void
-  _postOrderTraverse: (cb: F, node: BinarySearchTreeNodeOrNull<T>) => void
+  // _preOrderTraverse: (cb: F, node: BinarySearchTreeNodeOrNull<T>) => void
+  // _inOrderTraverse: (cb: F, node: BinarySearchTreeNodeOrNull<T>) => void
+  // _postOrderTraverse: (cb: F, node: BinarySearchTreeNodeOrNull<T>) => void
   traverse: (fn: F, order: BinarySearchTreeOrder) => void
   min: () => T | undefined
   max: () => T | undefined
@@ -82,9 +91,8 @@ interface BinarySearchTree<T> {
     v: T
   ) => BinarySearchTreeNodeOrNull<T>
   remove: (v: T) => void
-  // static 
-  _height: (node: BinarySearchTreeNode<T>, h: N) => N
-  height: (node: BinarySearchTreeNode<T>) => N
+  // _height: (node: BinarySearchTreeNode<T>, h: N) => N
+  // height: (node: BinarySearchTreeNode<T>) => N
 }
 // Adelson-Velskii-Landi tree
 type AVLTreeNode<T> = BinarySearchTreeNode<T>
