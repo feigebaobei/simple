@@ -49,7 +49,7 @@ interface BinaryTree<T> {
   height: (node: BinaryTreeNodeOrNull<T>) => N
   deep: (node: BinaryTreeNodeOrNull<T>) => N
   minDeep: () => N
-  getLevelNode: (p: N) => N
+  getLevelNode: (p: N) => BinaryTreeNode<T>[]
   isProper: () => B
   vertexCount: () => N
   isFull: () => B

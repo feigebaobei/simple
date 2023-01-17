@@ -167,7 +167,7 @@ class BinaryTree<T> implements BT<T> {
     let maxHeight = this.height(this.root)
     if (0 <= p && p <= maxHeight) {
       let level = 0
-      let queue = new Queue<BinaryTreeNodeOrNull<T>>()
+      let queue = new Queue<BinaryTreeNode<T>>()
       queue.enqueue(this.root)
       while (level < p) {
         let len = queue.size()
