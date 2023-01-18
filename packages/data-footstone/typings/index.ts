@@ -29,7 +29,8 @@ import {
   AVLTree,
   RedBackTree,
 } from './Tree'
-import { Graph, GraphColor } from './graph'
+import { Vertex,
+  Edge,EdgeOrNull, Graph, GraphColor } from './graph'
 import { Stack } from './stack'
 import {
   Cache,
@@ -79,6 +80,9 @@ export {
   BinarySearchTree,
   AVLTree,
   RedBackTree,
+  Vertex,
+  Edge,
+  EdgeOrNull,
   Graph,
   GraphColor,
   Cache,

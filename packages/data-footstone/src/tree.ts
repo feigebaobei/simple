@@ -459,24 +459,6 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
   remove(v: T) {
     this.root = this._remove(this.root, v)
   }
-  // static height(node: )
-  // 待测试
-  // 请使用原型上的方法
-  // _height(node: BinarySearchTreeNodeOrNull<T>, h: N = 0) {
-  //   if (node.left && node.right) {
-  //     return Math.max(this._height(node.left, h + 1), this._height(node.right, h + 1))
-  //   } else if (node.left) {
-  //     return this._height(node.left, h++)
-  //   } else if (node.right) {
-  //     return this._height(node.right, h++)
-  //   } else {
-  //     return h
-  //   }
-  // }
-  // height(node: BinarySearchTreeNode<T>) {
-  //   return this._height(node, 0)
-  // }
-
 }
 // class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
 //   constructor() {

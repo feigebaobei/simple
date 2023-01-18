@@ -33,6 +33,7 @@ interface BinaryTreeNode<T> {
   // _size: (n: BinaryTreeNodeOrNull<T>, size: N) => N,
   // size: () => N,
 }
+// 还有一种长子-兄弟表示法。
 
 type BinaryTreeNodeOrNull<T> = (BinaryTreeNode<T> | null)
 interface BinaryTree<T> {

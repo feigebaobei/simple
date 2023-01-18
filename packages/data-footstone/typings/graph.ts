@@ -1,4 +1,4 @@
-import { F, N } from './baseType'
+import { F, N, A, D, B } from './baseType'
 import { Queue } from './queue'
 
 type GraphColor = 'white' | 'grey' | 'black'
@@ -6,12 +6,40 @@ type ShortestPathObj<T> = {
   distance: Map<T, N>
   predecessors: Map<T, T>
 }
-
+interface Vertex<T> {
+  data: T
+  inDegree: N
+  outDegree: N
+  status: A
+  dTime: D // 考虑使用ms
+  fTime: D
+  // parent: VertexOrNull<T>
+}
+type VertexOrNull<T> = Vertex<T> | null
+interface Edge<T> {
+  data: A // 可能这里需要修改
+  start: Vertex<T>
+  end: Vertex<T>
+  weight: N
+  status: A
+}
+type EdgeOrNull<T> = Edge<T> | null
 interface Graph<T> {
-  vertices: T[]
-  adjList: Map<T, T[]>
-  addVertex: (a: T) => void
-  addEdge: (a: T, b: T) => void
+  // vertexMap: Vertex<T>[] // or map
+  vertexMap: Map<T, Vertex<T>>
+  // edgeMap: Map<T, Edge<T>>
+  adjMatrix: Map<T, Map<T, EdgeOrNull<T>>>
+  _adjTable: Map<T, Set<T>>
+  direction: B
+  // adjList: Map<Vertex<T>, T[]>
+  createVertex: (v: T) => Vertex<T>
+  createEdge: (a: T, b: T) => Edge<T>
+  // adjMatrix: T[][]
+  putVertex: (a: T) => void
+  putEdge: (a: T, b: T) => void
+  edgeList: () => Edge<T>[]
+  removeVertex: (a: T) => Vertex<T> | undefined
+  removeEdga: (a: T, b: T) => Edge<T> | undefined
   initColor: () => Map<T, GraphColor>
   bfs: (index: N, cb: F) => void
   dfs: (index: N, cb: F) => void
@@ -19,4 +47,7 @@ interface Graph<T> {
   getPath: (fromIndex: N, toIndex: N) => Queue<T>
 }
 
-export { Graph, GraphColor }
+export { Vertex,
+  Edge,
+  EdgeOrNull,
+  Graph, GraphColor }
