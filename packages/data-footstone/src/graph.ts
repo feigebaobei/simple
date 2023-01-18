@@ -109,74 +109,58 @@ class Graph<T> implements G<T> {
     }
     return res
   }
+  _initColor() {
+    let color: Map<T, GC> = new Map()
+    af(this.vertexMap.keys()).forEach((item: T) => {
+      color.set(item, 'white')
+    })
+    return color
+  }
+  // 只能遍历连通的顶点
+  bfs(data: T, cb: F) {
+    let vertex: V<T> = this.vertexMap.get(data)
+    if (vertex) {
+      let color = this._initColor()
+      let vertexQueue = new Queue<V<T>>()
+      vertexQueue.enqueue(vertex)
+      color.set(vertex.data, 'grey')
+      while (!vertexQueue.isEmpty()) {
+        let uVertex = vertexQueue.dequeue()
+        let arr = [...(this._adjTable.get(uVertex.data))] // T[]
+        arr.map(data => this.vertexMap.get(data)) // V<T>[]
+        .forEach((neiborVertex: V<T>) => {
+          if (color.get(neiborVertex.data) === 'white') {
+            vertexQueue.enqueue(neiborVertex)
+            color.set(neiborVertex.data, 'grey')
+          }
+        })
+        cb(uVertex)
+        color.set(uVertex.data, 'black')
+      }
+    }
+  }
+  _dfs(vertex: V<T>, cb: F, color: Map<T, GC>) {
+    // color.set(vertex.data, 'grey')
+    cb(vertex)
+    color.set(vertex.data, 'black')
+    let arr = [...this._adjTable.get(vertex.data)] // T[]
+    arr.map(data => this.vertexMap.get(data))
+      .forEach((neiborVertex: V<T>) => {
+        if (color.get(neiborVertex.data) === 'white') {
+          color.set(neiborVertex.data, 'grey')
+          this._dfs(neiborVertex, cb, color)
+        }
+      })
+  }
+  dfs(data: T, cb: F) {
+    let vertex = this.vertexMap.get(data)
+    if (vertex) {
+      let color = this._initColor()
+      color.set(vertex.data, 'grey')
+      this._dfs(vertex, cb, color)
+    }
+  }
 
-
-
-
-  // vertices: G<T>['vertices']
-  // adjList: G<T>['adjList']
-  // // adjMatrix: G<T>['adjMatrix']
-  // // static vertices: any
-  // constructor() {
-  //   this.vertices = []
-  //   this.adjList = new Map()
-  //   // this.adjMatrix = []
-  // }
-  // putVertex(v: T) {
-  //   this.vertices.push(v)
-  //   this.adjList.set(v, [])
-  // }
-  // putEdge(v: T, w: T) {
-  //   this.adjList.get(v).push(w)
-  //   this.adjList.get(w).push(v)
-  // }
-  // initColor() {
-  //   let color: Map<T, GC> = new Map()
-  //   this.vertices.forEach((item) => {
-  //     color.set(item, 'white')
-  //   })
-  //   return color
-  // }
-  // bfs(index = 0, cb: F) {
-  //   let v = this.vertices[index]
-  //   if (v !== undefined) {
-  //     let color = this.initColor()
-  //     let queue: Q<T> = new Queue()
-  //     queue.enqueue(v)
-  //     color.set(v, 'grey')
-  //     while (queue.size()) {
-  //       let u = queue.dequeue()
-  //       let neibors = this.adjList.get(u)
-  //       neibors.forEach((item) => {
-  //         if (color.get(item) === 'white') {
-  //           queue.enqueue(item)
-  //           color.set(item, 'grey')
-  //         }
-  //       })
-  //       cb && cb(u)
-  //       color.set(u, 'black')
-  //     }
-  //   }
-  // }
-  // _dfs(v: T, color: Map<T, GC>, cb: F) {
-  //   cb && cb(v)
-  //   color.set(v, 'grey')
-  //   let neibors = this.adjList.get(v)
-  //   for (let i = 0; i < neibors.length; i++) {
-  //     let w = neibors[i]
-  //     if (color.get(w) === 'white') {
-  //       this._dfs(w, color, cb)
-  //     }
-  //   }
-  //   color.set(v, 'black')
-  // }
-  // dfs(index = 0, cb: F) {
-  //   let v = this.vertices[index]
-  //   if (v !== undefined) {
-  //     let color = this.initColor()
-  //     this._dfs(v, color, cb)
-  //   }
-  // }
   // shortestPath(index = 0) {
   //   let distance = new Map()
   //   let predecessors = new Map()

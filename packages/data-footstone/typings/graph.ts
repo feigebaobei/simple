@@ -40,9 +40,9 @@ interface Graph<T> {
   edgeList: () => Edge<T>[]
   removeVertex: (a: T) => Vertex<T> | undefined
   removeEdga: (a: T, b: T) => Edge<T> | undefined
-  initColor: () => Map<T, GraphColor>
-  bfs: (index: N, cb: F) => void
-  dfs: (index: N, cb: F) => void
+  _initColor: () => Map<T, GraphColor>
+  bfs: (data: T, cb: F) => void
+  dfs: (data: T, cb: F) => void
   shortestPath: (index: N) => ShortestPathObj<T>
   getPath: (fromIndex: N, toIndex: N) => Queue<T>
 }

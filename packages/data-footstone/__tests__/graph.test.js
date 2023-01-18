@@ -178,9 +178,7 @@ describe('Graph', () => {
         ])
     })
 })
-
-
-describe.only('Graph 无向图', () => {
+describe('Graph 无向图', () => {
     it('Graph basic 无向图 添加点、边', () => {
         let g = new Graph(false)
         expect(g.direction).toBeFalsy()
@@ -326,5 +324,46 @@ describe.only('Graph 无向图', () => {
             { start: 'c', end: 'a', },
             { start: 'd', end: 'b', },
         ])
+    })
+})
+
+describe('Graph bfs', () => {
+    test('Graph bfs', () => {
+        let g = new Graph()
+        // expect(g.direction).toBeFalsy()
+        g.putVertex('a')
+        g.putVertex('b')
+        g.putVertex('c')
+        g.putVertex('d')
+        g.putVertex('e')
+        g.putEdge('a', 'b')
+        g.putEdge('a', 'c')
+        g.putEdge('b', 'd')
+        let arr = []
+        let cb = (vertex) => {
+            arr.push(vertex.data)
+        }
+        g.bfs('a', cb)
+        expect(arr).toEqual(['a', 'b', 'c', 'd'])
+    })
+})
+describe('Graph dfs', () => {
+    test('Graph dfs', () => {
+        let g = new Graph()
+        // expect(g.direction).toBeFalsy()
+        g.putVertex('a')
+        g.putVertex('b')
+        g.putVertex('c')
+        g.putVertex('d')
+        g.putVertex('e')
+        g.putEdge('a', 'b')
+        g.putEdge('a', 'c')
+        g.putEdge('b', 'd')
+        let arr = []
+        let cb = (vertex) => {
+            arr.push(vertex.data)
+        }
+        g.dfs('a', cb)
+        expect(arr).toEqual(['a', 'b', 'd', 'c'])
     })
 })
