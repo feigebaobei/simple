@@ -7,7 +7,7 @@ import {
    F, N, B 
 } from '../typings'
 import { Queue } from './queue'
-import { af } from './helper'
+import { af, NPF } from './helper'
 
 class Graph<T> implements G<T> {
   vertexMap: G<T>['vertexMap']
@@ -160,60 +160,53 @@ class Graph<T> implements G<T> {
       this._dfs(vertex, cb, color)
     }
   }
-
-  // shortestPath(index = 0) {
-  //   let distance = new Map()
-  //   let predecessors = new Map()
-  //   let v = this.vertices[index]
-  //   if (v) {
-  //     let color = this.initColor()
-  //     let queue: Q<T> = new Queue()
-  //     queue.enqueue(v)
-  //     color.set(v, 'grey')
-  //     // init
-  //     this.vertices.forEach((item) => {
-  //       distance.set(item, 0)
-  //       predecessors.set(item, null)
-  //     })
-  //     while (!queue.size()) {
-  //       let u = queue.dequeue()
-  //       let neibors = this.adjList.get(u)
-  //       neibors.forEach((item) => {
-  //         if (color.get(item) === 'white') {
-  //           queue.enqueue(item)
-  //           color.set(item, 'grey')
-  //           distance.set(item, distance.get(u) + 1)
-  //           predecessors.set(item, u)
-  //         }
-  //       })
-  //       color.set(u, 'black')
-  //     }
-  //   }
-  //   return {
-  //     distance,
-  //     predecessors,
-  //   }
-  // }
-  // getPath(fromIndex: N, toIndex: N) {
-  //   let queue: Q<T> = new Queue()
-  //   let to = this.vertices[toIndex]
-  //   let from = this.vertices[fromIndex]
-  //   if (to && from) {
-  //     let { predecessors } = this.shortestPath(fromIndex)
-  //     let cur = to
-  //     while (cur) {
-  //       queue.enqueue(cur)
-  //       cur = predecessors.get(cur)
-  //     }
-  //   }
-  //   queue.reverse()
-  //   return queue
-  // }
-  // neighborsMatrix() {
-  // }
-  // neighborsTable() {
-  //   return this.adjList
-  // }
+  shortestPath(data: T) {
+    let distance = new Map()
+    let predecessors = new Map()
+    let vertex = this.vertexMap.get(data)
+    // calc
+    if (vertex) {
+      // init
+      af(this.vertexMap.keys()).forEach(data => {
+        distance.set(data, NPF) // 所有距离设置为正无穷大
+        predecessors.set(data, null) // 所有前置节点设置为null
+      })
+      let color = this._initColor()
+      let dataQueue = new Queue<T>()
+      distance.set(data, 0)
+      dataQueue.enqueue(data)
+      color.set(data, 'grey')
+      while (!dataQueue.isEmpty()) {
+        let curData = dataQueue.dequeue()
+        let arr = [...this._adjTable.get(curData)] // T[]
+        arr.forEach(data => {
+          if (color.get(data) === 'white') {
+            distance.set(data, distance.get(curData) + 1)
+            predecessors.set(data, curData)
+            dataQueue.enqueue(data)
+            color.set(data, 'grey')
+          }
+        })
+        color.set(curData, 'black')
+      }
+    }
+    return {distance, predecessors}
+  }
+  getPath(from: T, to: T) {
+    let arr: T[] = []
+    let cur = to
+    let {predecessors} = this.shortestPath(from)
+    while (cur) {
+      arr.unshift(cur)
+      cur = predecessors.get(cur)
+    }
+    // 检查
+    if (arr[0] === from && arr[arr.length - 1] === to) {
+      return arr
+    } else {
+      return []
+    }
+  }
 }
 
 export { Graph }

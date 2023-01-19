@@ -25,7 +25,6 @@ interface Edge<T> {
 }
 type EdgeOrNull<T> = Edge<T> | null
 interface Graph<T> {
-  // vertexMap: Vertex<T>[] // or map
   vertexMap: Map<T, Vertex<T>>
   // edgeMap: Map<T, Edge<T>>
   adjMatrix: Map<T, Map<T, EdgeOrNull<T>>>
@@ -38,13 +37,13 @@ interface Graph<T> {
   putVertex: (a: T) => void
   putEdge: (a: T, b: T) => void
   edgeList: () => Edge<T>[]
-  removeVertex: (a: T) => Vertex<T> | undefined
-  removeEdga: (a: T, b: T) => Edge<T> | undefined
+  // removeVertex: (a: T) => Vertex<T> | undefined
+  // removeEdga: (a: T, b: T) => Edge<T> | undefined
   _initColor: () => Map<T, GraphColor>
   bfs: (data: T, cb: F) => void
   dfs: (data: T, cb: F) => void
-  shortestPath: (index: N) => ShortestPathObj<T>
-  getPath: (fromIndex: N, toIndex: N) => Queue<T>
+  shortestPath: (data: T) => ShortestPathObj<T>
+  getPath: (from: T, to: T) => T[]
 }
 
 export { Vertex,

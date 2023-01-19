@@ -1,7 +1,8 @@
 import {
     Graph,
   } from '../src/graph'
-import { af } from '../src/helper'
+import { af, mapToObj } from '../src/helper'
+import { Queue } from '../src/queue'
 
 let afGetValue = (iterator, key) => {
     return af(iterator).map(item => item[key])
@@ -365,5 +366,114 @@ describe('Graph dfs', () => {
         }
         g.dfs('a', cb)
         expect(arr).toEqual(['a', 'b', 'd', 'c'])
+    })
+})
+
+describe('Graph path', () => {
+    test('Graph path', () => {
+        let g = new Graph()
+        // expect(g.direction).toBeFalsy()
+        g.putVertex('a')
+        g.putVertex('b')
+        g.putVertex('c')
+        g.putVertex('d')
+        g.putVertex('e')
+        g.putEdge('a', 'b')
+        g.putEdge('a', 'c')
+        g.putEdge('b', 'd')
+        let {distance, predecessors} = g.shortestPath()
+        expect(af(distance.keys())).toEqual([])
+        expect(af(predecessors.keys())).toEqual([])
+        let res = g.shortestPath('a')
+        // 也可以使用map对象测试。
+        // eg:
+        // let m = new Map
+        // m.set(k, v)
+        // expect(obj).toEqual(m)
+        expect(mapToObj(res.distance)).toEqual({
+            'a': 0,
+            'b': 1,
+            'c': 1,
+            'd': 2,
+            'e': Infinity,
+        })
+        expect(mapToObj(res.predecessors)).toEqual({
+            'a': null,
+            'b': 'a',
+            'c': 'a',
+            'd': 'b',
+            'e': null,
+        })
+    })
+    test('graph path', () => {
+        let g = new Graph()
+        // expect(g.direction).toBeFalsy()
+        g.putVertex('a')
+        g.putVertex('b')
+        g.putVertex('c')
+        g.putVertex('d')
+        g.putVertex('e')
+        g.putEdge('a', 'b')
+        g.putEdge('a', 'c')
+        g.putEdge('b', 'd')
+        // let q = new Queue()
+        // q.enqueue('a')
+        // q.enqueue('b')
+        // q.enqueue('d')
+        expect(g.getPath('a', 'd')).toEqual(['a','b','d'])
+        // q = new Queue()
+        expect(g.getPath('a', 'e')).toEqual([])
+    })
+})
+
+describe('Graph path matrix&table', () => {
+    test('Graph path matrix', () => {
+        let g = new Graph()
+        // expect(g.direction).toBeFalsy()
+        g.putVertex('a')
+        g.putVertex('b')
+        g.putVertex('c')
+        g.putVertex('d')
+        g.putVertex('e')
+        g.putEdge('a', 'b')
+        g.putEdge('a', 'c')
+        g.putEdge('b', 'd')
+        let res = g.shortestPath('a')
+        let d = new Map()
+        d.set('a', 0)
+        d.set('b', 1)
+        d.set('c', 1)
+        d.set('d', 2)
+        d.set('e', Infinity)
+        expect(res.distance).toEqual(d)
+        let p = new Map()
+        p.set('a', null)
+        p.set('b', 'a')
+        p.set('c', 'a')
+        p.set('d', 'b')
+        p.set('e', null)
+        expect(res.predecessors).toEqual(p)
+    })
+    test('graph path table', () => {
+        let g = new Graph()
+        // expect(g.direction).toBeFalsy()
+        g.putVertex('a')
+        g.putVertex('b')
+        g.putVertex('c')
+        g.putVertex('d')
+        g.putVertex('e')
+        g.putEdge('a', 'b')
+        g.putEdge('a', 'c')
+        g.putEdge('b', 'd')
+        // expect(g.getPath('a', 'd')).toEqual(['a','b','d'])
+        // // q = new Queue()
+        // expect(g.getPath('a', 'e')).toEqual([])
+        let m = new Map()
+        m.set('a', (new Set()).add('b').add('c'))
+        m.set('b', (new Set()).add('d'))
+        m.set('c', (new Set()))
+        m.set('d', (new Set()))
+        m.set('e', (new Set()))
+        expect(g._adjTable).toEqual(m)
     })
 })
