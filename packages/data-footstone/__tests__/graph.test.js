@@ -345,7 +345,7 @@ describe('Graph bfs', () => {
             arr.push(vertex.data)
         }
         g.bfs('a', cb)
-        expect(arr).toEqual(['a', 'b', 'c', 'd'])
+        expect(arr).toEqual(['a', 'b', 'c', 'd', 'e'])
     })
 })
 describe('Graph dfs', () => {
@@ -365,7 +365,7 @@ describe('Graph dfs', () => {
             arr.push(vertex.data)
         }
         g.dfs('a', cb)
-        expect(arr).toEqual(['a', 'b', 'd', 'c'])
+        expect(arr).toEqual(['a', 'b', 'd', 'c', 'e'])
     })
 })
 

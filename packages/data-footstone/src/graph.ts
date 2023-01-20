@@ -31,7 +31,7 @@ class Graph<T> implements G<T> {
       data: v,
       inDegree: 0,
       outDegree: 0,
-      status: '',
+      status: 'cover',
       dTime: new Date(),
       fTime: new Date(),
     }
@@ -116,48 +116,65 @@ class Graph<T> implements G<T> {
     })
     return color
   }
+  reset() {
+    for (let vertex of this.vertexMap.values()) {
+      vertex.status = 'discovery'
+    }
+  }
   // 只能遍历连通的顶点
-  bfs(data: T, cb: F) {
-    let vertex: V<T> = this.vertexMap.get(data)
-    if (vertex) {
-      let color = this._initColor()
+  _bfs(vertex: V<T>, cb: F) {
       let vertexQueue = new Queue<V<T>>()
       vertexQueue.enqueue(vertex)
-      color.set(vertex.data, 'grey')
+      vertex.status = 'discovery'
+      // color.set(vertex.data, 'grey')
       while (!vertexQueue.isEmpty()) {
         let uVertex = vertexQueue.dequeue()
         let arr = [...(this._adjTable.get(uVertex.data))] // T[]
         arr.map(data => this.vertexMap.get(data)) // V<T>[]
         .forEach((neiborVertex: V<T>) => {
-          if (color.get(neiborVertex.data) === 'white') {
+          if (neiborVertex.status === 'cover') {
             vertexQueue.enqueue(neiborVertex)
-            color.set(neiborVertex.data, 'grey')
+            neiborVertex.status = 'discovery'
           }
         })
         cb(uVertex)
-        color.set(uVertex.data, 'black')
+        uVertex.status = 'visited'
       }
+  }
+  bfs(data: T, cb: F) {
+    let vertex = this.vertexMap.get(data)
+    if (vertex) {
+      do {
+        if (vertex.status === 'cover') {
+          this._bfs(vertex, cb)
+        }
+      } while (vertex = af(this.vertexMap.values()).find(vertex => vertex.status === 'cover')) // 这里可优化
+      this.reset()
     }
   }
-  _dfs(vertex: V<T>, cb: F, color: Map<T, GC>) {
-    // color.set(vertex.data, 'grey')
+  // to do 这里要变color
+  _dfs(vertex: V<T>, cb: F) {
     cb(vertex)
-    color.set(vertex.data, 'black')
+    vertex.status = 'visited'
     let arr = [...this._adjTable.get(vertex.data)] // T[]
     arr.map(data => this.vertexMap.get(data))
       .forEach((neiborVertex: V<T>) => {
-        if (color.get(neiborVertex.data) === 'white') {
-          color.set(neiborVertex.data, 'grey')
-          this._dfs(neiborVertex, cb, color)
+        if (neiborVertex.status === 'cover') {
+          neiborVertex.status = 'discovery'
+          this._dfs(neiborVertex, cb)
         }
       })
   }
   dfs(data: T, cb: F) {
     let vertex = this.vertexMap.get(data)
     if (vertex) {
-      let color = this._initColor()
-      color.set(vertex.data, 'grey')
-      this._dfs(vertex, cb, color)
+      do {
+        if (vertex.status === 'cover') {
+          vertex.status = 'discovery'
+          this._dfs(vertex, cb)
+        }
+      } while (vertex = af(this.vertexMap.values()).find(vertex => vertex.status === 'cover'))
+      this.reset()
     }
   }
   shortestPath(data: T) {
@@ -171,23 +188,27 @@ class Graph<T> implements G<T> {
         distance.set(data, NPF) // 所有距离设置为正无穷大
         predecessors.set(data, null) // 所有前置节点设置为null
       })
-      let color = this._initColor()
+      // let color = this._initColor()
       let dataQueue = new Queue<T>()
       distance.set(data, 0)
       dataQueue.enqueue(data)
-      color.set(data, 'grey')
+      // color.set(data, 'grey')
+      vertex.status = 'discovery'
       while (!dataQueue.isEmpty()) {
         let curData = dataQueue.dequeue()
         let arr = [...this._adjTable.get(curData)] // T[]
-        arr.forEach(data => {
-          if (color.get(data) === 'white') {
-            distance.set(data, distance.get(curData) + 1)
-            predecessors.set(data, curData)
-            dataQueue.enqueue(data)
-            color.set(data, 'grey')
+          .map(data => this.vertexMap.get(data)) // V<T>[]
+        arr.forEach(vt => {
+          if (vt.status === 'cover') {
+            distance.set(vt.data, distance.get(curData) + 1)
+            predecessors.set(vt.data, curData)
+            dataQueue.enqueue(vt.data)
+            // color.set(data, 'grey')
+            vt.status = 'discovery'
           }
         })
-        color.set(curData, 'black')
+        // color.set(curData, 'black')
+        this.vertexMap.get(curData).status = 'visited'
       }
     }
     return {distance, predecessors}
