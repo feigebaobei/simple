@@ -30,7 +30,12 @@ import {
   RedBackTree,
 } from './Tree'
 import { Vertex,
-  Edge,EdgeOrNull, Graph, GraphColor } from './graph'
+  Edge,EdgeOrNull, 
+  Graph,
+  DirectionGraph,
+  UndirectionGraph,
+  // GraphColor
+ } from './graph'
 import { Stack } from './stack'
 import {
   Cache,
@@ -84,7 +89,9 @@ export {
   Edge,
   EdgeOrNull,
   Graph,
-  GraphColor,
+  DirectionGraph,
+  UndirectionGraph,
+  // GraphColor,
   Cache,
   CacheNode,
   CacheOption,

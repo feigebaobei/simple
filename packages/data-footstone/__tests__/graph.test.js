@@ -1,5 +1,7 @@
 import {
-    Graph,
+    // Graph,
+    DirectionGraph,
+        UndirectionGraph
   } from '../src/graph'
 import { af, mapToObj } from '../src/helper'
 import { Queue } from '../src/queue'
@@ -8,10 +10,9 @@ let afGetValue = (iterator, key) => {
     return af(iterator).map(item => item[key])
 }
 
-describe('Graph', () => {
-    it('Graph basic 有向图 添加点、边', () => {
-        let g = new Graph()
-        expect(g.direction).toBeTruthy()
+describe('DirectionGraph', () => {
+    it('DirectionGraph basic 有向图 添加点、边', () => {
+        let g = new DirectionGraph()
         expect(g.createVertex('a').data).toBe('a')
         g.putVertex('a')
         g.putVertex('b')
@@ -33,9 +34,8 @@ describe('Graph', () => {
         end: 'c',
         }])
     })
-    test('Graph basic 有向图 移除点0', () => {
-        let g = new Graph()
-        expect(g.direction).toBeTruthy()
+    test('DirectionGraph basic 有向图 移除点0', () => {
+        let g = new DirectionGraph()
         expect(g.createVertex('a').data).toBe('a')
         g.putVertex('a')
         g.putVertex('b')
@@ -58,9 +58,8 @@ describe('Graph', () => {
             },
         ])
     })
-    test('Graph basic 有向图 移除点1', () => {
-        let g = new Graph()
-        expect(g.direction).toBeTruthy()
+    test('DirectionGraph basic 有向图 移除点1', () => {
+        let g = new DirectionGraph()
         expect(g.createVertex('a').data).toBe('a')
         g.putVertex('a')
         g.putVertex('b')
@@ -83,9 +82,8 @@ describe('Graph', () => {
         },
     ])
     })
-    test('Graph basic 有向图 移除点2', () => {
-        let g = new Graph()
-        expect(g.direction).toBeTruthy()
+    test('DirectionGraph basic 有向图 移除点2', () => {
+        let g = new DirectionGraph()
         expect(g.createVertex('a').data).toBe('a')
         g.putVertex('a')
         g.putVertex('b')
@@ -113,9 +111,8 @@ describe('Graph', () => {
             },
         ])
     })
-    test('Graph basic 有向图 移除点3', () => {
-        let g = new Graph()
-        expect(g.direction).toBeTruthy()
+    test('DirectionGraph basic 有向图 移除点3', () => {
+        let g = new DirectionGraph()
         expect(g.createVertex('a').data).toBe('a')
         g.putVertex('a')
         g.putVertex('b')
@@ -149,9 +146,8 @@ describe('Graph', () => {
             },
         ])
     })
-    test('Graph basic 有向图 移除边', () => {
-        let g = new Graph()
-        expect(g.direction).toBeTruthy()
+    test('DirectionGraph basic 有向图 移除边', () => {
+        let g = new DirectionGraph()
         expect(g.createVertex('a').data).toBe('a')
         g.putVertex('a')
         g.putVertex('b')
@@ -179,10 +175,9 @@ describe('Graph', () => {
         ])
     })
 })
-describe('Graph 无向图', () => {
-    it('Graph basic 无向图 添加点、边', () => {
-        let g = new Graph(false)
-        expect(g.direction).toBeFalsy()
+describe('UndirectionGraph 无向图', () => {
+    it('UndirectionGraph basic 无向图 添加点、边', () => {
+        let g = new UndirectionGraph(false)
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')
@@ -224,9 +219,8 @@ describe('Graph 无向图', () => {
             },
         ])
     })
-    test('Graph basic 无向图 移除点 起点', () => {
-        let g = new Graph(false)
-        expect(g.direction).toBeFalsy()
+    test('UndirectionGraph basic 无向图 移除点 起点', () => {
+        let g = new UndirectionGraph(false)
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')
@@ -248,9 +242,8 @@ describe('Graph 无向图', () => {
             { start: 'd', end: 'b'},
         ])
     })
-    test('Graph basic 无向图 移除点 终点', () => {
-        let g = new Graph(false)
-        expect(g.direction).toBeFalsy()
+    test('UndirectionGraph basic 无向图 移除点 终点', () => {
+        let g = new UndirectionGraph(false)
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')
@@ -274,9 +267,8 @@ describe('Graph 无向图', () => {
             { start: 'd', end: 'b'},
         ])
     })
-    test('Graph basic 无向图 移除点 起点+终点', () => {
-        let g = new Graph(false)
-        expect(g.direction).toBeFalsy()
+    test('UndirectionGraph basic 无向图 移除点 起点+终点', () => {
+        let g = new UndirectionGraph(false)
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')
@@ -298,9 +290,8 @@ describe('Graph 无向图', () => {
             { start: 'c', end: 'a'},
         ])
     })
-    test('Graph basic 无向图 移除点 无关联点', () => {
-        let g = new Graph(false)
-        expect(g.direction).toBeFalsy()
+    test('UndirectionGraph basic 无向图 移除点 无关联点', () => {
+        let g = new UndirectionGraph(false)
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')
@@ -330,8 +321,7 @@ describe('Graph 无向图', () => {
 
 describe('Graph bfs', () => {
     test('Graph bfs', () => {
-        let g = new Graph()
-        // expect(g.direction).toBeFalsy()
+        let g = new DirectionGraph()
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')
@@ -350,8 +340,7 @@ describe('Graph bfs', () => {
 })
 describe('Graph dfs', () => {
     test('Graph dfs', () => {
-        let g = new Graph()
-        // expect(g.direction).toBeFalsy()
+        let g = new DirectionGraph()
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')
@@ -371,8 +360,7 @@ describe('Graph dfs', () => {
 
 describe('Graph path', () => {
     test('Graph path', () => {
-        let g = new Graph()
-        // expect(g.direction).toBeFalsy()
+        let g = new DirectionGraph()
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')
@@ -406,8 +394,7 @@ describe('Graph path', () => {
         })
     })
     test('graph path', () => {
-        let g = new Graph()
-        // expect(g.direction).toBeFalsy()
+        let g = new DirectionGraph()
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')
@@ -428,8 +415,7 @@ describe('Graph path', () => {
 
 describe('Graph path matrix&table', () => {
     test('Graph path matrix', () => {
-        let g = new Graph()
-        // expect(g.direction).toBeFalsy()
+        let g = new DirectionGraph()
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')
@@ -455,8 +441,7 @@ describe('Graph path matrix&table', () => {
         expect(res.predecessors).toEqual(p)
     })
     test('graph path table', () => {
-        let g = new Graph()
-        // expect(g.direction).toBeFalsy()
+        let g = new DirectionGraph()
         g.putVertex('a')
         g.putVertex('b')
         g.putVertex('c')

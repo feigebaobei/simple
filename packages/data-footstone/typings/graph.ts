@@ -1,7 +1,9 @@
 import { F, N, A, D, B } from './baseType'
 import { Queue } from './queue'
 
-type GraphColor = 'white' | 'grey' | 'black'
+// for delete 2023/02/21
+// color => status
+// type GraphColor = 'white' | 'grey' | 'black'
 type ShortestPathObj<T> = {
   distance: Map<T, N>
   predecessors: Map<T, T>
@@ -28,21 +30,17 @@ type EdgeOrNull<T> = Edge<T> | null
 // 它是基类
 interface Graph<T> {
   vertexMap: Map<T, Vertex<T>>
-  // edgeMap: Map<T, Edge<T>>
   adjMatrix: Map<T, Map<T, EdgeOrNull<T>>>
-  // _adjTable: Map<T, Set<T>>
   adjTable: Map<T, Set<Vertex<T>>>
-  direction: B
+  // direction: B
   // adjList: Map<Vertex<T>, T[]>
   createVertex: (v: T) => Vertex<T>
   createEdge: (a: T, b: T) => Edge<T>
-  // adjMatrix: T[][]
   putVertex: (a: T) => void
-  putEdge: (a: T, b: T) => void
+  // putEdge: (a: T, b: T) => void
   edgeList: () => Edge<T>[]
-  // removeVertex: (a: T) => Vertex<T> | undefined
-  // removeEdga: (a: T, b: T) => Edge<T> | undefined
-  // _initColor: () => Map<T, GraphColor>
+  removeVertex: (a: T) => Vertex<T> | undefined
+  // removeEdge: (a: T, b: T) => Edge<T> | undefined
   bfs: (data: T, cb: F) => void
   dfs: (data: T, cb: F) => void
   shortestPath: (data: T) => ShortestPathObj<T>
@@ -51,18 +49,25 @@ interface Graph<T> {
 
 // 有向图
 interface DirectionGraph<T> extends Graph<T> {
-
+  // putVertex: (a: T) => void
+  putEdge: (a: T, b: T) => void
+  // removeVertex: (a: T) => Vertex<T> | undefined
+  removeEdge: (a: T, b: T) => Edge<T> | undefined
 }
 
 // 无向图
 interface UndirectionGraph<T> extends Graph<T> {
-
+  // putVertex: (a: T) => void
+  putEdge: (a: T, b: T) => void
+  // removeVertex: (a: T) => Vertex<T> | undefined
+  removeEdge: (a: T, b: T) => Edge<T> | undefined
 }
 
 export { Vertex,
   Edge,
   EdgeOrNull,
-  Graph, GraphColor,
+  Graph, 
+  // GraphColor,
   DirectionGraph,
   UndirectionGraph,
  }

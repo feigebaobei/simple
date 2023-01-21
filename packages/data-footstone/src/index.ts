@@ -19,6 +19,8 @@ import {
 } from './tree'
 import * as order from './order'
 import { Lru, Fifo, Lfu } from './store'
+import { DirectionGraph,
+  UndirectionGraph } from './graph'
 
 export {
   Stack,
@@ -41,4 +43,6 @@ export {
   Lru,
   Fifo,
   Lfu,
+  DirectionGraph,
+  UndirectionGraph,
 }

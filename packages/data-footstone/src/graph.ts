@@ -1,12 +1,10 @@
-// DirectionGraph
-// UndirectionGraph
-
 import {
   Vertex as V,
   Edge as E,
    Graph as G,
    Queue as Q, 
-  GraphColor as GC,
+  // GraphColor as GC,
+  DirectionGraph as DG,
    F, N, B 
 } from '../typings'
 import { Queue } from './queue'
@@ -16,16 +14,16 @@ class Graph<T> implements G<T> {
   vertexMap: G<T>['vertexMap']
   adjMatrix: G<T>['adjMatrix']
   adjTable: G<T>['adjTable']
-  direction: G<T>['direction']
-  constructor (direction: B = true) {
+  // direction: G<T>['direction']
+  constructor () {
     this.vertexMap = new Map()
     this.adjMatrix = new Map() // 保存边的信息
     this.adjTable = new Map() // 保存点的信息
     // 不可改变
-    Object.defineProperty(this, 'direction', {
-      value: direction,
-      writable: false
-    })
+    // Object.defineProperty(this, 'direction', {
+    //   value: direction,
+    //   writable: false
+    // })
   }
   createVertex(v: T) {
     return {
@@ -54,17 +52,17 @@ class Graph<T> implements G<T> {
     this.adjMatrix.set(v, new Map(Array.from(this.vertexMap.keys()).map((v) => [v, null])))
     this.adjTable.set(v, new Set())
   }
-  putEdge(a: T, b: T) {
-    if (this.direction) { // 有方向，需要添加1个边
-      this.adjMatrix.get(a).set(b, this.createEdge(a, b))
-      this.adjTable.get(a).add(this.vertexMap.get(b))
-    } else { // 无方向，需要添加2个边。
-      this.adjMatrix.get(a).set(b, this.createEdge(a, b)) // 添加 a->b
-      this.adjMatrix.get(b).set(a, this.createEdge(b, a)) // 添加 b->a
-      this.adjTable.get(a).add(this.vertexMap.get(b))
-      this.adjTable.get(b).add(this.vertexMap.get(a))
-    }
-  }
+  // putEdge(a: T, b: T) {
+  //   if (this.direction) { // 有方向，需要添加1个边
+  //     this.adjMatrix.get(a).set(b, this.createEdge(a, b))
+  //     this.adjTable.get(a).add(this.vertexMap.get(b))
+  //   } else { // 无方向，需要添加2个边。
+  //     this.adjMatrix.get(a).set(b, this.createEdge(a, b)) // 添加 a->b
+  //     this.adjMatrix.get(b).set(a, this.createEdge(b, a)) // 添加 b->a
+  //     this.adjTable.get(a).add(this.vertexMap.get(b))
+  //     this.adjTable.get(b).add(this.vertexMap.get(a))
+  //   }
+  // }
   edgeList() {
     return Array.from(this.adjMatrix.values()).reduce((r: E<T>[], c: Map<T, E<T>>) => {
       for (let edge of c.values()) {
@@ -84,25 +82,25 @@ class Graph<T> implements G<T> {
     }
     return vertex
   }
-  removeEdge(a: T, b: T) {
-    let res = []
-    if (this.direction) { // 有方向，应该删除1个边
-      let t = this.adjMatrix.get(a)
-      res.push(t.get(b))
-      t.delete(b)
-      this.adjTable.get(a).delete(this.vertexMap.get(b))
-    } else { // 无方向，应该删除2个边
-      let t = this.adjMatrix.get(a)
-      res.push(t.get(b))
-      t.delete(b)
-      t = this.adjMatrix.get(b)
-      res.push(t.get(a))
-      t.delete(a)
-      this.adjTable.get(a).delete(this.vertexMap.get(b))
-      this.adjTable.get(b).delete(this.vertexMap.get(a))
-    }
-    return res
-  }
+  // removeEdge(a: T, b: T) {
+  //   let res = []
+  //   if (this.direction) { // 有方向，应该删除1个边
+  //     let t = this.adjMatrix.get(a)
+  //     res.push(t.get(b))
+  //     t.delete(b)
+  //     this.adjTable.get(a).delete(this.vertexMap.get(b))
+  //   } else { // 无方向，应该删除2个边
+  //     let t = this.adjMatrix.get(a)
+  //     res.push(t.get(b))
+  //     t.delete(b)
+  //     t = this.adjMatrix.get(b)
+  //     res.push(t.get(a))
+  //     t.delete(a)
+  //     this.adjTable.get(a).delete(this.vertexMap.get(b))
+  //     this.adjTable.get(b).delete(this.vertexMap.get(a))
+  //   }
+  //   return res
+  // }
   reset() {
     for (let vertex of this.vertexMap.values()) {
       vertex.status = 'discovery'
@@ -137,7 +135,6 @@ class Graph<T> implements G<T> {
       this.reset()
     }
   }
-  // to do 这里要变color
   _dfs(vertex: V<T>, cb: F) {
     cb(vertex)
     vertex.status = 'visited'
@@ -209,4 +206,75 @@ class Graph<T> implements G<T> {
   }
 }
 
-export { Graph }
+class DirectionGraph<T>  extends Graph<T> implements DG<T>{
+  constructor() {
+    super()
+    // this.direction = true
+  }
+  // putVertex(data: T) {
+  //   this.vertexMap.set(data, this.createVertex(data))
+  //   for (let m of this.adjMatrix.values()) {
+  //     m.set(data, null)
+  //   }
+  //   this.adjMatrix.set(data, new Map(af(this.adjMatrix.keys()).map(data => [data, null])))
+  //   this.adjTable.set(data, new Set())
+  // }
+  putEdge(a: T, b: T) {
+    this.adjMatrix.get(a).set(b, this.createEdge(a, b))
+    this.adjTable.get(a).add(this.vertexMap.get(b))
+  }
+  // removeVertex(p: T) {
+  //   let vertex = this.vertexMap.get(p)
+  //   if (vertex) {
+  //     this.vertexMap.delete(vertex.data)
+  //     this.adjMatrix.delete(vertex.data)
+  //     af(this.adjMatrix.values()).forEach(map => map.delete(vertex.data))
+  //     this.adjTable.delete(vertex.data)
+  //     af(this.adjTable.values()).forEach(set => set.delete(vertex))
+  //   }
+  //   return vertex
+  // }
+  removeEdge(a: T, b: T) {
+    let temp = this.adjMatrix.get(a)
+    let edge = temp.get(b)
+    temp.delete(b)
+    this.adjTable.get(a).delete(this.vertexMap.get(b))
+    return edge
+  }
+}
+class UndirectionGraph<T>  extends Graph<T> {
+  constructor() {
+    super()
+  }
+  putEdge(a: T, b: T) {
+    this.adjMatrix.get(a).set(b, this.createEdge(a, b))
+    this.adjMatrix.get(b).set(a, this.createEdge(b, a))
+    this.adjTable.get(a).add(this.vertexMap.get(b))
+    this.adjTable.get(b).add(this.vertexMap.get(a))
+  }
+  // removeVertex(a: T) => V<T> | undefined
+  // removeVertex(data: T) {
+  //   let vertex = this.vertexMap.get(data)
+    
+  //   return vertex
+  // }
+  // removeEdge: (a: T, b: T) => E<T> | undefined
+  removeEdge(a: T, b: T) {
+    let edge = []
+    let temp = this.adjMatrix.get(a)
+    edge.push(temp.get(b))
+    temp.delete(b)
+    temp = this.adjMatrix.get(b)
+    edge.push(temp.get(a))
+    temp.delete(a)
+    this.adjTable.get(a).delete(this.vertexMap.get(b))
+    this.adjTable.get(b).delete(this.vertexMap.get(a))
+    return edge
+  }
+}
+
+export {
+  // Graph
+  DirectionGraph,
+  UndirectionGraph,
+}
