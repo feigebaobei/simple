@@ -1,4 +1,3 @@
-// _adjTable =》 adjTable
 // DirectionGraph
 // UndirectionGraph
 
@@ -16,16 +15,12 @@ import { af, NPF } from './helper'
 class Graph<T> implements G<T> {
   vertexMap: G<T>['vertexMap']
   adjMatrix: G<T>['adjMatrix']
-  // _adjTable: G<T>['_adjTable']
   adjTable: G<T>['adjTable']
   direction: G<T>['direction']
   constructor (direction: B = true) {
     this.vertexMap = new Map()
-    // this.edgeMap = new Map()
     this.adjMatrix = new Map() // 保存边的信息
-    // this._adjTable = new Map()
     this.adjTable = new Map() // 保存点的信息
-    // this.direction = direction // 是否有方向
     // 不可改变
     Object.defineProperty(this, 'direction', {
       value: direction,
@@ -51,47 +46,32 @@ class Graph<T> implements G<T> {
       status: ''
     }
   }
-  // get adjTable () {
-  //   return af(this._adjTable.entries()).reduce((r, [k, v]) => {
-  //     r.set(k, af(v.keys()).reduce((r, c) => {
-  //       this.vertexMap.get(c)
-  //       return r
-  //     }, new Map()))
-  //     return r
-  //   }, new Map)
-  // }
   putVertex(v: T) {
     this.vertexMap.set(v, this.createVertex(v))
     for (let a of this.adjMatrix.values()) {
       a.set(v, null)
     }
     this.adjMatrix.set(v, new Map(Array.from(this.vertexMap.keys()).map((v) => [v, null])))
-    // this._adjTable.set(v, new Set())
     this.adjTable.set(v, new Set())
   }
   putEdge(a: T, b: T) {
     if (this.direction) { // 有方向，需要添加1个边
       this.adjMatrix.get(a).set(b, this.createEdge(a, b))
-      // this._adjTable.get(a).add(b)
       this.adjTable.get(a).add(this.vertexMap.get(b))
     } else { // 无方向，需要添加2个边。
       this.adjMatrix.get(a).set(b, this.createEdge(a, b)) // 添加 a->b
       this.adjMatrix.get(b).set(a, this.createEdge(b, a)) // 添加 b->a
-      // this._adjTable.get(a).add(b)
-      // this._adjTable.get(b).add(a)
       this.adjTable.get(a).add(this.vertexMap.get(b))
       this.adjTable.get(b).add(this.vertexMap.get(a))
     }
   }
   edgeList() {
     return Array.from(this.adjMatrix.values()).reduce((r: E<T>[], c: Map<T, E<T>>) => {
-      // r.push(...Array.from(c.values()))
       for (let edge of c.values()) {
         edge && r.push(edge)
       }
       return r
     }, [])
-    // .filter(Boolean, this)
   }
   removeVertex(p: T) {
     let vertex = this.vertexMap.get(p)
@@ -99,9 +79,7 @@ class Graph<T> implements G<T> {
       this.vertexMap.delete(vertex.data) // 删除map中的点
       this.adjMatrix.delete(vertex.data) // 删除矩阵中的点
       af(this.adjMatrix.values()).forEach(map => map.delete(vertex.data))
-      // this._adjTable.delete(vertex.data) // 删除表中的点
       this.adjTable.delete(vertex.data)
-      // af(this._adjTable.values()).forEach(set => set.delete(vertex.data))
       af(this.adjTable.values()).forEach(set => set.delete(vertex))
     }
     return vertex
@@ -125,13 +103,6 @@ class Graph<T> implements G<T> {
     }
     return res
   }
-  // _initColor() {
-  //   let color: Map<T, GC> = new Map()
-  //   af(this.vertexMap.keys()).forEach((item: T) => {
-  //     color.set(item, 'white')
-  //   })
-  //   return color
-  // }
   reset() {
     for (let vertex of this.vertexMap.values()) {
       vertex.status = 'discovery'
@@ -142,11 +113,8 @@ class Graph<T> implements G<T> {
       let vertexQueue = new Queue<V<T>>()
       vertexQueue.enqueue(vertex)
       vertex.status = 'discovery'
-      // color.set(vertex.data, 'grey')
       while (!vertexQueue.isEmpty()) {
         let uVertex = vertexQueue.dequeue()
-        // let arr = [...(this._adjTable.get(uVertex.data))] // T[]
-        // arr.map(data => this.vertexMap.get(data)) // V<T>[]
         let arr = this.adjTable.get(uVertex.data)
         arr.forEach((neiborVertex: V<T>) => {
           if (neiborVertex.status === 'cover') {
@@ -173,8 +141,6 @@ class Graph<T> implements G<T> {
   _dfs(vertex: V<T>, cb: F) {
     cb(vertex)
     vertex.status = 'visited'
-    // let arr = [...this._adjTable.get(vertex.data)] // T[]
-    // arr.map(data => this.vertexMap.get(data))
     let arr = this.adjTable.get(vertex.data)
     arr.forEach((neiborVertex: V<T>) => {
         if (neiborVertex.status === 'cover') {
@@ -206,27 +172,21 @@ class Graph<T> implements G<T> {
         distance.set(data, NPF) // 所有距离设置为正无穷大
         predecessors.set(data, null) // 所有前置节点设置为null
       })
-      // let color = this._initColor()
       let dataQueue = new Queue<T>()
       distance.set(data, 0)
       dataQueue.enqueue(data)
-      // color.set(data, 'grey')
       vertex.status = 'discovery'
       while (!dataQueue.isEmpty()) {
         let curData = dataQueue.dequeue()
-        // let arr = [...this._adjTable.get(curData)] // T[]
-        //   .map(data => this.vertexMap.get(data)) // V<T>[]
         let arr = this.adjTable.get(curData)
         arr.forEach(vt => {
           if (vt.status === 'cover') {
             distance.set(vt.data, distance.get(curData) + 1)
             predecessors.set(vt.data, curData)
             dataQueue.enqueue(vt.data)
-            // color.set(data, 'grey')
             vt.status = 'discovery'
           }
         })
-        // color.set(curData, 'black')
         this.vertexMap.get(curData).status = 'visited'
       }
     }
