@@ -12,7 +12,7 @@ interface Vertex<T> {
   data: T
   inDegree: N
   outDegree: N
-  status: A
+  status: A // 实际只用到string.可以考虑改为string
   dTime: D // 考虑使用ms
   fTime: D
   // parent: VertexOrNull<T>
@@ -49,18 +49,14 @@ interface Graph<T> {
 
 // 有向图
 interface DirectionGraph<T> extends Graph<T> {
-  // putVertex: (a: T) => void
   putEdge: (a: T, b: T) => void
-  // removeVertex: (a: T) => Vertex<T> | undefined
   removeEdge: (a: T, b: T) => Edge<T> | undefined
 }
 
 // 无向图
 interface UndirectionGraph<T> extends Graph<T> {
-  // putVertex: (a: T) => void
   putEdge: (a: T, b: T) => void
-  // removeVertex: (a: T) => Vertex<T> | undefined
-  removeEdge: (a: T, b: T) => Edge<T> | undefined
+  removeEdge: (a: T, b: T) => Edge<T>[]
 }
 
 export { Vertex,

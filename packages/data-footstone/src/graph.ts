@@ -5,6 +5,7 @@ import {
    Queue as Q, 
   // GraphColor as GC,
   DirectionGraph as DG,
+  UndirectionGraph as UG,
    F, N, B 
 } from '../typings'
 import { Queue } from './queue'
@@ -211,29 +212,10 @@ class DirectionGraph<T>  extends Graph<T> implements DG<T>{
     super()
     // this.direction = true
   }
-  // putVertex(data: T) {
-  //   this.vertexMap.set(data, this.createVertex(data))
-  //   for (let m of this.adjMatrix.values()) {
-  //     m.set(data, null)
-  //   }
-  //   this.adjMatrix.set(data, new Map(af(this.adjMatrix.keys()).map(data => [data, null])))
-  //   this.adjTable.set(data, new Set())
-  // }
   putEdge(a: T, b: T) {
     this.adjMatrix.get(a).set(b, this.createEdge(a, b))
     this.adjTable.get(a).add(this.vertexMap.get(b))
   }
-  // removeVertex(p: T) {
-  //   let vertex = this.vertexMap.get(p)
-  //   if (vertex) {
-  //     this.vertexMap.delete(vertex.data)
-  //     this.adjMatrix.delete(vertex.data)
-  //     af(this.adjMatrix.values()).forEach(map => map.delete(vertex.data))
-  //     this.adjTable.delete(vertex.data)
-  //     af(this.adjTable.values()).forEach(set => set.delete(vertex))
-  //   }
-  //   return vertex
-  // }
   removeEdge(a: T, b: T) {
     let temp = this.adjMatrix.get(a)
     let edge = temp.get(b)
@@ -242,7 +224,7 @@ class DirectionGraph<T>  extends Graph<T> implements DG<T>{
     return edge
   }
 }
-class UndirectionGraph<T>  extends Graph<T> {
+class UndirectionGraph<T>  extends Graph<T> implements UG<T> {
   constructor() {
     super()
   }
@@ -252,13 +234,6 @@ class UndirectionGraph<T>  extends Graph<T> {
     this.adjTable.get(a).add(this.vertexMap.get(b))
     this.adjTable.get(b).add(this.vertexMap.get(a))
   }
-  // removeVertex(a: T) => V<T> | undefined
-  // removeVertex(data: T) {
-  //   let vertex = this.vertexMap.get(data)
-    
-  //   return vertex
-  // }
-  // removeEdge: (a: T, b: T) => E<T> | undefined
   removeEdge(a: T, b: T) {
     let edge = []
     let temp = this.adjMatrix.get(a)
