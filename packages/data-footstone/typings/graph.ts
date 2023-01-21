@@ -24,11 +24,14 @@ interface Edge<T> {
   status: A
 }
 type EdgeOrNull<T> = Edge<T> | null
+
+// 它是基类
 interface Graph<T> {
   vertexMap: Map<T, Vertex<T>>
   // edgeMap: Map<T, Edge<T>>
   adjMatrix: Map<T, Map<T, EdgeOrNull<T>>>
-  _adjTable: Map<T, Set<T>>
+  // _adjTable: Map<T, Set<T>>
+  adjTable: Map<T, Set<Vertex<T>>>
   direction: B
   // adjList: Map<Vertex<T>, T[]>
   createVertex: (v: T) => Vertex<T>
@@ -39,14 +42,27 @@ interface Graph<T> {
   edgeList: () => Edge<T>[]
   // removeVertex: (a: T) => Vertex<T> | undefined
   // removeEdga: (a: T, b: T) => Edge<T> | undefined
-  _initColor: () => Map<T, GraphColor>
+  // _initColor: () => Map<T, GraphColor>
   bfs: (data: T, cb: F) => void
   dfs: (data: T, cb: F) => void
   shortestPath: (data: T) => ShortestPathObj<T>
   getPath: (from: T, to: T) => T[]
 }
 
+// 有向图
+interface DirectionGraph<T> extends Graph<T> {
+
+}
+
+// 无向图
+interface UndirectionGraph<T> extends Graph<T> {
+
+}
+
 export { Vertex,
   Edge,
   EdgeOrNull,
-  Graph, GraphColor }
+  Graph, GraphColor,
+  DirectionGraph,
+  UndirectionGraph,
+ }
