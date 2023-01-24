@@ -31,7 +31,7 @@ class Graph<T> implements G<T> {
       data: v,
       inDegree: 0,
       outDegree: 0,
-      status: 'cover',
+      status: 'cover', // 使用状态机+链表处理状态。
       dTime: new Date(),
       fTime: new Date(),
     }
@@ -147,6 +147,7 @@ class Graph<T> implements G<T> {
         }
       })
   }
+  // 未处理dTime/fTime
   dfs(data: T, cb: F) {
     let vertex = this.vertexMap.get(data)
     if (vertex) {

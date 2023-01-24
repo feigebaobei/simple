@@ -3,171 +3,21 @@ import {
   BinaryTree,
   // BinaryTreeNode,
   BinarySearchTree,
+  BinarySearchTreeNode,
   AVLTree,
   RedBackTree,
 } from '../src/tree'
+import {loseloseHashFn} from '../src/hashMap'
 
 // let arr = []
 
-
-describe('BinarySearchTree', () => {
-  it('BinarySearchTree', () => {
-    let t = new BinarySearchTree()
-    expect(t.createNode(5)).toEqual({ value: 5, left: null, right: null, parent: null })
-    t.insert(5)
-    t.insert(3)
-    t.insert(4)
-    t.insert(2)
-    // expect(t.root).toEqual({
-    //   value: 5,
-    //   left: {
-    //     value: 3,
-    //     left: {
-    //       value: 2,
-    //       left: null,
-    //       right: null,
-    //       parent: null,
-    //     },
-    //     right: {
-    //       value: 4,
-    //       left: null,
-    //       right: null,
-    //       parent: null,
-    //     },
-    //   },
-    //   right: null,
-    //   parent: null,
-    // })
-
-    let temp = []
-    t.traverse(v => {temp.push(v)})
-    // console.log('temp', temp)
-    expect(temp).toEqual([2,3,4,5])
-    expect(t.search(3)).toBeTruthy()
-    expect(t.search(4)).toBeTruthy()
-    expect(t.search(6)).toBeFalsy()
-    temp = []
-    t.traverse((v) => {
-      temp.push(v)
-    })
-    expect(temp).toEqual([2, 3, 4, 5])
-    temp = []
-    t.traverse((v) => {
-      temp.push(v)
-    }, 'preOrder')
-    expect(temp).toEqual([5, 3, 2, 4])
-    temp = []
-    t.traverse((v) => {
-      temp.push(v)
-    }, 'postOrder')
-    expect(temp).toEqual([2, 4, 3, 5])
-    expect(t.min()).toBe(2)
-    t.insert(6)
-    expect(t.max()).toBe(6)
-    // expect(t.findMinNode(t.root)).toEqual({
-    //   value: 2,
-    //   left: null,
-    //   right: null,
-    //   parent: null,
-    // })
-    expect(t.findMinNode(t.root).value).toBe(2)
-    // expect(t.findMaxNode(t.root)).toEqual({
-    //   value: 6,
-    //   left: null,
-    //   right: null,
-    //   parent: null,
-    // })
-    expect(t.findMaxNode(t.root).value).toBe(6)
-    t.remove(3) // 有2个节点
-    // expect(t.root).toEqual({
-    //   value: 5,
-    //   left: {
-    //     value: 4,
-    //     left: {
-    //       value: 2,
-    //       left: null,
-    //       right: null,
-    //       parent: null,
-    //     },
-    //     right: null,
-    //     parent: null,
-    //   },
-    //   right: {
-    //     value: 6,
-    //     left: null,
-    //     right: null,
-    //     parent: null,
-    //   },
-    //   parent: null,
-    // })
-    temp = []
-    t.traverse(v => {temp.push(v)})
-    expect(temp).toEqual([2,4,5,6])
-    t.remove(4) // 有1个左节点
-    // expect(t.root).toEqual({
-    //   value: 5,
-    //   left: {
-    //     value: 2,
-    //     left: null,
-    //     right: null,
-    //     parent: null,
-    //   },
-    //   right: {
-    //     value: 6,
-    //     left: null,
-    //     right: null,
-    //     parent: null,
-    //   },
-    //   parent: null,
-    // })
-    temp = []
-    t.traverse(v => {temp.push(v)})
-    expect(temp).toEqual([2,5,6])
-    t.insert(7) // 有1个右节点
-    t.remove(6) // 有1个右节点
-    // expect(t.root).toEqual({
-    //   value: 5,
-    //   left: {
-    //     value: 2,
-    //     left: null,
-    //     right: null,
-    //     parent: null,
-    //   },
-    //   right: {
-    //     value: 7,
-    //     left: null,
-    //     right: null,
-    //     parent: null,
-    //   },
-    //   parent: null,
-    // })
-    temp = []
-    t.traverse(v => {temp.push(v)})
-    expect(temp).toEqual([2,5,7])
-    t.remove(7) // 有0个节点
-    // expect(t.root).toEqual({
-    //   value: 5,
-    //   left: {
-    //     value: 2,
-    //     left: null,
-    //     right: null,
-    //     parent: null,
-    //   },
-    //   right: null,
-    //   parent: null,
-    // })
-    temp = []
-    t.traverse(v => {temp.push(v)})
-    expect(temp).toEqual([2,5])
-  })
-})
 
 describe('BinaryTree', () => {
   test('BinaryTree 结构', () => {
     //     2
     //  1     3
     let tree = new BinaryTree()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     tree.insertAsLeft(tree.root, 1)
     tree.insertAsRight(tree.root, 3)
     expect(tree.root.value).toBe(2)
@@ -199,7 +49,7 @@ describe('BinaryTree', () => {
     //  1     3
     // 4 5   6 7 
     let tree = new BinaryTree()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     tree.insertAsLeft(tree.root, 1)
     tree.insertAsRight(tree.root, 3)
     tree.insertAsLeft(tree.root.left, 4)
@@ -224,7 +74,7 @@ describe('BinaryTree', () => {
     //  1     3
     // 4 5
     let tree = new BinaryTree()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     tree.insertAsLeft(tree.root, 1)
     tree.insertAsRight(tree.root, 3)
     tree.insertAsLeft(tree.root.left, 4)
@@ -239,7 +89,7 @@ describe('BinaryTree', () => {
     expect(tree.minDeep()).toBe(1)
     tree = new BinaryTree()
     expect(tree.minDeep()).toBe(-1)
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     expect(tree.minDeep()).toBe(0)
   })
   test('BinaryTree height', () => {
@@ -247,7 +97,7 @@ describe('BinaryTree', () => {
     //  1     3
     // 4 5
     let tree = new BinaryTree()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     tree.insertAsLeft(tree.root, 1)
     tree.insertAsRight(tree.root, 3)
     tree.insertAsLeft(tree.root.left, 4)
@@ -265,7 +115,7 @@ describe('BinaryTree', () => {
   })
   test('BinaryTree 得到指定层数的节点', () => {
     let tree = new BinaryTree()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     expect(tree.getLevelNode(0).map(item => (item.value))).toEqual([2])
     expect(tree.getLevelNode(1).map(item => (item.value))).toEqual([])
     expect(tree.getLevelNode(10).map(item => (item.value))).toEqual([])
@@ -285,7 +135,7 @@ describe('BinaryTree', () => {
     // 4 5   6 7
     let tree = new BinaryTree()
     expect(tree.isProper()).toBeTruthy()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     expect(tree.isProper()).toBeTruthy()
     tree.insertAsLeft(tree.root, 1)
     expect(tree.isProper()).toBeFalsy()
@@ -305,7 +155,7 @@ describe('BinaryTree', () => {
     // 4 5   6 7
     let tree = new BinaryTree()
     expect(tree.isFull()).toBeTruthy()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     expect(tree.isFull()).toBeTruthy()
     tree.insertAsLeft(tree.root, 1)
     expect(tree.isFull()).toBeFalsy()
@@ -325,7 +175,7 @@ describe('BinaryTree', () => {
     // 4 5   6 7
     let tree = new BinaryTree()
     expect(tree.isComplete()).toBeTruthy()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     expect(tree.isComplete()).toBeTruthy()
     tree.insertAsLeft(tree.root, 1)
     // expect(tree.height()).toBe(2)
@@ -338,7 +188,7 @@ describe('BinaryTree', () => {
     //  1     3
     // 4 5
     let tree = new BinaryTree()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     tree.insertAsLeft(tree.root, 1)
     tree.insertAsRight(tree.root, 3)
     tree.insertAsLeft(tree.root.left, 4)
@@ -351,7 +201,7 @@ describe('BinaryTree', () => {
     //  1     3
     // 4     6
     let tree = new BinaryTree()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     tree.insertAsLeft(tree.root, 1)
     tree.insertAsRight(tree.root, 3)
     tree.insertAsLeft(tree.root.left, 4)
@@ -365,7 +215,7 @@ describe('BinaryTree', () => {
     //  1     3
     //       6 7
     let tree = new BinaryTree()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     tree.insertAsLeft(tree.root, 1)
     tree.insertAsRight(tree.root, 3)
     // tree.insertAsLeft(tree.root.left, 4)
@@ -380,7 +230,7 @@ describe('BinaryTree', () => {
     //  4     6 7
     // 5 6
     let tree = new BinaryTree()
-    tree.root = tree.createNode(2)
+    tree.root = tree.createBTNode(2)
     tree.insertAsLeft(tree.root, 1)
     tree.insertAsRight(tree.root, 3)
     tree.insertAsLeft(tree.root.left, 4)
@@ -392,16 +242,65 @@ describe('BinaryTree', () => {
   })
 })
 
-// describe('BinaryTree', () => {
-//   test('BinaryTree', () => {
-//     let tree = new BinaryTree()
-//     tree.root = tree.createNode(2)
-//     tree.insertAsLeft(tree.root, 1)
-//     tree.insertAsRight(tree.root, 3)
-//     expect(tree.root.value).toBe(2)
-//     expect(tree.root.left.value).toBe(1)
-//     expect(tree.root.right.value).toBe(3)
-//     expect(tree.root.left.parent.value).toBe(2)
-//     expect(tree.root.right.parent.value).toBe(2)
+let obj = {
+  15: {
+    key: loseloseHashFn(15), // 28
+    value: 15
+  },
+  17: {
+    key: loseloseHashFn(17),
+    value: 17
+  },
+  21: {
+    key: loseloseHashFn(21),
+    value: 21
+  },
+  8: {
+    key: loseloseHashFn(8), // 19
+    value: 8
+  },
+  9: {
+    key: loseloseHashFn(9),
+    value: 9
+  },
+  1: {
+    key: loseloseHashFn(1),
+    value: 1
+  },
+  5: {
+    key: loseloseHashFn(5),
+    value: 5
+  },
+  13: {
+    key: loseloseHashFn(13),
+    value: 13
+  },
+}
+
+describe.only('BinarySearchTreeNode', () => {
+  test('', () => {
+    let node = new BinarySearchTreeNode(obj[15].key, obj[15].value)
+    expect(node).toEqual({
+      key: obj[15].key,
+      value: obj[15].value,
+      left: null,
+      right: null,
+      parent: null,
+    })
+    let node1 = new BinarySearchTreeNode(obj[8].key, obj[8].value)
+    expect(node['operator<'](node1)).toBeFalsy()
+    expect(node['operator>'](node1)).toBeTruthy()
+    expect(node['operator==='](node1)).toBeFalsy()
+    expect(node['operator!=='](node1)).toBeTruthy()
+  })
+})
+
+// describe('BinarySearchTree', () => {
+//   it('insert & search', () => {
+//     let tree = new BinarySearchTree()
+//     tree.insert(obj['15'].key, obj['15'].value)
+//     expect(tree.search(obj['15'].key)).toEqual({
+
+//     })
 //   })
 // })

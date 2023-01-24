@@ -4,11 +4,11 @@ import {
   // BaseTreeNode as BTN,
   // BaseTree as BT,
 
-  BinaryTreeNode,
+  BinaryTreeNode as BTN,
   //  as BTN,
-  BinaryTreeNodeOrNull,
+  BinaryTreeNodeOrNull as BTNON,
   BinaryTree as BT,
-  BinarySearchTreeNode,
+  BinarySearchTreeNode as BSTN,
   BinarySearchTreeNodeOrNull,
   BinarySearchTree as BST,
   AVLTree as AVLT,
@@ -18,13 +18,23 @@ import {
   N,
 } from '../typings'
 
+
+
 class BinaryTree<T> implements BT<T> {
-  // root: BinaryTreeNodeOrNull<T>
   root: BT<T>['root']
+  // createNode: BT<T>['createNode']
   constructor() {
     this.root = null
+    // this.createNode = (v) => {
+    //   return {
+    //   value: v,
+    //   left: null,
+    //   right: null,
+    //   parent: null,
+    //   }
+    // }
   }
-  createNode(v: T) {
+  createBTNode(v: T) {
     return {
       value: v,
       left: null,
@@ -33,8 +43,8 @@ class BinaryTree<T> implements BT<T> {
     }
   }
   // 还缺少设置根节点的方法
-  insertAsLeft(parent: BinaryTreeNode<T>, current: T) {
-    let cur = this.createNode(current)
+  insertAsLeft(parent: BTN<T>, current: T) {
+    let cur = this.createBTNode(current)
     let oldLeft = parent.left
     if (oldLeft) {
       oldLeft.parent = cur
@@ -46,8 +56,8 @@ class BinaryTree<T> implements BT<T> {
       cur.parent = parent
     }
   }
-  insertAsRight(parent: BinaryTreeNode<T>, current: T) {
-    let cur = this.createNode(current)
+  insertAsRight(parent: BTN<T>, current: T) {
+    let cur = this.createBTNode(current)
     let oldRight = parent.right
     if (oldRight) {
       oldRight.parent = cur
@@ -59,9 +69,9 @@ class BinaryTree<T> implements BT<T> {
       cur.parent = parent
     }
   }
-  _preOrderTraverse(cb: F, node: BinaryTreeNodeOrNull<T>) {
+  _preOrderTraverse(cb: F, node: BTNON<T>) {
     if (node) {
-      let stack = new Stack<BinaryTreeNode<T>>()
+      let stack = new Stack<BTN<T>>()
       stack.push(node)
       while (stack.size()) {
         let n = stack.pop()
@@ -71,23 +81,23 @@ class BinaryTree<T> implements BT<T> {
       }
     }
   }
-  _inOrderTraverse(cb: F, node: BinaryTreeNodeOrNull<T>) {
+  _inOrderTraverse(cb: F, node: BTNON<T>) {
     if (node) {
       this._inOrderTraverse(cb, node.left)
       cb(node)
       this._inOrderTraverse(cb, node.right)
     }
   }
-  _postOrderTraverse(cb: F, node: BinaryTreeNodeOrNull<T>) {
+  _postOrderTraverse(cb: F, node: BTNON<T>) {
     if (node) {
       this._postOrderTraverse(cb, node.left)
       this._postOrderTraverse(cb, node.right)
       cb(node)
     }
   }
-  _levelTraverse(cb: F, node: BinaryTreeNodeOrNull<T>) {
+  _levelTraverse(cb: F, node: BTNON<T>) {
     if (node) {
-      let queue = new Queue<BinaryTreeNodeOrNull<T>>()
+      let queue = new Queue<BTNON<T>>()
       queue.enqueue(node)
       while (!queue.isEmpty()) {
         let n = queue.dequeue()
@@ -100,7 +110,7 @@ class BinaryTree<T> implements BT<T> {
   isEmpty() {
     return !this.root
   }
-  _height(node: BinaryTreeNodeOrNull<T>, h: N = 0) {
+  _height(node: BTNON<T>, h: N = 0) {
     let res: N
     if (!node) {
       res = h
@@ -117,11 +127,11 @@ class BinaryTree<T> implements BT<T> {
   }
   // 得到指定根节点的二叉树的高度。
   // 从1开始数
-  height(node: BinaryTreeNodeOrNull<T> = this.root) {
+  height(node: BTNON<T> = this.root) {
     return this._height(node)
   }
   // 得到指定子树的深度
-  deep(node: BinaryTreeNodeOrNull<T> = this.root) {
+  deep(node: BTNON<T> = this.root) {
     let d = -1
     if (node) {
       let cur = node
@@ -136,7 +146,7 @@ class BinaryTree<T> implements BT<T> {
   // 认为深度与层数 值相等。
   minDeep() {
     if (this.root) {
-      let queue = new Queue<BinaryTreeNodeOrNull<T>>()
+      let queue = new Queue<BTNON<T>>()
       queue.enqueue(this.root)
       let len = queue.size()
       let deep = 0 // 认为根节点的深度是0
@@ -167,7 +177,7 @@ class BinaryTree<T> implements BT<T> {
     let maxHeight = this.height(this.root)
     if (0 <= p && p <= maxHeight) {
       let level = 0
-      let queue = new Queue<BinaryTreeNode<T>>()
+      let queue = new Queue<BTN<T>>()
       queue.enqueue(this.root)
       while (level < p) {
         let len = queue.size()
@@ -195,7 +205,7 @@ class BinaryTree<T> implements BT<T> {
     if (!this.root) {
       return true
     }
-    let stack = new Stack<BinaryTreeNodeOrNull<T>>()
+    let stack = new Stack<BTNON<T>>()
     stack.push(this.root)
     let res = true
     while (!stack.isEmpty()) {
@@ -269,14 +279,60 @@ class BinaryTree<T> implements BT<T> {
     }
   }
 }
+class BinarySearchTreeNode<T> implements BSTN<T> {
+  key: N
+  value: T
+  left: BSTN<T>['left']
+  right: BSTN<T>['right']
+  parent: BSTN<T>['parent']
+  constructor(key: N, value: T) {
+    this.key = key
+    this.value = value
+    this.left = null
+    this.right = null
+    this.parent = null
+  }
+  clone () {
+    return new BinarySearchTreeNode<T>(this.key, this.value)
+  }
+  'operator<'(otherNode: BinarySearchTreeNode<T>) {
+    return this.key < otherNode.key
+  }
+  'operator>'(otherNode: BinarySearchTreeNode<T>) {
+    return this.key > otherNode.key
+  }
+  'operator==='(otherNode: BinarySearchTreeNode<T>) {
+    return this.key === otherNode.key
+  }
+  'operator!=='(otherNode: BinarySearchTreeNode<T>) {
+    return this.key !== otherNode.key
+  }
+}
+// to test
 class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
+  root: BST<T>['root']
+  // createNode: (k: N, v: T) => BSTN<T>
   constructor() {
     super()
+    this.root = null
+    // this.createNode = (k: N, v: T) => {
+    //   return new BinarySearchTreeNode(k, v)
+    // }
+  }
+  createBSTNode(k: N, v: T) {
+    return new BinarySearchTreeNode(k, v)
+  }
+  // createNode(k: N, v: T) {
+  //   return new BinarySearchTreeNode(k, v)
+  // }
+  insertAsLeft() {
+    return new Error('不能插入左节点')
+  }
+  insertAsRight() {
+    return new Error('不能插入右节点')
   }
   _insertNode(node: BinarySearchTreeNode<T>, newNode: BinarySearchTreeNode<T>) {
     if (newNode.value < node.value) {
-      // node.left ? this._insertNode(node.left, newNode) : (node.left = newNode)
-      // let oldLeft = node.left
       if (node.left) {
         this._insertNode(node.left, newNode)
       } else {
@@ -284,9 +340,6 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
         newNode.parent = node
       }
     } else {
-      // node.right
-      //   ? this._insertNode(node.right, newNode)
-      //   : (node.right = newNode)
       if (node.right) {
         this._insertNode(node.right, newNode)
       } else {
@@ -295,90 +348,55 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
       }
     }
   }
-  insert(v: T) {
-    let node = this.createNode(v)
-    if (this.root) {
-      this._insertNode(this.root, node)
+  // insert(v: T) {
+  //   let node = this.createNode(v)
+  //   if (this.root) {
+  //     this._insertNode(this.root, node)
+  //   } else {
+  //     this.root = node
+  //   }
+  // }
+  // insert(k: N, v: T) {
+  //   // 若已经存在则禁止插入
+  //   // 返回插入的节点
+  //   if (this.search()) {}
+  // }
+  insert(k: N, v: T) {
+    let node = this.search(k)
+    if (node) {
+      return new Error('has exist')
     } else {
-      this.root = node
+      this._insertNode(this.root, this.createBSTNode(k, v))
     }
   }
-  // 可能后期会删除此方法
-  // 是否存在
-  search(v: T) {
-    let res: B = false
-    let cur = this.root
-    while (cur) {
-      if (cur.value === v) {
-        res = true
-        break
-      }
-      if (v < cur.value) {
-        cur = cur.left
-      } else {
-        cur = cur.right
-      }
+  // 若存在则返回节点，否则返回null
+  search(k: N, node: BinarySearchTreeNodeOrNull<T> = this.root) {
+    if (!node || node.key === k) {
+      return node
+    } else if (node.key < k) {
+      return this.search(k, node.right)
+    } else {
+      return this.search(k, node.left)
     }
-    return res
   }
-  // for del 2023/02/15
-  // T<n> = O(1) +  T(a) + T(n-a-1) = O(n)
-  // _preOrderTraverse(cb: F, node: BinarySearchTreeNodeOrNull<T>) {
-  //   if (node) {
-  //     cb(node.value)
-  //     this._preOrderTraverse(cb, node.left)
-  //     this._preOrderTraverse(cb, node.right)
-  //   }
-  // }
-  // 递归 =》 迭代
-  // _preOrderTraverse(cb: F, node: BinarySearchTreeNodeOrNull<T>) {
-  //   if (node) {
-  //     let stack = new Stack<BinarySearchTreeNode<T>>()
-  //     stack.push(node)
-  //     while (!stack.isEmpty()) {
-  //       let n = stack.pop()
-  //       cb(n.value)
-  //       n.right && stack.push(n.right)
-  //       n.left && stack.push(n.left)
-  //     }
-  //   }
-  // }
-  // _inOrderTraverse(cb: F, node: BinarySearchTreeNodeOrNull<T>) {
-  //   if (node) {
-  //     this._inOrderTraverse(cb, node.left)
-  //     cb(node.value)
-  //     this._inOrderTraverse(cb, node.right)
-  //   }
-  // }
-  // _postOrderTraverse(cb: F, node: BinarySearchTreeNodeOrNull<T>) {
-  //   if (node) {
-  //     this._postOrderTraverse(cb, node.left)
-  //     this._postOrderTraverse(cb, node.right)
-  //     cb(node.value)
-  //   }
-  // }
   traverse(cb: F, order = 'inOrder') {
     switch (order) {
       case 'preOrder':
-        // this._preOrderTraverse(cb, this.root)
         this._preOrderTraverse((node: BinarySearchTreeNode<T>) => {
           cb(node.value)
         }, this.root)
         break
       case 'inOrder':
-        // this._inOrderTraverse(cb, this.root)
         this._inOrderTraverse((node: BinarySearchTreeNode<T>) => {
           cb(node.value)
         }, this.root)
         break
         case 'postOrder':
-          // this._postOrderTraverse(cb, this.root)
           this._postOrderTraverse((node: BinarySearchTreeNode<T>) => {
             cb(node.value)
           }, this.root)
           break
         case 'level':
-          // this._levelTraverse(cb, this.root)
           this._levelTraverse((node: BinarySearchTreeNode<T>) => {
             cb(node.value)
           }, this.root)
@@ -460,6 +478,7 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
     this.root = this._remove(this.root, v)
   }
 }
+
 // class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
 //   constructor() {
 //     super()
@@ -531,9 +550,10 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
 
 export {
   // BaseTree,
-  // BinaryTreeNode,
+  // BTN,
   BinaryTree,
   BinarySearchTree,
+  BinarySearchTreeNode, // to export
   // AVLTree,
   // RedBackTree,
 }
