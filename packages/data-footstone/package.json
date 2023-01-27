@@ -39,7 +39,6 @@
     "registry": "https://registry.npmjs.org"
   },
   "files": [
-    "lib",
     "tscDist",
     "dist_cjs",
     "dist_esm"

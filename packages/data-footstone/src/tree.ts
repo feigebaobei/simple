@@ -11,6 +11,8 @@ import {
   BinarySearchTreeNode as BSTN,
   BinarySearchTreeNodeOrNull,
   BinarySearchTree as BST,
+  AVLTreeNode as AVLTN,
+  AVLTreeNodeOrNull as AVLTNOR,
   AVLTree as AVLT,
   RedBackTree as RBT,
   B,
@@ -25,14 +27,6 @@ class BinaryTree<T> implements BT<T> {
   // createNode: BT<T>['createNode']
   constructor() {
     this.root = null
-    // this.createNode = (v) => {
-    //   return {
-    //   value: v,
-    //   left: null,
-    //   right: null,
-    //   parent: null,
-    //   }
-    // }
   }
   createBTNode(v: T) {
     return {
@@ -125,7 +119,7 @@ class BinaryTree<T> implements BT<T> {
     }
     return res
   }
-  // 得到指定根节点的二叉树的高度。
+  // 得到指定节点的高度。
   // 从1开始数
   height(node: BTNON<T> = this.root) {
     return this._height(node)
@@ -332,7 +326,7 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
     return new Error('不能插入右节点')
   }
   _insertNode(node: BinarySearchTreeNode<T>, newNode: BinarySearchTreeNode<T>) {
-    if (newNode.value < node.value) {
+    if (newNode.key < node.key) {
       if (node.left) {
         this._insertNode(node.left, newNode)
       } else {
@@ -366,7 +360,11 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
     if (node) {
       return new Error('has exist')
     } else {
-      this._insertNode(this.root, this.createBSTNode(k, v))
+      if (this.root) {
+        this._insertNode(this.root, this.createBSTNode(k, v))
+      } else {
+        this.root = this.createBSTNode(k, v)
+      }
     }
   }
   // 若存在则返回节点，否则返回null
@@ -382,24 +380,28 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
   traverse(cb: F, order = 'inOrder') {
     switch (order) {
       case 'preOrder':
-        this._preOrderTraverse((node: BinarySearchTreeNode<T>) => {
-          cb(node.value)
-        }, this.root)
+        // this._preOrderTraverse((node: BinarySearchTreeNode<T>) => {
+        //   cb(node.value)
+        // }, this.root)
+        this._preOrderTraverse(cb, this.root)
         break
       case 'inOrder':
-        this._inOrderTraverse((node: BinarySearchTreeNode<T>) => {
-          cb(node.value)
-        }, this.root)
+        // this._inOrderTraverse((node: BinarySearchTreeNode<T>) => {
+        //   cb(node.value)
+        // }, this.root)
+        this._inOrderTraverse(cb, this.root)
         break
         case 'postOrder':
-          this._postOrderTraverse((node: BinarySearchTreeNode<T>) => {
-            cb(node.value)
-          }, this.root)
+          // this._postOrderTraverse((node: BinarySearchTreeNode<T>) => {
+          //   cb(node.value)
+          // }, this.root)
+          this._postOrderTraverse(cb, this.root)
           break
         case 'level':
-          this._levelTraverse((node: BinarySearchTreeNode<T>) => {
-            cb(node.value)
-          }, this.root)
+          // this._levelTraverse((node: BinarySearchTreeNode<T>) => {
+          //   cb(node.value)
+          // }, this.root)
+          this._levelTraverse(cb, this.root)
           break
     }
   }
@@ -443,23 +445,23 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
     }
     return cur
   }
-  _remove(node: BinarySearchTreeNodeOrNull<T>, value: T) {
+  _remove(node: BinarySearchTreeNodeOrNull<T>, k: N) {
     if (!node) {
       return null
     }
-    if (value < node.value) {
-      node.left = this._remove(node.left, value)
+    if (k < node.key) {
+      node.left = this._remove(node.left, k)
       return node
-    } else if (value > node.value) {
-      node.right = this._remove(node.right, value)
+    } else if (k > node.key) {
+      node.right = this._remove(node.right, k)
       return node
-    } else {
-      // 有0个节点
+    } else { // 相等
+      // 有0个子节点
       if (!node.left && !node.right) {
         node = null
         return node
       }
-      // 有1个节点
+      // 有1个子节点
       if (!node.left) {
         node = node.right
         return node
@@ -467,25 +469,54 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
         node = node.left
         return node
       }
-      // 有2个节点
+      // 有2个子节点
       let t = this.findMinNode(node.right)
       node.value = t.value
-      node.right = this._remove(node.right, t.value)
+      node.right = this._remove(node.right, t.key)
       return node
     }
   }
-  remove(v: T) {
-    this.root = this._remove(this.root, v)
+  // 不返回东西
+  remove(k: N) {
+    this.root = this._remove(this.root, k)
   }
+  // // 判断左右关系
+  // 此api好像用不上
+  // isLeft(parent: BinarySearchTreeNode<T>, node: BinarySearchTreeNode<T>) {
+  //   return node['operator!=='](parent.left)
+  // }
+  // isRight(parent: BinarySearchTreeNode<T>, node: BinarySearchTreeNode<T>) {
+  //   return node['operator!=='](parent.right)
+  // }
 }
-
+  
 // class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
 //   constructor() {
 //     super()
 //   }
-//   insert(v: T): void {
-//     this._insertNode(this.root, this.createNode(v))
+//   // 平衡因子
+//   isBalance(n: AVLTN<T>) {
+//     return this.height(n.left) - this.height(n.right)
 //   }
+//   // _rotationRR: (node: BSTN<T>) => void
+//   // _rotationLL: (node: BSTN<T>) => void
+//   // _rotationLR: (node: BSTN<T>) => void
+//   // _rotationRL: (node: BSTN<T>) => void
+//   insert(k: N, v: T) {
+//     let node = this.search(k)
+//     if (node) {
+//       return new Error('has exist')
+//     } else {
+//       if (this.root) {
+//         this._insertNode(this.root, this.createBSTNode(k, v))
+//       } else {
+//         this.root = this.createBSTNode(k, v)
+//       }
+//     }
+//   }
+//   // insert(v: T): void {
+//   //   this._insertNode(this.root, this.createNode(v))
+//   // }
 //   _insertNode(node: BTN<T>, newNode: BTN<T>): BTN<T> {
 //     if (!node) {
 //       node = newNode
@@ -553,7 +584,7 @@ export {
   // BTN,
   BinaryTree,
   BinarySearchTree,
-  BinarySearchTreeNode, // to export
-  // AVLTree,
+  BinarySearchTreeNode,
+  AVLTree,
   // RedBackTree,
 }

@@ -1,5 +1,4 @@
-import { F, N, A, D, B } from './baseType'
-import { Queue } from './queue'
+import { F, N, A, D, S } from './baseType'
 
 // for delete 2023/02/21
 // color => status
@@ -13,8 +12,8 @@ interface Vertex<T> {
   inDegree: N
   outDegree: N
   status: A // 实际只用到string.可以考虑改为string
-  dTime: D // 考虑使用ms
-  fTime: D
+  dTime: N
+  fTime: N
   // parent: VertexOrNull<T>
 }
 type VertexOrNull<T> = Vertex<T> | null
@@ -45,6 +44,7 @@ interface Graph<T> {
   dfs: (data: T, cb: F) => void
   shortestPath: (data: T) => ShortestPathObj<T>
   getPath: (from: T, to: T) => T[]
+  reset: (p: S) => void
 }
 
 // 有向图

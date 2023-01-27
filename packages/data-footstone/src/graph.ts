@@ -6,7 +6,7 @@ import {
   // GraphColor as GC,
   DirectionGraph as DG,
   UndirectionGraph as UG,
-   F, N, B 
+   F, N, B, S
 } from '../typings'
 import { Queue } from './queue'
 import { af, NPF } from './helper'
@@ -32,8 +32,8 @@ class Graph<T> implements G<T> {
       inDegree: 0,
       outDegree: 0,
       status: 'cover', // 使用状态机+链表处理状态。
-      dTime: new Date(),
-      fTime: new Date(),
+      dTime: 0,
+      fTime: 0,
     }
   }
   createEdge(a: T, b: T) {
@@ -102,10 +102,17 @@ class Graph<T> implements G<T> {
   //   }
   //   return res
   // }
-  reset() {
+  // 只重置了点
+  reset(p: S = 'status,dTime,fTime') {
+    let s = p.includes('status')
+    let d = p.includes('dTime')
+    let f = p.includes('fTime')
     for (let vertex of this.vertexMap.values()) {
-      vertex.status = 'discovery'
+      s && (vertex.status = 'discovery')
+      d && (vertex.dTime = 0)
+      f && (vertex.fTime = 0)
     }
+    
   }
   // 只能遍历连通的顶点
   _bfs(vertex: V<T>, cb: F) {
@@ -139,6 +146,7 @@ class Graph<T> implements G<T> {
   _dfs(vertex: V<T>, cb: F) {
     cb(vertex)
     vertex.status = 'visited'
+    // 可以使用dTime&fTime代替status处理。
     let arr = this.adjTable.get(vertex.data)
     arr.forEach((neiborVertex: V<T>) => {
         if (neiborVertex.status === 'cover') {

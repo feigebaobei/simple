@@ -8,7 +8,7 @@ import {
   RedBackTree,
 } from '../src/tree'
 import {loseloseHashFn} from '../src/hashMap'
-
+import {af} from '../src/helper'
 // let arr = []
 
 
@@ -277,7 +277,7 @@ let obj = {
   },
 }
 
-describe.only('BinarySearchTreeNode', () => {
+describe('BinarySearchTreeNode', () => {
   test('', () => {
     let node = new BinarySearchTreeNode(obj[15].key, obj[15].value)
     expect(node).toEqual({
@@ -295,12 +295,42 @@ describe.only('BinarySearchTreeNode', () => {
   })
 })
 
-// describe('BinarySearchTree', () => {
-//   it('insert & search', () => {
-//     let tree = new BinarySearchTree()
-//     tree.insert(obj['15'].key, obj['15'].value)
-//     expect(tree.search(obj['15'].key)).toEqual({
+describe('BinarySearchTree', () => {
+  it('insert & search', () => {
+    let tree = new BinarySearchTree()
+    tree.insert(obj[15].key, obj[15].value)
+    expect(tree.search(obj[15].key)).toEqual(new BinarySearchTreeNode(obj[15].key, obj[15].value))
+    tree.insert(obj[8].key, obj[8].value)
+    let temp = []
+    tree.traverse((node) => {
+      temp.push({key: node.key, value: node.value})
+    })
+    expect(temp).toEqual([
+      { key: 19, value: 8 },
+      { key: 28, value: 15 },
+    ])
+    expect(tree.insert(obj[8].key, obj[8].value)).toEqual(new Error('has exist'))
+  })
+  it('remove', () => {
+    let tree = new BinarySearchTree()
+    af(Object.values(obj)).forEach(({key: k, value: v}) => {
+      tree.insert(k, v)
+    })
+    tree.remove(20)
+    let temp = []
+    tree.traverse((node) => {
+      temp.push({key: node.key, value: node.value})
+    })
+    expect(temp).toEqual([
+      { key: 12, value: 1 },
+      { key: 16, value: 5 },
+      { key: 19, value: 8 },
+      // { key: 20, value: 9 },
+      { key: 25, value: 21 },
+      { key: 26, value: 13 },
+      { key: 28, value: 15 },
+      { key: 30, value: 17 },
+    ])
+  })
+})
 
-//     })
-//   })
-// })
