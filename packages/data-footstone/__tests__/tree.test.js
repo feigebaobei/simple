@@ -329,7 +329,7 @@ describe('BinarySearchTree', () => {
       { key: 30, value: 17 },
     ])
   })
-  test.only('tallerChild', () => {
+  test('tallerChild', () => {
     let tree = new BinarySearchTree()
     tree.insert(15, 15)
     tree.insert(10, 10)
@@ -350,15 +350,44 @@ describe('BinarySearchTree', () => {
     expect(tree.tallerChild(tree.root).value).toBe(10)
   })
 })
-describe('AVLTree', () => {
-  test('AVLTree ll', () => { 
+describe.only('AVLTree', () => {
+  test('AVLTree 34 1', () => { 
     let tree = new AVLTree()
     expect(tree.root).toBeNull()
-    expect(tree.isBalance(tree.root)).toBeTruthy()
-    tree.insert(obj[15].key, obj[15].value)
-    tree.insert(obj[8].key, obj[8].value)
-    tree.insert(obj[5].key, obj[5].value)
-    tree.insert(obj[1].key, obj[1].value)
+    expect(tree.AvlBalanced(tree.root)).toBeTruthy()
+    // tree.insert(obj[15].key, obj[15].value)
+    // tree.insert(obj[8].key, obj[8].value)
+    // tree.insert(obj[5].key, obj[5].value)
+    // tree.insert(obj[1].key, obj[1].value)
+    tree.insert(15, 15)
+    tree.insert(8, 8)
+    tree.insert(4, 4)
+    tree.insert(1, 1)
+    // console.log(tree.root)
+    //   8
+    //  4 15
+    // 1
+    let temp = []
+    tree.traverse((node) => {
+      temp.push({key: node.key, value: node.value})
+    }, 'preOrder')
+    expect(temp).toEqual([
+      { key: 8, value: 8 },
+      { key: 4, value: 4 },
+      { key: 1, value: 1 },
+      { key: 15, value: 15 },
+    ])
+  })
+  test('AVLTree 34 2', () => {
+    let tree = new AVLTree()
+    // tree.insert(obj[1].key, obj[1].value)
+    // tree.insert(obj[5].key, obj[5].value)
+    // tree.insert(obj[8].key, obj[8].value)
+    // tree.insert(obj[15].key, obj[15].value)
+    tree.insert(5, 5)
+    tree.insert(8, 8)
+    tree.insert(15, 15)
+    tree.insert(1, 1)
     // console.log(tree.root)
     //   8
     //  5 15
@@ -366,61 +395,96 @@ describe('AVLTree', () => {
     let temp = []
     tree.traverse((node) => {
       temp.push({key: node.key, value: node.value})
-    })
+    }, 'preOrder')
     expect(temp).toEqual([
-      { key: 12, value: 1 },
-      { key: 16, value: 5 },
-      { key: 19, value: 8 },
-      { key: 28, value: 15 },
+      { key: 8, value: 8 },
+      { key: 5, value: 5 },
+      { key: 1, value: 1 },
+      { key: 15, value: 15 },
     ])
   })
-  test('AVLTree rr', () => {
+  test('AVLTree 34 3', () => {
     let tree = new AVLTree()
-    tree.insert(obj[1].key, obj[1].value)
-    tree.insert(obj[5].key, obj[5].value)
-    tree.insert(obj[8].key, obj[8].value)
-    tree.insert(obj[15].key, obj[15].value)
+    tree.insert(15, 15)
+    tree.insert(8, 8)
+    tree.insert(20, 20)
+    tree.insert(12, 12)
+    tree.insert(4, 4)
+    tree.insert(10, 10)
     // console.log(tree.root)
-    //  5
-    // 1 8
-    //    15
+    //         15
+    //     8       20
+    //  4    12
+    //      10
     let temp = []
     tree.traverse((node) => {
       temp.push({key: node.key, value: node.value})
     }, 'preOrder')
     expect(temp).toEqual([
-      { key: 16, value: 5 },
-      { key: 12, value: 1 },
-      { key: 19, value: 8 },
-      { key: 28, value: 15 },
+      { key: 12, value: 12 },
+      { key: 8, value: 8 },
+      { key: 4, value: 4 },
+      { key: 10, value: 10 },
+      { key: 15, value: 15 },
+      { key: 20, value: 20 },
+    ])
+  })
+  test('AVLTree 34 4', () => {
+    let tree = new AVLTree()
+    tree.insert(15, 15)
+    tree.insert(8, 8)
+    tree.insert(30, 30)
+    tree.insert(20, 20)
+    tree.insert(40, 40)
+    tree.insert(25, 25)
+    // console.log(tree.root)
+    //         15
+    //     8       30
+    //            20  40
+    //             25
+    let temp = []
+    tree.traverse((node) => {
+      temp.push({key: node.key, value: node.value})
+    }, 'preOrder')
+    expect(temp).toEqual([
+      { key: 20, value: 20 },
+      { key: 15, value: 15 },
+      { key: 8, value: 8 },
+      { key: 30, value: 30 },
+      { key: 25, value: 25 },
+      { key: 40, value: 40 },
     ])
   })
   // 没找到测试双旋转的用例
+  // 以前使用旋转的方式解决insert，经过测试可以使用。后来使用3+4解决insert/remove，所以不再测试旋转。
   // test('AVLTree rl', () => {
   // })
   // test('AVLTree lr', () => {
   // })
   test('AVLTree remove', () => {
     let tree = new AVLTree()
+    tree.insert(15, 15)
     tree.insert(8, 8)
+    tree.insert(20, 20)
     tree.insert(4, 4)
-    tree.insert(12, 12)
-    tree.insert(2, 2)
-    tree.insert(6, 6)
+    tree.remove(20)
+    console.log(tree.root)
+    // tree.insert(6, 6)
     // tree.insert(10, 10)
-    tree.insert(14, 14)
-    tree.insert(1, 1)
+    // tree.insert(14, 14)
+    // tree.insert(1, 1)
     // tree.insert(3, 3)
     // tree.insert(5, 5)
     // tree.insert(7, 7)
-    console.log(tree.root)
-    // let temp = []
-    // tree.traverse((node) => {
-    //   temp.push({key: node.key, value: node.value})
-    // }, 'preOrder')
-    // expect(temp).toEqual([
-    //   { key: 16, value: 5 },
-    // ])
-    // tree.traverse(() => {})
+    // console.log(tree.root)
+    let temp = []
+    tree.traverse((node) => {
+      temp.push({key: node.key, value: node.value})
+    }, 'preOrder')
+    expect(temp).toEqual([
+      { key: 8, value: 8 },
+      { key: 4, value: 4 },
+      { key: 15, value: 15 },
+    ])
   })
 })

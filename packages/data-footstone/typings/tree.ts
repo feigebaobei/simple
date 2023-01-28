@@ -6,36 +6,17 @@ import {
   F,
 } from './baseType'
 
-// interface BaseTreeNode<T> {
-//   value: T
-//   left: BaseTreeNode<T> | null
-//   right: BaseTreeNode<T> | null
-// }
-// interface BaseTree<NodeType> {
-// //   // root: BaseTreeNode<T> | null
-// //   // createNode: (v: T) => BaseTreeNode<T>
-//   // _preOrderTraverse: (cb: F, node: NodeType | null) => void
-//   // _inOrderTraverse: (cb: F, node: NodeType | null) => void
-//   // _postOrderTraverse: (cb: F, node: NodeType | null) => void
-// //   // _remove: (node: BaseTreeNode<T> | null, v: T) => BaseTreeNode<T> | null
-// //   _findMinNode: (node: BaseTreeNode<T> | null) => BaseTreeNode<T> | null
-// //   heightNode: (node: BaseTreeNode<T> | null) => N
-// //   shortPathNodeLength: (node: BaseTreeNode<T> | null, deep: N) => N
-// }
-
+// 二叉树的节点
 interface BinaryTreeNode<T> {
   value: T,
   left: BinaryTreeNodeOrNull<T>
   right: BinaryTreeNodeOrNull<T>
   parent: BinaryTreeNodeOrNull<T>
-  // _height: (n: BinaryTreeNodeOrNull<T>, h: N) => N,
-  // height: () => N,
-  // _size: (n: BinaryTreeNodeOrNull<T>, size: N) => N,
-  // size: () => N,
+  // 有可能需要一个指向树的指针
 }
 // 还有一种长子-兄弟表示法。
-
 type BinaryTreeNodeOrNull<T> = (BinaryTreeNode<T> | null)
+// 二叉树
 interface BinaryTree<T> {
   root: BinaryTreeNodeOrNull<T>
   // 有此方法，在要编辑器中有警告。所以先注释。
@@ -58,9 +39,8 @@ interface BinaryTree<T> {
   isFull: () => B
   isComplete: () => B
 }
-
+// 二叉搜索树的节点
 type BinarySearchTreeOrder = 'preOrder' | 'inOrder' | 'postOrder' | 'level'
-// type BinarySearchTreeNode<T> = BinaryTreeNode<T>
 interface BinarySearchTreeNode<T> {
   key: N
   value: T | null
@@ -72,19 +52,18 @@ interface BinarySearchTreeNode<T> {
   'operator>': (otherNode: BinarySearchTreeNode<T>) => B
   'operator===': (otherNode: BinarySearchTreeNode<T>) => B
   'operator!==': (otherNode: BinarySearchTreeNode<T>) => B
+  isLeft: () => B
+  isRight: () => B
 }
-// type BinarySearchTreeNodeOrNull<T> = BinaryTreeNodeOrNull<T>
 type BinarySearchTreeNodeOrNull<T> = BinarySearchTreeNode<T> | null
 
-// to do 以下需要重构
-// interface BinarySearchTree<T> extends Pick<BinaryTree<T>, '_preOrderTraverse' | '_inOrderTraverse' | '_postOrderTraverse'> {
-type Temp<T> = Pick<BinaryTree<T>, '_preOrderTraverse' | '_inOrderTraverse' | '_postOrderTraverse'>
-interface BinarySearchTree<T> extends Temp<T>{
+// 二叉搜索树
+interface BinarySearchTree<T> extends Pick<BinaryTree<T>, '_preOrderTraverse' | '_inOrderTraverse' | '_postOrderTraverse'> {
   root: BinarySearchTreeNodeOrNull<T>
   createBSTNode: (k: N, v: T) => BinarySearchTreeNode<T>
   insertAsLeft: () => Error
   insertAsRight: () => Error
-  insert: (k: N, v: T) => void
+  insert: (k: N, v: T) => Error | undefined
   _insertNode: (
     n0: BinarySearchTreeNode<T>,
     n1: BinarySearchTreeNode<T>
@@ -101,25 +80,30 @@ interface BinarySearchTree<T> extends Temp<T>{
   ) => BinarySearchTreeNodeOrNull<T>
   _remove: (
     node: BinarySearchTreeNodeOrNull<T>,
-    v: T
+    k: N
   ) => BinarySearchTreeNodeOrNull<T>
-  remove: (v: T) => void
+  remove: (k: N) => void
 }
-// Adelson-Velskii-Landi tree
+// avl树节点
 type AVLTreeNode<T> = BinarySearchTreeNode<T>
+type AVLTreeNodeOrNull<T> = BinarySearchTreeNodeOrNull<T>
+// avl树
+// Adelson-Velskii-Landi tree
 interface AVLTree<T> extends BinarySearchTree<T> {
-  insert: (v: T) => void
+  // insert: (v: T) => void
+  // insert: (k: N, v: T) => void
   _insertNode: (n0: AVLTreeNode<T>, n1: AVLTreeNode<T>) => void
   _rotationRR: (node: AVLTreeNode<T>) => void
   _rotationLL: (node: AVLTreeNode<T>) => void
   _rotationLR: (node: AVLTreeNode<T>) => void
   _rotationRL: (node: AVLTreeNode<T>) => void
+  remove: (k: N) => void
 }
 
 type RedBackTreeNode<T> = BinarySearchTreeNode<T>
 interface RedBackTree<T> extends BinarySearchTree<T> {
-  insert: (v: T) => void
-  _insertNode: (n0: RedBackTreeNode<T>, n1: RedBackTreeNode<T>) => void
+  // insert: (v: T) => void
+  // _insertNode: (n0: RedBackTreeNode<T>, n1: RedBackTreeNode<T>) => void
 }
 
 // B+
@@ -141,6 +125,8 @@ export {
   BinarySearchTreeNode,
   BinarySearchTreeNodeOrNull,
   BinarySearchTree,
+  AVLTreeNode,
+  AVLTreeNodeOrNull,
   AVLTree,
   RedBackTree,
 }
