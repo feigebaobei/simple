@@ -301,6 +301,24 @@ class BinarySearchTreeNode<T> implements BSTN<T> {
   'operator!=='(otherNode: BinarySearchTreeNode<T>) {
     return this.key !== otherNode.key
   }
+  // 是否是左节点
+  isLeft() {
+    let p = this.parent
+    if (!p) {
+      return false
+    } else {
+      return this.key < p.key
+    }
+  }
+  // 是否是右节点
+  isRight() {
+    let p = this.parent
+    if (!p) {
+      return false
+    } else {
+      return this.key >= p.key
+    }
+  }
 }
 // to test
 class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
@@ -342,29 +360,18 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
       }
     }
   }
-  // insert(v: T) {
-  //   let node = this.createNode(v)
-  //   if (this.root) {
-  //     this._insertNode(this.root, node)
-  //   } else {
-  //     this.root = node
-  //   }
-  // }
-  // insert(k: N, v: T) {
-  //   // 若已经存在则禁止插入
-  //   // 返回插入的节点
-  //   if (this.search()) {}
-  // }
   insert(k: N, v: T) {
     let node = this.search(k)
     if (node) {
       return new Error('has exist')
     } else {
+      let newNode = this.createBSTNode(k, v)
       if (this.root) {
-        this._insertNode(this.root, this.createBSTNode(k, v))
+        this._insertNode(this.root, newNode)
       } else {
-        this.root = this.createBSTNode(k, v)
+        this.root = newNode
       }
+      // return newNode // 考虑是否返回插入的节点
     }
   }
   // 若存在则返回节点，否则返回null
@@ -380,9 +387,6 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
   traverse(cb: F, order = 'inOrder') {
     switch (order) {
       case 'preOrder':
-        // this._preOrderTraverse((node: BinarySearchTreeNode<T>) => {
-        //   cb(node.value)
-        // }, this.root)
         this._preOrderTraverse(cb, this.root)
         break
       case 'inOrder':
@@ -488,90 +492,206 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
   // isRight(parent: BinarySearchTreeNode<T>, node: BinarySearchTreeNode<T>) {
   //   return node['operator!=='](parent.right)
   // }
+  // 返回较高的子节点
+  tallerChild(n: BinarySearchTreeNode<T>) {
+    let leftHeight = this.height(n.left)
+    let rightHeight = this.height(n.right)
+    if (leftHeight > rightHeight) {
+      return n.left
+    } else if (rightHeight > leftHeight) {
+      return n.right
+    } else {
+      return n.isLeft() ? n.left : n.right
+    }
+  }
 }
-  
+
+// to test
 // class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
 //   constructor() {
 //     super()
 //   }
-//   // 平衡因子
-//   isBalance(n: AVLTN<T>) {
-//     return this.height(n.left) - this.height(n.right)
+//   // 理想平衡
+//   balanced(n: AVLTNOR<T>) {
+//     if (!n) {
+//       return true
+//     } else {
+//       return this.height(n.left) === this.height(n.right)
+//     }
 //   }
-//   // _rotationRR: (node: BSTN<T>) => void
-//   // _rotationLL: (node: BSTN<T>) => void
-//   // _rotationLR: (node: BSTN<T>) => void
-//   // _rotationRL: (node: BSTN<T>) => void
+//   // 平衡因子
+//   balanceFac(n: AVLTNOR<T>) {
+//     if (!n) {
+//       return 0
+//     } else {
+//       return this.height(n.left) - this.height(n.right)
+//     }
+//   }
+//   // 是否avl平衡
+//   AvlBalanced(n: AVLTNOR<T>) {
+//     if (!n) {
+//       return true
+//     } else {
+//       return Math.abs(this.height(n.left) - this.height(n.right)) <= 1
+//     }
+//   }
+//   // 插入时使用旋转
 //   insert(k: N, v: T) {
+//     // let node = this.search(k)
+//     // if (node) {
+//     //   return new Error('has exist')
+//     // } else {
+//     //   if (this.root) {
+//     //     this.root = this._insertNode(this.root, this.createBSTNode(k, v))
+//     //   } else {
+//     //     this.root = this.createBSTNode(k, v)
+//     //   }
+//     // }
+
 //     let node = this.search(k)
 //     if (node) {
 //       return new Error('has exist')
 //     } else {
+//       let newNode = this.createBSTNode(k, v)
 //       if (this.root) {
-//         this._insertNode(this.root, this.createBSTNode(k, v))
+//         this._insertNode(this.root, newNode)
 //       } else {
-//         this.root = this.createBSTNode(k, v)
+//         this.root = newNode
 //       }
+//       let p = newNode.parent
+//       while (p) {
+//         if (!this.AvlBalanced(p)) {
+//           this.rotateAt(p.parent.parent)
+//           break
+//         }
+//         p = p.parent
+//       }
+//       // return newNode // 考虑是否返回插入的节点
 //     }
 //   }
-//   // insert(v: T): void {
-//   //   this._insertNode(this.root, this.createNode(v))
+//   // _insertNode(node: AVLTN<T>, newNode: AVLTN<T>): AVLTN<T> {
+//   //   if (!node) {
+//   //     node = newNode
+//   //   } else if (newNode.key < node.key) {
+//   //     node.left = this._insertNode(node.left, newNode)
+//   //     if (node.left) {
+//   //       // 是否需要平衡
+//   //       if (this.height(node.left) - this.height(node.right) > 1) {
+//   //         if (newNode.key < node.left.key) {
+//   //           node = this._rotationLL(node)
+//   //         } else {
+//   //           node = this._rotationLR(node)
+//   //         }
+//   //       }
+//   //     }
+//   //   } else if (newNode.key > node.key) {
+//   //     node.right = this._insertNode(node.right, newNode)
+//   //     if (node.right) {
+//   //       // 是否需要平衡
+//   //       if (this.height(node.left) - this.height(node.right) < -1) {
+//   //         if (newNode.key > node.right.key) {
+//   //           node = this._rotationRR(node)
+//   //         } else {
+//   //           node = this._rotationRL(node)
+//   //         }
+//   //       }
+//   //     }
+//   //   }
+//   //   return node
 //   // }
-//   _insertNode(node: BTN<T>, newNode: BTN<T>): BTN<T> {
-//     if (!node) {
-//       node = newNode
-//     } else if (newNode.value < node.value) {
-//       node.left = this._insertNode(node.left, newNode)
-//       if (node.left) {
-//         // 是否需要平衡
-//         if (this.heightNode(node.left) - this.heightNode(node.right) > 1) {
-//           if (newNode.value < node.left.value) {
-//             node = this._rotationLL(node)
-//           } else {
-//             node = this._rotationLR(node)
-//           }
-//         }
-//       }
-//     } else if (newNode.value > node.value) {
-//       node.right = this._insertNode(node.right, newNode)
-//       if (node.right) {
-//         // 是否需要平衡
-//         if (this.heightNode(node.right) - this.heightNode(node.left) > 1) {
-//           if (newNode.value > node.right.value) {
-//             node = this._rotationRR(node)
-//           } else {
-//             node = this._rotationRL(node)
-//           }
-//         }
-//       }
-//     }
-//     return node
-//   }
 //   // 向左的单旋转
-//   _rotationRR(node: BTN<T>) {
+//   _rotationRR(node: AVLTN<T>) {
 //     let t = node.right
 //     node.right = t.left
 //     t.left = node
 //     return t
 //   }
 //   // 向右的单旋转
-//   _rotationLL(node: BTN<T>) {
+//   _rotationLL(node: AVLTN<T>) {
 //     let t = node.left
 //     node.left = t.right
 //     t.right = node
 //     return t
 //   }
 //   // 向右的双旋转
-//   _rotationLR(node: BTN<T>) {
+//   _rotationLR(node: AVLTN<T>) {
 //     node.left = this._rotationRR(node.left)
 //     return this._rotationLL(node)
 //   }
 //   // 向左的双旋转
-//   _rotationRL(node: BTN<T>) {
+//   _rotationRL(node: AVLTN<T>) {
 //     node.right = this._rotationLL(node.right)
 //     return this._rotationRR(node)
 //   }
+//   _connect34(a: AVLTN<T>, b: AVLTN<T>, c: AVLTN<T>, t0: AVLTN<T>, t1: AVLTN<T>, t2: AVLTN<T>, t3: AVLTN<T>) {
+//     a.left = t0
+//     if (t0) {
+//       t0.parent = a
+//     }
+//     a.right = t1
+//     if (t1) {
+//       t1.parent = a
+//     }
+//     c.left = t2
+//     if (t2) {
+//       t2.parent = c
+//     }
+//     c.right = t3
+//     if (t3) {
+//       t3.parent = c
+//     }
+//     b.left = a
+//     a.parent = b
+//     b.right = c
+//     c.parent = b
+//     return b // 返回该子树的根节点
+//   }
+//   rotateAt(v: AVLTN<T>) {
+//     // v是孙辈的节点，不平衡。
+//     // 至少有3层，才会出现不平衡，所以一定会有父节点、祖节点。
+//     let p = v.parent, g = p.parent
+//     if (p['operator!=='](g.left)) {
+//       if (v['operator!=='](p.left)) {
+//         // v p g
+//         this._connect34(v, p, g, v.left, v.right, p.right, g.right)
+//       } else  {
+//         // p v g
+//         this._connect34(p, v, g, p.left, v.left, v.right, g.right)
+//       }
+//     } else {
+//       if (v['operator!=='](p.left)) {
+//         // g v p
+//         this._connect34(g, v, p, g.left, v.left, v.right, p.right)
+//       } else  {
+//         // g p v
+//         this._connect34(g, p, v, g.left, p.left, v.left, g.right)
+//       }
+//     }
+//   }
+//   // 删除时使用3+4重构
+//   // O(1)
+//   // 是否删除成功
+//   remove(k: N) {
+//     // 查检是否存在。
+//     // 若存在，则删除。否则，返回false
+//     let node = this.search(k)
+//     if (node) {
+//       let g = node.parent
+//       while (g) {
+//         if (!this.AvlBalanced(g)) {
+//           this.rotateAt(g)
+//           break
+//         }
+//       }
+//     } else {
+//       return false
+//     }
+//   }
+
+
 // }
+
+
 
 // class RedBackTree<T> extends BinarySearchTree<T> implements RBT<T> {
 //   constructor() {

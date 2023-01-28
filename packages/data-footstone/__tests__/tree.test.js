@@ -7,9 +7,9 @@ import {
   AVLTree,
   RedBackTree,
 } from '../src/tree'
-import {loseloseHashFn} from '../src/hashMap'
-import {af} from '../src/helper'
-// let arr = []
+import { loseloseHashFn } from '../src/hashMap'
+import { af } from '../src/helper'
+
 
 
 describe('BinaryTree', () => {
@@ -241,18 +241,17 @@ describe('BinaryTree', () => {
     expect(tree.isComplete()).toBeFalsy()
   })
 })
-
 let obj = {
   15: {
     key: loseloseHashFn(15), // 28
     value: 15
   },
   17: {
-    key: loseloseHashFn(17),
+    key: loseloseHashFn(17), // 30
     value: 17
   },
   21: {
-    key: loseloseHashFn(21),
+    key: loseloseHashFn(21), // 25
     value: 21
   },
   8: {
@@ -260,23 +259,22 @@ let obj = {
     value: 8
   },
   9: {
-    key: loseloseHashFn(9),
+    key: loseloseHashFn(9), // 20
     value: 9
   },
   1: {
-    key: loseloseHashFn(1),
+    key: loseloseHashFn(1), // 12
     value: 1
   },
   5: {
-    key: loseloseHashFn(5),
+    key: loseloseHashFn(5), // 16
     value: 5
   },
   13: {
-    key: loseloseHashFn(13),
+    key: loseloseHashFn(13), // 26
     value: 13
   },
 }
-
 describe('BinarySearchTreeNode', () => {
   test('', () => {
     let node = new BinarySearchTreeNode(obj[15].key, obj[15].value)
@@ -294,7 +292,6 @@ describe('BinarySearchTreeNode', () => {
     expect(node['operator!=='](node1)).toBeTruthy()
   })
 })
-
 describe('BinarySearchTree', () => {
   it('insert & search', () => {
     let tree = new BinarySearchTree()
@@ -332,5 +329,98 @@ describe('BinarySearchTree', () => {
       { key: 30, value: 17 },
     ])
   })
+  test.only('tallerChild', () => {
+    let tree = new BinarySearchTree()
+    tree.insert(15, 15)
+    tree.insert(10, 10)
+    tree.insert(6, 6)
+    tree.insert(4, 4)
+    tree.insert(28, 28)
+    tree.insert(30, 30)
+    tree.insert(32, 32)
+    tree.insert(34, 34)
+    expect(tree.tallerChild(tree.root).value).toBe(28)
+    tree = new BinarySearchTree()
+    tree.insert(15, 15)
+    tree.insert(10, 10)
+    tree.insert(6, 6)
+    tree.insert(4, 4)
+    tree.insert(4, 4)
+    tree.insert(28, 28)
+    expect(tree.tallerChild(tree.root).value).toBe(10)
+  })
 })
-
+describe('AVLTree', () => {
+  test('AVLTree ll', () => { 
+    let tree = new AVLTree()
+    expect(tree.root).toBeNull()
+    expect(tree.isBalance(tree.root)).toBeTruthy()
+    tree.insert(obj[15].key, obj[15].value)
+    tree.insert(obj[8].key, obj[8].value)
+    tree.insert(obj[5].key, obj[5].value)
+    tree.insert(obj[1].key, obj[1].value)
+    // console.log(tree.root)
+    //   8
+    //  5 15
+    // 1
+    let temp = []
+    tree.traverse((node) => {
+      temp.push({key: node.key, value: node.value})
+    })
+    expect(temp).toEqual([
+      { key: 12, value: 1 },
+      { key: 16, value: 5 },
+      { key: 19, value: 8 },
+      { key: 28, value: 15 },
+    ])
+  })
+  test('AVLTree rr', () => {
+    let tree = new AVLTree()
+    tree.insert(obj[1].key, obj[1].value)
+    tree.insert(obj[5].key, obj[5].value)
+    tree.insert(obj[8].key, obj[8].value)
+    tree.insert(obj[15].key, obj[15].value)
+    // console.log(tree.root)
+    //  5
+    // 1 8
+    //    15
+    let temp = []
+    tree.traverse((node) => {
+      temp.push({key: node.key, value: node.value})
+    }, 'preOrder')
+    expect(temp).toEqual([
+      { key: 16, value: 5 },
+      { key: 12, value: 1 },
+      { key: 19, value: 8 },
+      { key: 28, value: 15 },
+    ])
+  })
+  // 没找到测试双旋转的用例
+  // test('AVLTree rl', () => {
+  // })
+  // test('AVLTree lr', () => {
+  // })
+  test('AVLTree remove', () => {
+    let tree = new AVLTree()
+    tree.insert(8, 8)
+    tree.insert(4, 4)
+    tree.insert(12, 12)
+    tree.insert(2, 2)
+    tree.insert(6, 6)
+    // tree.insert(10, 10)
+    tree.insert(14, 14)
+    tree.insert(1, 1)
+    // tree.insert(3, 3)
+    // tree.insert(5, 5)
+    // tree.insert(7, 7)
+    console.log(tree.root)
+    // let temp = []
+    // tree.traverse((node) => {
+    //   temp.push({key: node.key, value: node.value})
+    // }, 'preOrder')
+    // expect(temp).toEqual([
+    //   { key: 16, value: 5 },
+    // ])
+    // tree.traverse(() => {})
+  })
+})
