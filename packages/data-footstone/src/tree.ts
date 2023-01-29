@@ -1,11 +1,7 @@
 import { Queue } from './queue'
 import { Stack } from './stack'
 import {
-  // BaseTreeNode as BTN,
-  // BaseTree as BT,
-
   BinaryTreeNode as BTN,
-  //  as BTN,
   BinaryTreeNodeOrNull as BTNON,
   BinaryTree as BT,
   BinarySearchTreeNode as BSTN,
@@ -36,10 +32,6 @@ class BinaryTreeNode<T> implements BTN<T> {
   isRoot() {
     return !this.parent
   }
-  // isLeft() {
-  //   return !this.isRoot && this.parent.left.key === this.key
-  // }
-  // isRight() {}
   hasParent() {
     return !!this.parent
   }
@@ -58,23 +50,14 @@ class BinaryTreeNode<T> implements BTN<T> {
   isLeaf() {
     return !this.hasChild()
   }
-  // sibling() {}
-  // uncle() {}
 }
 class BinaryTree<T> implements BT<T> {
   root: BT<T>['root']
-  // createNode: BT<T>['createNode']
   constructor() {
     this.root = null
   }
   createBTNode(v: T) {
     return new BinaryTreeNode(v)
-    // return {
-    //   value: v,
-    //   left: null,
-    //   right: null,
-    //   parent: null,
-    // }
   }
   // 还缺少设置根节点的方法
   insertAsLeft(parent: BTN<T>, current: T) {
@@ -384,18 +367,6 @@ class BinarySearchTreeNode<T> extends BinaryTreeNode<T> implements BSTN<T> {
       return this.isLeft() ? this.parent.right : this.parent.left
     }
   }
-  // 在tree中使用此方法
-  // deep() {
-  //   let cur = this
-  //   let d = 0
-  //   while (cur) {
-  //     cur = cur.parent
-  //     d++
-  //   }
-  //   return d
-  // }
-  // height() {
-  // }
   uncle() {
     if (this.isRoot() || !this.parent || !this.parent.parent) {
       return null

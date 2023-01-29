@@ -13,6 +13,13 @@ interface BinaryTreeNode<T> {
   right: BinaryTreeNodeOrNull<T>
   parent: BinaryTreeNodeOrNull<T>
   // 有可能需要一个指向树的指针
+  isRoot: () => B
+  hasParent: () => B
+  hasLeft: () => B
+  hasRight: () => B
+  hasChild: () => B
+  hasBothChild: () => B
+  isLeaf: () => B
 }
 // 还有一种长子-兄弟表示法。
 type BinaryTreeNodeOrNull<T> = (BinaryTreeNode<T> | null)
@@ -41,7 +48,7 @@ interface BinaryTree<T> {
 }
 // 二叉搜索树的节点
 type BinarySearchTreeOrder = 'preOrder' | 'inOrder' | 'postOrder' | 'level'
-interface BinarySearchTreeNode<T> {
+interface BinarySearchTreeNode<T> extends BinaryTreeNode<T> {
   key: N
   value: T | null
   left: BinarySearchTreeNodeOrNull<T>
@@ -54,6 +61,8 @@ interface BinarySearchTreeNode<T> {
   'operator!==': (otherNode: BinarySearchTreeNode<T>) => B
   isLeft: () => B
   isRight: () => B
+  sibling: () => BinarySearchTreeNodeOrNull<T>
+  uncle: () => BinarySearchTreeNodeOrNull<T>
 }
 type BinarySearchTreeNodeOrNull<T> = BinarySearchTreeNode<T> | null
 
