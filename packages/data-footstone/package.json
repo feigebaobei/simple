@@ -1,6 +1,6 @@
 {
   "name": "data-footstone",
-  "version": "0.1.17",
+  "version": "0.1.16",
   "description": "data structure",
   "author": "feigebaobei <18515195415@163.com>",
   "license": "ISC",
@@ -86,5 +86,5 @@
     "ts-jest": "^29.0.3",
     "typescript": "~4.7.0"
   },
-  "gitHead": "a2fe29c6269604e4ba7e7f7a812706b75a3e5ee1"
+  "gitHead": "919a017d1d5ff7d41025b76fef2756bbb726f20d"
 }

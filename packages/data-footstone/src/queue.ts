@@ -48,7 +48,7 @@ class Queue<T> extends BaseQueue implements Q<T> {
   //   super()
   //   this.enqueue(...p)
   // }
-  constructor(capacity: N) {
+  constructor(capacity: N = Number.POSITIVE_INFINITY) {
     super(capacity)
   }
   // enqueue(...p: T[]) {
