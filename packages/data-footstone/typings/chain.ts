@@ -26,7 +26,7 @@ interface SingleChain<T> extends BaseChain<T> {
   head: SingleChainElementOrNull<T>
   length: N
   createNode: (v: T, p: N) => SingleChainElement<T>
-  append: (p: T) => void
+  append: (p: T) => Error | N
   insert: (p: T, position: N) => B
   removeAt: (position: N) => T | undefined
   // removeElement: (element: T, all: B) => B
@@ -50,7 +50,7 @@ interface DoublyChain<T> {
   tail: DoublyChainElement<T> | null
   length: N
   createNode: (v: T, p: N) => DoublyChainElement<T>
-  append: (p: T) => void
+  append: (p: T) => Error | N
   insert: (v: T, p: N) => B
   removeAt: (p: N) => T | undefined
   toArray: () => T[]
@@ -83,7 +83,7 @@ interface DoublyCircleChainElement<T> {
 }
 interface DoublyCircleChain<T> {
   createNode: (v: T, p: N) => DoublyCircleChainElement<T>
-  append: (v: T) => void
+  append: (v: T) => Error | N
   insert: (v: T, p: N) => B
   removeAt: (p: N) => T | undefined
 }

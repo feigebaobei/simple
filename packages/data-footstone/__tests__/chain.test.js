@@ -56,7 +56,7 @@ describe('SingleChain', () => {
 
 describe('DoublyChain', () => {
   it('DoublyChain', () => {
-    let chain = new DoublyChain(4)
+    let chain = new DoublyChain()
     chain.append(1)
     chain.append(2)
     chain.append(3)

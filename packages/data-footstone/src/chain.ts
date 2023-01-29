@@ -267,6 +267,9 @@ class DoublyChain<T> extends BaseChain<T> implements DC<T> {
     }
   }
   append(v: T) {
+    if (this.isFull()) {
+      return new Error('has full')
+    }
     let node = this.createNode(v, this.length)
     if (this.length) {
       node.prev = this.tail
@@ -390,6 +393,9 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
     }
   }
   append(v: T) {
+    if (this.isFull()) {
+      return new Error('has full')
+    }
     let node = this.createNode(v, this.length)
     if (this.length) {
       this.tail.next = node
@@ -512,6 +518,9 @@ class DoublyCircleChain<T> extends DoublyChain<T> implements DCC<T> {
     }
   }
   append(p: T) {
+    if (this.isFull()) {
+      return new Error('has full')
+    }
     let node = this.createNode(p, this.length)
     if (this.length) {
       node.next = this.head
