@@ -2,19 +2,29 @@
 /*
 栈
 */
-import { Stack as StackI } from '../typings'
+import { Stack as StackI, N } from '../typings'
 
 class Stack<T> implements StackI<T> {
   items: T[]
-  constructor() {
+  capacity: N
+  constructor(capacity: N = Number.POSITIVE_INFINITY) {
     this.items = []
+    // 不可改变
+    Object.defineProperty(this, 'capacity', {
+      value: capacity,
+      writable: false
+    })
   }
   toArray() {
     return this.items
   }
-  push(...p: T[]) {
-    this.items.push(...p)
-    return this.size()
+  push(p: T) {
+    if (this.isFull()) {
+      return new Error('has full')
+    } else {
+      this.items.push(p)
+      return this.size()
+    }
   }
   pop() {
     return this.items.pop()
@@ -24,6 +34,9 @@ class Stack<T> implements StackI<T> {
   }
   isEmpty() {
     return this.size() === 0
+  }
+  isFull() {
+    return this.size() === this.capacity
   }
   clear() {
     this.items = []
