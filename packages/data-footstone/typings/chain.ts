@@ -7,6 +7,7 @@ interface BaseChainElement<T> {
 // 链表基类
 interface BaseChain<T> {
   // join: () => T[]
+  readonly capacity: N
   head: BaseChainElement<T> | null
   toArray: () => T[]
   isValidRange: (p: N) => B
@@ -17,12 +18,12 @@ interface BaseChain<T> {
 interface SingleChainElement<T> {
   value: T
   position: N // 标记出位置会方便一些
-  next: SingleChainElement<T> | null
+  next: SingleChainElementOrNull<T>
 }
+type SingleChainElementOrNull<T> = SingleChainElement<T> | null
 // 单向链表
-// 可以使用extends Pick<objT, key...>
 interface SingleChain<T> extends BaseChain<T> {
-  head: SingleChainElement<T> | null
+  head: SingleChainElementOrNull<T>
   length: N
   createNode: (v: T, p: N) => SingleChainElement<T>
   append: (p: T) => void
@@ -64,20 +65,6 @@ interface SingleCircleChainElement<T> {
   next: SingleCircleChainElement<T> | null
 }
 
-// interface SingleCircleChain<T> extends SingleChain<T> {
-// interface SingleCircleChain<T> {
-//   append: (p: T) => void
-//   insert: () => {}
-//   removeAt: () => {}
-//   removeElement: () => {}
-//   slice: () => {}
-//   getEleByIndex: () => {}
-//   getTail: () => {}
-// }
-// interface SingleCircleChain<T> extends SingleChain<T> {
-//   // append: (a: S, b: B) => N
-//   // append: SingleChain<T>['append'] | ((a: S, b: B) => N)
-// }
 interface SingleCircleChain<T>
   extends Pick<
     SingleChain<T>,
@@ -105,6 +92,7 @@ export {
   BaseChainElement,
   BaseChain,
   SingleChainElement,
+  SingleChainElementOrNull,
   SingleChain,
   DoublyChainElement,
   DoublyChain,

@@ -3,6 +3,7 @@ import {
   BaseChain as BC,
   SingleChain as SC,
   SingleChainElement as SCE,
+  SingleChainElementOrNull as SCEON,
   DoublyChain as DC,
   DoublyChainElement as DCE,
   SingleCircleChain as SCC,
@@ -19,9 +20,14 @@ import {
 class BaseChain<T> implements BC<T> {
   head: BCE<T>
   length: N
-  constructor() {
+  readonly capacity: number
+  constructor(capacity: N = Number.POSITIVE_INFINITY) {
     this.head = null
     this.length = 0
+    Object.defineProperty(this, 'capacity', {
+      value: capacity,
+      writable: false
+    })
   }
   toArray() {
     let cur = this.head
@@ -35,6 +41,12 @@ class BaseChain<T> implements BC<T> {
   // 默认至少有一个节点
   isValidRange(p: N) {
     return 0 <= p && p < this.length
+  }
+  isEmpty() {
+    return !this.length
+  }
+  isFull() {
+    return this.length === this.capacity
   }
   // for delelte after 2023/02/11
   // 返回匹配元素的下标
@@ -89,30 +101,28 @@ class BaseChain<T> implements BC<T> {
 }
 
 class SingleChain<T> extends BaseChain<T> implements SC<T> {
-  head: SCE<T>
+  head: SCEON<T>
   length: N
-  constructor(...p: T[]) {
-    super()
-    if (p.length) {
-      this.head = p.reduceRight((r: SCE<T>, c: T, index: N) => {
-        return {
-          value: c,
-          next: r,
-          position: index,
-        }
-      }, null)
-      this.length = p.length
-    }
+  capacity: number
+  // constructor 是实例化的过程。参数是为整个对象执行实例化时需要的内容。
+  // 不应该是使用时的数据。即使这个功能方便后续使用。
+  constructor(capacity: N = Number.POSITIVE_INFINITY) {
+    super(capacity)
+    this.head = null
+    this.length = 0
   }
-  createNode(v: T, p: N) {
+  createNode(v: T, p: N = -1) {
     return {
       value: v,
       next: null,
-      position: p,
+      position: p, // 负数表示不在链上
     }
   }
   // 对外不暴露数据结构。所心不提供appendNode方法。
   append(p: T) {
+    if (this.isFull()) {
+      return new Error('has full')
+    }
     let node = this.createNode(p, this.length)
     if (!this.head) {
       this.head = node
@@ -180,42 +190,6 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
       return undefined
     }
   }
-  // 删除此方法
-  // removeElement(v: T, all = false) {
-  //   let res: B = false
-  //   if (this.length) {
-  //     if (this.head.value === v) {
-  //       this.head = this.head.next
-  //       this.length--
-  //       res = true
-  //     } else {
-  //       let cur = this.head.next
-  //       let pre = this.head
-  //       while (cur) {
-  //         if (cur.value === v) {
-  //           pre.next = cur.next
-  //           this.length--
-  //           res = true
-  //           if (!all) {
-  //             break
-  //           }
-  //         }
-  //         pre = cur
-  //         cur = cur.next
-  //       }
-  //     }
-  //     let cur = this.head
-  //     let index = 0
-  //     while (cur) {
-  //       cur.position = index
-  //       index++
-  //       cur = cur.next
-  //     }
-  //   } else {
-  //     res = false
-  //   }
-  //   return res
-  // }
   // includes() {}
   reverseSelf() {
     let fn = (p: SCE<T> | null, q = null) => {
@@ -279,10 +253,10 @@ class DoublyChain<T> extends BaseChain<T> implements DC<T> {
   head: DCE<T> | null
   tail: DCE<T> | null
   length: N
-  constructor(...p: T[]) {
-    super()
+  constructor(capacity: N = Number.POSITIVE_INFINITY) {
+    super(capacity)
     this.tail = null
-    p.forEach(this.append, this)
+    // p.forEach(this.append, this)
   }
   createNode(v: T, p: N) {
     return {
@@ -368,37 +342,6 @@ class DoublyChain<T> extends BaseChain<T> implements DC<T> {
       return undefined
     }
   }
-  // removeElement(v: T, all = false) {
-  //   let res: B = false
-  //   let cur = this.head
-  //   let index = 0
-  //   while (index < this.length) {
-  //     if (cur.value === v) {
-  //       if (index === 0) {
-  //         // op this.head
-  //         this.head = this.head.next
-  //         this.head.prev = null
-  //       } else if (index === this.length) {
-  //         // op this.tail
-  //         this.tail = this.tail.prev
-  //         this.tail.next = null
-  //       } else {
-  //         // op middle
-  //         cur.prev.next = cur.next
-  //         cur.next.prev = cur.prev
-  //       }
-  //       res = true
-  //       this.length--
-  //       if (!all) {
-  //         break
-  //       }
-  //     } else {
-  //       index++
-  //     }
-  //     cur = cur.next
-  //   }
-  //   return res
-  // }
   clear() {
     this.head = null
     this.tail = null
@@ -421,12 +364,12 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
   head: SCCE<T> | null
   length: N
   tail: SCCE<T> | null
-  constructor(...p: T[]) {
-    super()
+  constructor(capacity: N = Number.POSITIVE_INFINITY) {
+    super(capacity)
     this.head = null
     this.tail = null
     this.length = 0
-    p.forEach(this.append, this)
+    // p.forEach(this.append, this)
   }
   toArray() {
     let res = []
@@ -556,9 +499,9 @@ class SingleCircleChain<T> extends SingleChain<T> implements SCC<T> {
 }
 
 class DoublyCircleChain<T> extends DoublyChain<T> implements DCC<T> {
-  constructor(...p: T[]) {
-    super()
-    p.forEach(this.append, this)
+  constructor(capacity: N = Number.POSITIVE_INFINITY) {
+    super(capacity)
+    // p.forEach(this.append, this)
   }
   createNode(v: T, p: number) {
     return {
@@ -649,36 +592,6 @@ class DoublyCircleChain<T> extends DoublyChain<T> implements DCC<T> {
       return undefined
     }
   }
-  // removeElement(v: T, all = false) {
-  //   let res: B = false
-  //   let cur = this.head
-  //   let index = 0
-  //   while (index < this.length) {
-  //     if (cur.value === v) {
-  //       if (index === 0) {
-  //         this.head = this.head.next
-  //         this.head.prev = this.tail
-  //         this.tail.next = this.head
-  //       } else if (index === this.length) {
-  //         this.tail = this.tail.prev
-  //         this.tail.next = this.head
-  //         this.head.prev = this.tail
-  //       } else {
-  //         cur.prev.next = cur.next
-  //         cur.next.prev = cur.prev
-  //       }
-  //       res = true
-  //       this.length--
-  //       if (!all) {
-  //         break
-  //       }
-  //     } else {
-  //       index++
-  //     }
-  //     cur = cur.next
-  //   }
-  //   return res
-  // }
   toArray() {
     let res = []
     let index = 0
@@ -703,4 +616,4 @@ class DoublyCircleChain<T> extends DoublyChain<T> implements DCC<T> {
   }
 }
 
-export { SingleChain, DoublyChain, SingleCircleChain, DoublyCircleChain }
+export { BaseChain, SingleChain, DoublyChain, SingleCircleChain, DoublyCircleChain }

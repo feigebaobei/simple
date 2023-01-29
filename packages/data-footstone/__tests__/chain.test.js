@@ -1,13 +1,24 @@
 import {
+  BaseChain,
   SingleChain,
   DoublyChain,
   SingleCircleChain,
   DoublyCircleChain,
 } from '../src/chain'
 
+describe('BaseChain', () => {
+  let c = new BaseChain(3)
+  expect(c.capacity).toBe(3)
+  expect(c.isEmpty()).toBeTruthy()
+})
 describe('SingleChain', () => {
   it('SingleChain', () => {
-    let chain = new SingleChain(1, 2, 3, 4)
+    let chain = new SingleChain(4)
+    chain.append(1)
+    chain.append(2)
+    chain.append(3)
+    chain.append(4)
+    expect(chain.append(5)).toEqual(new Error('has full'))
     expect(chain.toArray()).toEqual([1, 2, 3, 4])
     chain.insert(5, 2)
     // 1,2,5,3,4
@@ -24,7 +35,11 @@ describe('SingleChain', () => {
     expect(chain.toArray()).toEqual([])
   })
   test('SingleChain slice', () => {
-    let originChain = new SingleChain(1, 2, 3, 4)
+    let originChain = new SingleChain(4)
+    originChain.append(1)
+    originChain.append(2)
+    originChain.append(3)
+    originChain.append(4)
     let newChain = originChain.slice(1, 3)
     expect(newChain.length).toEqual(2)
     newChain = originChain.slice(1, 2)
@@ -41,7 +56,11 @@ describe('SingleChain', () => {
 
 describe('DoublyChain', () => {
   it('DoublyChain', () => {
-    let chain = new DoublyChain(1, 2, 3, 4)
+    let chain = new DoublyChain(4)
+    chain.append(1)
+    chain.append(2)
+    chain.append(3)
+    chain.append(4)
     expect(chain.toArray()).toEqual([1, 2, 3, 4])
     chain.append(5)
     expect(chain.toArray()).toEqual([1, 2, 3, 4, 5])
@@ -64,7 +83,11 @@ describe('DoublyChain', () => {
 
 describe('SingleCircleChain', () => {
   it('SingleCircleChain', () => {
-    let chain = new SingleCircleChain(1, 2, 3, 4)
+    let chain = new SingleCircleChain(4)
+    chain.append(1)
+    chain.append(2)
+    chain.append(3)
+    chain.append(4)
     expect(chain.head.next.next.next.value).toBe(4)
     expect(chain.head.next.next.next.position).toBe(3)
     expect(chain.toArray()).toEqual([1, 2, 3, 4])
@@ -81,7 +104,11 @@ describe('SingleCircleChain', () => {
   })
 
   test('SingleCircleChain slice', () => {
-    let originChain = new SingleCircleChain(1, 2, 3, 4)
+    let originChain = new SingleCircleChain(4)
+    originChain.append(1)
+    originChain.append(2)
+    originChain.append(3)
+    originChain.append(4)
     let newChain = originChain.slice(1, 3)
     expect(newChain.length).toEqual(2)
     newChain = originChain.slice(1, 2)
@@ -98,7 +125,11 @@ describe('SingleCircleChain', () => {
 
 describe('DoublyCircleChain', () => {
   it('DoublyCircleChain', () => {
-    let chain = new DoublyCircleChain(1, 2, 3, 4)
+    let chain = new DoublyCircleChain(4)
+    chain.append(1)
+    chain.append(2)
+    chain.append(3)
+    chain.append(4)
     expect(chain.toArray()).toEqual([1, 2, 3, 4])
     expect(chain.head.next.next.next.value).toBe(4)
     expect(chain.head.next.next.next.position).toBe(3)
