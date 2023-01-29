@@ -7,7 +7,7 @@ import {
 } from './baseType'
 
 interface Stack<T> {
-  capacity: N
+  readonly capacity: N
   toArray: () => T[]
   push: (p: T) => Error | N
   pop: () => T

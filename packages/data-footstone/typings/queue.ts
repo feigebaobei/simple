@@ -7,6 +7,7 @@ import {
 
 interface BaseQueue {
   items: A[]
+  readonly capacity: N
   // enqueue: (...p: T[]) => void
   // dequeue: () => T
   // toArray: () => A[]
@@ -18,15 +19,16 @@ interface BaseQueue {
   // reverse: () => void
 }
 // interface Queue<T> extends BaseQueue<T> {
-interface Queue<T> {
+interface Queue<T> extends BaseQueue {
   items: T[]
-  enqueue: (...p: T[]) => N
+  // enqueue: (...p: T[]) => N
+  enqueue: (p: T) => Error | N
   dequeue: () => T
   toArray: () => T[]
-  getHead: () => T
-  getTail: () => T
-  size: () => N
-  isEmpty: () => B
+  // getHead: () => T
+  // getTail: () => T
+  // size: () => N
+  // isEmpty: () => B
   clear: () => void
   reverse: () => void
   peek: () => T | undefined
@@ -50,7 +52,7 @@ interface PriorityQueue<T> {
     priority?: N,
     positionFlag?: B,
     needSetPosition?: B
-  ) => N
+  ) => Error | N
   dequeue: () => T
   highestPriority: () => N | undefined
   toArray: () => T[]

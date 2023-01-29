@@ -1,8 +1,20 @@
-import { Queue, PriorityQueue } from '../src/queue'
+import { BaseQueue, Queue, PriorityQueue } from '../src/queue'
 
+describe('BaseQueue', () => {
+  test('BaseQueue', () => {
+    let q = new BaseQueue(3)
+    expect(Number.isFinite(q.capacity)).toBeTruthy()
+    q = new BaseQueue()
+    expect(Number.isFinite(q.capacity)).toBeFalsy()
+  })
+})
 describe('Queue', () => {
   it('Queue', () => {
-    let queue = new Queue(1, 2, 3, 4)
+    let queue = new Queue()
+    queue.enqueue(1)
+    queue.enqueue(2)
+    queue.enqueue(3)
+    queue.enqueue(4)
     expect(queue.dequeue()).toBe(1)
     expect(queue.dequeue()).toBe(2)
     expect(queue.toArray()).toEqual([3, 4])
@@ -10,15 +22,25 @@ describe('Queue', () => {
     expect(queue.getTail()).toBe(4)
     expect(queue.size()).toBe(2)
     expect(queue.isEmpty()).toBeFalsy()
+    expect(queue.isFull()).toBeFalsy()
     queue.clear()
     expect(queue.toArray()).toEqual([])
     expect(queue.isEmpty()).toBeTruthy()
   })
+  test('queue', () => {
+    let queue = new Queue(3)
+    queue.enqueue(1)
+    queue.enqueue(1)
+    queue.enqueue(1)
+    expect(queue.toArray()).toEqual([1,1,1])
+    expect(queue.capacity).toBe(3)
+    expect(queue.enqueue(2)).toEqual(new Error('has full'))
+  })
 })
 
-describe('PriorityQueue', () => {
+describe.only('PriorityQueue', () => {
   it('PriorityQueue', () => {
-    let queue = new PriorityQueue(3)
+    let queue = new PriorityQueue(undefined, 3)
     expect(queue.highestPriority()).toBeUndefined()
     expect(queue.lowestPriority()).toBeUndefined()
     expect(queue.enqueue(1)).toBe(1)
@@ -45,5 +67,12 @@ describe('PriorityQueue', () => {
     expect(queue.size()).toBe(0)
     expect(queue.isEmpty()).toBeTruthy()
     expect(queue.toArray()).toEqual([])
+  })
+  test('PriorityQueue capacity', () => {
+    let queue = new PriorityQueue(3)
+    queue.enqueue(1)
+    queue.enqueue(2)
+    queue.enqueue(3)
+    expect(queue.enqueue(4)).toEqual(new Error('has full'))
   })
 })

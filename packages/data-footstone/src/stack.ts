@@ -6,7 +6,7 @@ import { Stack as StackI, N } from '../typings'
 
 class Stack<T> implements StackI<T> {
   items: T[]
-  capacity: N
+  readonly capacity: N
   constructor(capacity: N = Number.POSITIVE_INFINITY) {
     this.items = []
     // 不可改变

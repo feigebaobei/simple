@@ -12,8 +12,15 @@ import {
 // 可以抽象出BaseQueue
 class BaseQueue implements BQ {
   items: A[]
-  constructor() {
+  readonly capacity: N
+  constructor(capacity: N = Number.POSITIVE_INFINITY) {
     this.items = []
+    // this.capacity = capacity
+    // Object.defineProperty('')
+    Object.defineProperty(this, 'capacity', {
+      value: capacity,
+      writable: false
+    })
   }
   getHead() {
     return this.items[0]
@@ -27,21 +34,34 @@ class BaseQueue implements BQ {
   isEmpty() {
     return this.size() === 0
   }
+  isFull() {
+    return this.size() === this.capacity
+  }
   clear() {
-    // return
     this.items = []
   }
 }
 
 class Queue<T> extends BaseQueue implements Q<T> {
   items: T[]
-  constructor(...p: T[]) {
-    super()
-    this.enqueue(...p)
+  // constructor(...p: T[]) {
+  //   super()
+  //   this.enqueue(...p)
+  // }
+  constructor(capacity: N) {
+    super(capacity)
   }
-  enqueue(...p: T[]) {
-    this.items.push(...p)
-    return this.size()
+  // enqueue(...p: T[]) {
+  //   this.items.push(...p)
+  //   return this.size()
+  // }
+  enqueue(p: T) {
+    if (this.isFull()) {
+      return new Error('has full')
+    } else {
+      this.items.push(p)
+      return this.size()
+    }
   }
   dequeue() {
     return this.items.shift()
@@ -62,10 +82,12 @@ class Queue<T> extends BaseQueue implements Q<T> {
 class PriorityQueue<T> extends BaseQueue implements PQ<T> {
   items: PQE<T>[]
   defaultPriority: N
-  constructor(defaultPriority: N = 0) {
-    super()
-    // this.items = []
-    this.defaultPriority = defaultPriority
+  constructor(capacity: N = Number.POSITIVE_INFINITY, defaultPriority: N = 0) {
+    super(capacity)
+    Object.defineProperty(this, 'defaultPriority', {
+      value: defaultPriority,
+      writable: false
+    })
   }
   highestPriority() {
     let temp = this._getHead()
@@ -104,6 +126,9 @@ class PriorityQueue<T> extends BaseQueue implements PQ<T> {
     positionFlag: B = true,
     needSetPosition: B = true
   ) {
+    if (this.isFull()) {
+      return new Error('has full')
+    }
     let len = this.size()
     let node = this.createNode(element, priority)
     if (!len) {
@@ -156,9 +181,6 @@ class PriorityQueue<T> extends BaseQueue implements PQ<T> {
   size() {
     return this.items.length
   }
-  isEmpty() {
-    return this.size() === 0
-  }
   clear() {
     this.items = []
   }
@@ -198,4 +220,4 @@ class PriorityQueue<T> extends BaseQueue implements PQ<T> {
 }
 // 不写循环队列。它应该写在循环链表。
 
-export { Queue, PriorityQueue }
+export { BaseQueue, Queue, PriorityQueue }
