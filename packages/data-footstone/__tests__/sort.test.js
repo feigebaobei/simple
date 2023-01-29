@@ -5,7 +5,7 @@ import {
   insertSort,
   quickSort,
   versionOrder,
-} from '../src/order'
+} from '../src/sort'
 
 let arr = []
 

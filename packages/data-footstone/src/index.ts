@@ -17,7 +17,7 @@ import {
   AVLTree,
   // RedBackTree,
 } from './tree'
-import * as order from './order'
+import * as sort from './sort'
 import { Lru, Fifo, Lfu } from './store'
 import { DirectionGraph,
   UndirectionGraph } from './graph'
@@ -40,7 +40,7 @@ export {
   BinarySearchTree,
   AVLTree,
   // RedBackTree,
-  order,
+  sort,
   Lru,
   Fifo,
   Lfu,

@@ -99,14 +99,16 @@ type AVLTreeNodeOrNull<T> = BinarySearchTreeNodeOrNull<T>
 // avl树
 // Adelson-Velskii-Landi tree
 interface AVLTree<T> extends BinarySearchTree<T> {
-  // insert: (v: T) => void
+  insert: (k: N, v: T) => Error | undefined
   // insert: (k: N, v: T) => void
   _insertNode: (n0: AVLTreeNode<T>, n1: AVLTreeNode<T>) => void
-  _rotationRR: (node: AVLTreeNode<T>) => void
-  _rotationLL: (node: AVLTreeNode<T>) => void
-  _rotationLR: (node: AVLTreeNode<T>) => void
-  _rotationRL: (node: AVLTreeNode<T>) => void
-  remove: (k: N) => void
+  _rotationRR: (node: AVLTreeNode<T>) => AVLTreeNode<T>
+  _rotationLL: (node: AVLTreeNode<T>) => AVLTreeNode<T>
+  _rotationLR: (node: AVLTreeNode<T>) => AVLTreeNode<T>
+  _rotationRL: (node: AVLTreeNode<T>) => AVLTreeNode<T>
+  _connect34: (a: AVLTreeNode<T>, b: AVLTreeNode<T>, c: AVLTreeNode<T>, t0: AVLTreeNodeOrNull<T>, t1: AVLTreeNodeOrNull<T>, t2: AVLTreeNodeOrNull<T>, t3: AVLTreeNodeOrNull<T>) => AVLTreeNode<T>
+  rotateAt: (v: AVLTreeNode<T>) => AVLTreeNode<T>
+  remove: (k: N) => B
 }
 
 type RedBackTreeNode<T> = BinarySearchTreeNode<T>
@@ -117,7 +119,7 @@ interface RedBackTree<T> extends BinarySearchTree<T> {
 
 // B+
 // 平衡二叉树
-// avl树
+// 伸展树
 // 红黑树
 // 霍夫曼树
 // 有序树

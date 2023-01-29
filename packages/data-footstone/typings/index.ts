@@ -44,7 +44,7 @@ import {
   LfuNode,
   Lfu,
 } from './store'
-import { OrderType } from './order'
+import { OrderType } from './sort'
 
 export {
   S,

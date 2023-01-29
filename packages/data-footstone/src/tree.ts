@@ -8,7 +8,7 @@ import {
   BinarySearchTreeNodeOrNull,
   BinarySearchTree as BST,
   AVLTreeNode as AVLTN,
-  AVLTreeNodeOrNull as AVLTNOR,
+  AVLTreeNodeOrNull as AVLTNON,
   AVLTree as AVLT,
   RedBackTree as RBT,
   B,
@@ -545,7 +545,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     super()
   }
   // 理想平衡
-  balanced(n: AVLTNOR<T>) {
+  balanced(n: AVLTNON<T>) {
     if (!n) {
       return true
     } else {
@@ -553,7 +553,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     }
   }
   // 平衡因子
-  balanceFac(n: AVLTNOR<T>) {
+  balanceFac(n: AVLTNON<T>) {
     if (!n) {
       return 0
     } else {
@@ -561,7 +561,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     }
   }
   // 是否avl平衡
-  AvlBalanced(n: AVLTNOR<T>) {
+  avlBalanced(n: AVLTNON<T>) {
     if (!n) {
       return true
     } else {
@@ -582,7 +582,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
       }
       let p = newNode.parent
       while (p) {
-        if (!this.AvlBalanced(p)) {
+        if (!this.avlBalanced(p)) {
           if (p.parent) { // 非根节点
             this.rotateAt(this.tallerChild(this.tallerChild(p)))
           } else { // 根节点
@@ -650,7 +650,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     node.right = this._rotationLL(node.right)
     return this._rotationRR(node)
   }
-  _connect34(a: AVLTN<T>, b: AVLTN<T>, c: AVLTN<T>, t0: AVLTN<T>, t1: AVLTN<T>, t2: AVLTN<T>, t3: AVLTN<T>) {
+  _connect34(a: AVLTN<T>, b: AVLTN<T>, c: AVLTN<T>, t0: AVLTNON<T>, t1: AVLTNON<T>, t2: AVLTNON<T>, t3: AVLTNON<T>) {
     a.left = t0
     if (t0) {
       t0.parent = a
@@ -677,7 +677,6 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     return b // 返回该子树的根节点
   }
   rotateAt(v: AVLTN<T>) {
-    // console.log('v', v)
     // v是孙辈的节点，不平衡。
     // 至少有3层，才会出现不平衡，所以一定会有父节点、祖节点。
     let p = v.parent
@@ -686,24 +685,23 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     // console.log('p', p)
     // console.log('g', g)
     if (p['operator==='](g.left)) {
-      // console.log('left g')
       if (v['operator==='](p.left)) {
-        console.log('left left p')
+        // console.log('left left p')
         // v p g
         return this._connect34(v, p, g, v.left, v.right, p.right, g.right)
       } else  {
-        console.log('left right p')
+        // console.log('left right p')
         // p v g
         return this._connect34(p, v, g, p.left, v.left, v.right, g.right)
       }
     } else {
       // console.log('right g')
       if (v['operator==='](p.left)) {
-        console.log('right left p')
+        // console.log('right left p')
         // g v p
         return this._connect34(g, v, p, g.left, v.left, v.right, p.right)
       } else  {
-        console.log('right right p')
+        // console.log('right right p')
         // g p v
         return this._connect34(g, p, v, g.left, p.left, v.left, v.right)
       }
@@ -720,7 +718,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
       let p = node.parent
       super.remove(k)
       while (p) {
-        if (!this.AvlBalanced(p)) {
+        if (!this.avlBalanced(p)) {
           if (p.parent) { // 非根节点
             this.rotateAt(this.tallerChild(this.tallerChild(p)))
           } else { // 根节点
