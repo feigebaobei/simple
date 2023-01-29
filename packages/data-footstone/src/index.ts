@@ -12,9 +12,9 @@ import {
 // import { PMap } from './pMap'
 import { HashMap, djb2HashFn, loseloseHashFn } from './hashMap'
 import {
-  // BaseTree,
+  BinaryTree,
   BinarySearchTree,
-  // AVLTree,
+  AVLTree,
   // RedBackTree,
 } from './tree'
 import * as order from './order'
@@ -36,8 +36,9 @@ export {
   djb2HashFn,
   loseloseHashFn,
   // BaseTree,
+  BinaryTree,
   BinarySearchTree,
-  // AVLTree,
+  AVLTree,
   // RedBackTree,
   order,
   Lru,

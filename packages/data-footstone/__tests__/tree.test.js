@@ -350,7 +350,7 @@ describe('BinarySearchTree', () => {
     expect(tree.tallerChild(tree.root).value).toBe(10)
   })
 })
-describe.only('AVLTree', () => {
+describe('AVLTree', () => {
   test('AVLTree 34 1', () => { 
     let tree = new AVLTree()
     expect(tree.root).toBeNull()

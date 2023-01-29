@@ -409,20 +409,13 @@ class BinarySearchTreeNode<T> extends BinaryTreeNode<T> implements BSTN<T> {
 // to test
 class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
   root: BST<T>['root']
-  // createNode: (k: N, v: T) => BSTN<T>
   constructor() {
     super()
     this.root = null
-    // this.createNode = (k: N, v: T) => {
-    //   return new BinarySearchTreeNode(k, v)
-    // }
   }
   createBSTNode(k: N, v: T) {
     return new BinarySearchTreeNode(k, v)
   }
-  // createNode(k: N, v: T) {
-  //   return new BinarySearchTreeNode(k, v)
-  // }
   insertAsLeft() {
     return new Error('不能插入左节点')
   }
@@ -748,15 +741,14 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
   // 删除时使用3+4重构
   // O(1)
   // 是否删除成功
-  // to test
   remove(k: N) {
     // 查检是否存在。
     // 若存在，则删除。否则，返回false
     let node = this.search(k)
     if (node) {
       let p = node.parent
+      super.remove(k)
       while (p) {
-
         if (!this.AvlBalanced(p)) {
           if (p.parent) { // 非根节点
             this.rotateAt(this.tallerChild(this.tallerChild(p)))
@@ -764,9 +756,6 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
             this.root = this.rotateAt(this.tallerChild(this.tallerChild(p)))
             this.root.parent = null
           }
-
-
-          // this.rotateAt(this.tallerChild(this.tallerChild(p)))
         }
         p = p.parent
       }
