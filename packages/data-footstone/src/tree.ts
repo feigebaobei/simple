@@ -10,6 +10,7 @@ import {
   AVLTreeNode as AVLTN,
   AVLTreeNodeOrNull as AVLTNON,
   AVLTree as AVLT,
+  SplayTree as ST,
   RedBackTree as RBT,
   B,
   F,
@@ -85,6 +86,14 @@ class BinaryTree<T> implements BT<T> {
       parent.right = cur
       cur.parent = parent
     }
+  }
+  attachAsLeft(parent: BTN<T>, node: BTN<T>) {
+    parent.left = node
+    node && (node.parent = parent)
+  }
+  attachAsRight(parent: BTN<T>, node: BTN<T>) {
+    parent.right = node
+    node && (node.parent = parent)
   }
   _preOrderTraverse(cb: F, node: BTNON<T>) {
     if (node) {
@@ -310,8 +319,13 @@ class BinarySearchTreeNode<T> extends BinaryTreeNode<T> implements BSTN<T> {
     this.right = null
     this.parent = null
   }
+  // to test
   clone () {
-    return new BinarySearchTreeNode<T>(this.key, this.value)
+    let res = new BinarySearchTreeNode<T>(this.key, this.value)
+    res.left = this.left
+    res.right = this.right
+    res.parent = this.parent
+    return res
   }
   'operator<'(otherNode: BinarySearchTreeNodeOrNull<T>) {
     if (otherNode) {
@@ -410,6 +424,7 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
       }
     }
   }
+  // to test
   insert(k: N, v: T) {
     let node = this.search(k)
     if (node) {
@@ -421,7 +436,7 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
       } else {
         this.root = newNode
       }
-      // return newNode // 考虑是否返回插入的节点
+      return newNode // 考虑是否返回插入的节点
     }
   }
   // 若存在则返回节点，否则返回null
@@ -735,6 +750,89 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
   }
 }
 
+class SplayTree<T> extends BinarySearchTree<T> implements ST<T> {
+  constructor() {
+    super()
+  }
+  splay(v: BinarySearchTreeNodeOrNull<T>) {
+    // console.log('v', v)
+    if (!v) {return null}
+    let p = v.parent
+    let g = p.parent
+    while(p && g) {
+      let gg = g.parent // 未旋转时v的曾祖父。是旋转后v的父。
+      if (v.isLeft()) {
+        if (p.isLeft()) {
+          // 当前结构
+          //     g
+          //   p
+          // v
+          // zig-zig
+          this.attachAsLeft(g, p.right)
+          this.attachAsRight(p, g)
+          this.attachAsLeft(p, v.right)
+          this.attachAsRight(v, p)
+        } else {
+          // 当前结构
+          // g
+          //      p
+          //    v
+          // zig-zag
+          this.attachAsRight(g, v.left)
+          this.attachAsLeft(v, g)
+          this.attachAsRight(v, p)
+          this.attachAsLeft(p, v.right)
+        }
+      } else {
+        if (p.isRight()) {
+          // zag-zag
+          this.attachAsRight(g, p.left)
+          this.attachAsLeft(p, g)
+          this.attachAsRight(p, v.left)
+          this.attachAsLeft(v, p)
+        } else {
+          // zag-zig
+          this.attachAsLeft(g, v.right)
+          this.attachAsRight(v, g)
+          this.attachAsRight(p, v.left)
+          this.attachAsLeft(v, p)
+        }
+      }
+      if (!gg) {
+        // 可删除
+        v.parent = null // 根节点parent=null
+      } else {
+        if (gg.left['operator=='](g)) {
+          this.attachAsLeft(gg, v)
+        } else {
+          this.attachAsRight(gg, v)
+        }
+      }
+      p = v.parent
+      if (p) {
+        g = p.parent
+      } else {
+        g = null
+      }
+    }
+    if (p && p['operator==='](v.parent)) { // 最后一次可能是单旋转
+      if (v.isLeft()) {
+        this.attachAsLeft(p, v.right)
+        this.attachAsRight(v, p)
+      } else {
+        this.attachAsRight(p, v.left)
+        this.attachAsLeft(v, p)
+      }
+    }
+    // console.log(this)
+    v.parent = null // 到达树根后，设置parent=null
+    this.root = v
+    return v
+  }
+  search: (k: N) => BinarySearchTreeNodeOrNull<T>
+  insert: (k: N, v: T) => Error | undefined
+  remove: (k: N) => void
+}
 
 
 // class RedBackTree<T> extends BinarySearchTree<T> implements RBT<T> {
@@ -750,5 +848,6 @@ export {
   BinarySearchTree,
   BinarySearchTreeNode,
   AVLTree,
+  SplayTree,
   // RedBackTree,
 }

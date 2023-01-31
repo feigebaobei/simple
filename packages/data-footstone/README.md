@@ -9,10 +9,26 @@
 
 - stack
 - queue
+  - PriorityQueue
+- chain
+  - SingleChain
+  - DoublyChain
+  - SingleCircleChain
+  - DoublyCircleChain
 - hashMap
+  - hash 方法
 - tree
-- ……
-- graph 简单
+  - BinaryTree
+  - BinarySearchTree
+  - AVLTree
+- graph
+  - DirectionGraph
+  - UndirectionGraph
+- sort
+- cache
+  - fifo
+  - lru
+  - lfu
 
 ## install
 
@@ -23,12 +39,15 @@
 ```js
 import { Stack } from 'data-footstone'
 let s = new Stack()
-s.push(1, 2, 3, 4)
+s.push(1) // 压入栈
+s.push(2)
+s.push(3)
+s.push(4)
 s.toArray() // [1,2,3,4]
-s.pop() // 4
+s.pop() // 4 弹出栈顶元素
 s.pop() // 3
-s.peek() // 2
-s.isEmpty() // false
+s.peek() // 2 返回栈顶元素
+s.isEmpty() // false 是否空栈
 s.clear() // 清空栈
 ```
 

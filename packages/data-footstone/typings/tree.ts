@@ -72,7 +72,8 @@ interface BinarySearchTree<T> extends Pick<BinaryTree<T>, '_preOrderTraverse' | 
   createBSTNode: (k: N, v: T) => BinarySearchTreeNode<T>
   insertAsLeft: () => Error
   insertAsRight: () => Error
-  insert: (k: N, v: T) => Error | undefined
+  // insert: (k: N, v: T) => Error | undefined
+  insert: (k: N, v: T) => Error | BinarySearchTreeNode<T>
   _insertNode: (
     n0: BinarySearchTreeNode<T>,
     n1: BinarySearchTreeNode<T>
@@ -117,9 +118,16 @@ interface RedBackTree<T> extends BinarySearchTree<T> {
   // _insertNode: (n0: RedBackTreeNode<T>, n1: RedBackTreeNode<T>) => void
 }
 
+// 伸展树
+interface SplayTree<T> extends BinarySearchTree<T> {
+  splay: (v: BinarySearchTreeNodeOrNull<T>) => BinarySearchTreeNodeOrNull<T>
+  search: (k: N) => BinarySearchTreeNodeOrNull<T>
+  insert: (k: N, v: T) => Error | undefined
+  remove: (k: N) => void
+  // q: (k: N) => void
+}
 // B+
 // 平衡二叉树
-// 伸展树
 // 红黑树
 // 霍夫曼树
 // 有序树
@@ -139,5 +147,6 @@ export {
   AVLTreeNode,
   AVLTreeNodeOrNull,
   AVLTree,
+  SplayTree,
   RedBackTree,
 }
