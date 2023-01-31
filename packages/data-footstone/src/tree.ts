@@ -7,8 +7,8 @@ import {
   BinarySearchTreeNode as BSTN,
   BinarySearchTreeNodeOrNull,
   BinarySearchTree as BST,
-  AVLTreeNode as AVLTN,
-  AVLTreeNodeOrNull as AVLTNON,
+  // AVLTreeNode as BSTN,
+  // AVLTreeNodeOrNull as BinarySearchTreeNodeOrNull,
   AVLTree as AVLT,
   SplayTree as ST,
   RedBackTree as RBT,
@@ -551,7 +551,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     super()
   }
   // 理想平衡
-  balanced(n: AVLTNON<T>) {
+  balanced(n: BinarySearchTreeNodeOrNull<T>) {
     if (!n) {
       return true
     } else {
@@ -559,7 +559,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     }
   }
   // 平衡因子
-  balanceFac(n: AVLTNON<T>) {
+  balanceFac(n: BinarySearchTreeNodeOrNull<T>) {
     if (!n) {
       return 0
     } else {
@@ -567,7 +567,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     }
   }
   // 是否avl平衡
-  avlBalanced(n: AVLTNON<T>) {
+  avlBalanced(n: BinarySearchTreeNodeOrNull<T>) {
     if (!n) {
       return true
     } else {
@@ -602,7 +602,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
       return newNode // 考虑是否返回插入的节点
     }
   }
-  // _insertNode(node: AVLTN<T>, newNode: AVLTN<T>): AVLTN<T> {
+  // _insertNode(node: BSTN<T>, newNode: BSTN<T>): BSTN<T> {
   //   if (!node) {
   //     node = newNode
   //   } else if (newNode.key < node.key) {
@@ -633,30 +633,30 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
   //   return node
   // }
   // 向左的单旋转
-  _rotationRR(node: AVLTN<T>) {
+  _rotationRR(node: BSTN<T>) {
     let t = node.right
     node.right = t.left
     t.left = node
     return t
   }
   // 向右的单旋转
-  _rotationLL(node: AVLTN<T>) {
+  _rotationLL(node: BSTN<T>) {
     let t = node.left
     node.left = t.right
     t.right = node
     return t
   }
   // 向右的双旋转
-  _rotationLR(node: AVLTN<T>) {
+  _rotationLR(node: BSTN<T>) {
     node.left = this._rotationRR(node.left)
     return this._rotationLL(node)
   }
   // 向左的双旋转
-  _rotationRL(node: AVLTN<T>) {
+  _rotationRL(node: BSTN<T>) {
     node.right = this._rotationLL(node.right)
     return this._rotationRR(node)
   }
-  _connect34(a: AVLTN<T>, b: AVLTN<T>, c: AVLTN<T>, t0: AVLTNON<T>, t1: AVLTNON<T>, t2: AVLTNON<T>, t3: AVLTNON<T>) {
+  _connect34(a: BSTN<T>, b: BSTN<T>, c: BSTN<T>, t0: BinarySearchTreeNodeOrNull<T>, t1: BinarySearchTreeNodeOrNull<T>, t2: BinarySearchTreeNodeOrNull<T>, t3: BinarySearchTreeNodeOrNull<T>) {
     a.left = t0
     if (t0) {
       t0.parent = a
@@ -679,7 +679,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     c.parent = b
     return b // 返回该子树的根节点
   }
-  rotateAt(v: AVLTN<T>) {
+  rotateAt(v: BSTN<T>) {
     // v是孙辈的节点，不平衡。
     // 至少有3层，才会出现不平衡，所以一定会有父节点、祖节点。
     let p = v.parent

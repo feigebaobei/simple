@@ -94,24 +94,24 @@ interface BinarySearchTree<T> extends Pick<BinaryTree<T>, '_preOrderTraverse' | 
   remove: (k: N) => void
 }
 // avl树节点
-type AVLTreeNode<T> = BinarySearchTreeNode<T>
-type AVLTreeNodeOrNull<T> = BinarySearchTreeNodeOrNull<T>
+// type BinarySearchTreeNode<T> = BinarySearchTreeNode<T>
+// type BinarySearchTreeNodeOrNull<T> = BinarySearchTreeNodeOrNull<T>
 // avl树
 // Adelson-Velskii-Landi tree
 interface AVLTree<T> extends BinarySearchTree<T> {
-  insert: (k: N, v: T) => Error | AVLTreeNode<T>
+  insert: (k: N, v: T) => Error | BinarySearchTreeNode<T>
   // insert: (k: N, v: T) => void
-  _insertNode: (n0: AVLTreeNode<T>, n1: AVLTreeNode<T>) => void
-  _rotationRR: (node: AVLTreeNode<T>) => AVLTreeNode<T>
-  _rotationLL: (node: AVLTreeNode<T>) => AVLTreeNode<T>
-  _rotationLR: (node: AVLTreeNode<T>) => AVLTreeNode<T>
-  _rotationRL: (node: AVLTreeNode<T>) => AVLTreeNode<T>
-  _connect34: (a: AVLTreeNode<T>, b: AVLTreeNode<T>, c: AVLTreeNode<T>, t0: AVLTreeNodeOrNull<T>, t1: AVLTreeNodeOrNull<T>, t2: AVLTreeNodeOrNull<T>, t3: AVLTreeNodeOrNull<T>) => AVLTreeNode<T>
-  rotateAt: (v: AVLTreeNode<T>) => AVLTreeNode<T>
+  _insertNode: (n0: BinarySearchTreeNode<T>, n1: BinarySearchTreeNode<T>) => void
+  _rotationRR: (node: BinarySearchTreeNode<T>) => BinarySearchTreeNode<T>
+  _rotationLL: (node: BinarySearchTreeNode<T>) => BinarySearchTreeNode<T>
+  _rotationLR: (node: BinarySearchTreeNode<T>) => BinarySearchTreeNode<T>
+  _rotationRL: (node: BinarySearchTreeNode<T>) => BinarySearchTreeNode<T>
+  _connect34: (a: BinarySearchTreeNode<T>, b: BinarySearchTreeNode<T>, c: BinarySearchTreeNode<T>, t0: BinarySearchTreeNodeOrNull<T>, t1: BinarySearchTreeNodeOrNull<T>, t2: BinarySearchTreeNodeOrNull<T>, t3: BinarySearchTreeNodeOrNull<T>) => BinarySearchTreeNode<T>
+  rotateAt: (v: BinarySearchTreeNode<T>) => BinarySearchTreeNode<T>
   remove: (k: N) => B
 }
 
-type RedBackTreeNode<T> = BinarySearchTreeNode<T>
+// type RedBackTreeNode<T> = BinarySearchTreeNode<T>
 interface RedBackTree<T> extends BinarySearchTree<T> {
   // insert: (v: T) => void
   // _insertNode: (n0: RedBackTreeNode<T>, n1: RedBackTreeNode<T>) => void
@@ -143,8 +143,8 @@ export {
   BinarySearchTreeNode,
   BinarySearchTreeNodeOrNull,
   BinarySearchTree,
-  AVLTreeNode,
-  AVLTreeNodeOrNull,
+  // AVLTreeNode,
+  // AVLTreeNodeOrNull,
   AVLTree,
   SplayTree,
   RedBackTree,
