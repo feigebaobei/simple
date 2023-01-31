@@ -17,8 +17,6 @@ import {
   N,
 } from '../typings'
 
-// 需要添加该type
-// to test
 class BinaryTreeNode<T> implements BTN<T> {
   value: T
   left: BTNON<T>
@@ -226,7 +224,6 @@ class BinaryTree<T> implements BT<T> {
   }
   // 是否是真二叉树
   // 每个节点的出度是 0 或 2.  
-  // to test
   isProper() {
     if (!this.root) {
       return true
@@ -256,14 +253,12 @@ class BinaryTree<T> implements BT<T> {
   }
   // 是否是满二叉树
   // 叶子节点在最后一层上的真二叉树。
-  // to test
   isFull() {
     let p = this.height()
     return this.vertexCount() === (Math.pow(2, p) - 1)
   }
   // 是否是完全二叉树
   // 非最后一层为满二叉树，最后一层从左到右分布。
-  // to test
   isComplete() {
     let h = this.height()
     let fullCount = Math.pow(2, h) -1
@@ -319,7 +314,6 @@ class BinarySearchTreeNode<T> extends BinaryTreeNode<T> implements BSTN<T> {
     this.right = null
     this.parent = null
   }
-  // to test
   clone () {
     let res = new BinarySearchTreeNode<T>(this.key, this.value)
     res.left = this.left
@@ -391,7 +385,6 @@ class BinarySearchTreeNode<T> extends BinaryTreeNode<T> implements BSTN<T> {
     }
   }
 }
-// to test
 class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
   root: BST<T>['root']
   constructor() {
@@ -424,7 +417,6 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
       }
     }
   }
-  // to test
   insert(k: N, v: T) {
     let node = this.search(k)
     if (node) {
@@ -554,7 +546,6 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
   }
 }
 
-// to test
 class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
   constructor() {
     super()
@@ -608,7 +599,7 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
         }
         p = p.parent
       }
-      // return newNode // 考虑是否返回插入的节点
+      return newNode // 考虑是否返回插入的节点
     }
   }
   // _insertNode(node: AVLTN<T>, newNode: AVLTN<T>): AVLTN<T> {
@@ -686,9 +677,6 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     a.parent = b
     b.right = c
     c.parent = b
-    // console.log('a', a)
-    // console.log('b', b)
-    // console.log('c', c)
     return b // 返回该子树的根节点
   }
   rotateAt(v: AVLTN<T>) {
@@ -696,27 +684,19 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
     // 至少有3层，才会出现不平衡，所以一定会有父节点、祖节点。
     let p = v.parent
     let g = p.parent
-    // console.log('v', v)
-    // console.log('p', p)
-    // console.log('g', g)
     if (p['operator==='](g.left)) {
       if (v['operator==='](p.left)) {
-        // console.log('left left p')
         // v p g
         return this._connect34(v, p, g, v.left, v.right, p.right, g.right)
       } else  {
-        // console.log('left right p')
         // p v g
         return this._connect34(p, v, g, p.left, v.left, v.right, g.right)
       }
     } else {
-      // console.log('right g')
       if (v['operator==='](p.left)) {
-        // console.log('right left p')
         // g v p
         return this._connect34(g, v, p, g.left, v.left, v.right, p.right)
       } else  {
-        // console.log('right right p')
         // g p v
         return this._connect34(g, p, v, g.left, p.left, v.left, v.right)
       }
@@ -750,12 +730,12 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
   }
 }
 
+// to test
 class SplayTree<T> extends BinarySearchTree<T> implements ST<T> {
   constructor() {
     super()
   }
   splay(v: BinarySearchTreeNodeOrNull<T>) {
-    // console.log('v', v)
     if (!v) {return null}
     let p = v.parent
     let g = p.parent
@@ -824,13 +804,12 @@ class SplayTree<T> extends BinarySearchTree<T> implements ST<T> {
         this.attachAsLeft(v, p)
       }
     }
-    // console.log(this)
     v.parent = null // 到达树根后，设置parent=null
     this.root = v
     return v
   }
   search: (k: N) => BinarySearchTreeNodeOrNull<T>
-  insert: (k: N, v: T) => Error | undefined
+  insert: (k: N, v: T) => Error | BinarySearchTreeNode<T>
   remove: (k: N) => void
 }
 

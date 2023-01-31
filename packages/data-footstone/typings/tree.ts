@@ -72,7 +72,6 @@ interface BinarySearchTree<T> extends Pick<BinaryTree<T>, '_preOrderTraverse' | 
   createBSTNode: (k: N, v: T) => BinarySearchTreeNode<T>
   insertAsLeft: () => Error
   insertAsRight: () => Error
-  // insert: (k: N, v: T) => Error | undefined
   insert: (k: N, v: T) => Error | BinarySearchTreeNode<T>
   _insertNode: (
     n0: BinarySearchTreeNode<T>,
@@ -100,7 +99,7 @@ type AVLTreeNodeOrNull<T> = BinarySearchTreeNodeOrNull<T>
 // avl树
 // Adelson-Velskii-Landi tree
 interface AVLTree<T> extends BinarySearchTree<T> {
-  insert: (k: N, v: T) => Error | undefined
+  insert: (k: N, v: T) => Error | AVLTreeNode<T>
   // insert: (k: N, v: T) => void
   _insertNode: (n0: AVLTreeNode<T>, n1: AVLTreeNode<T>) => void
   _rotationRR: (node: AVLTreeNode<T>) => AVLTreeNode<T>
@@ -122,7 +121,7 @@ interface RedBackTree<T> extends BinarySearchTree<T> {
 interface SplayTree<T> extends BinarySearchTree<T> {
   splay: (v: BinarySearchTreeNodeOrNull<T>) => BinarySearchTreeNodeOrNull<T>
   search: (k: N) => BinarySearchTreeNodeOrNull<T>
-  insert: (k: N, v: T) => Error | undefined
+  insert: (k: N, v: T) => Error | BinarySearchTreeNode<T>
   remove: (k: N) => void
   // q: (k: N) => void
 }

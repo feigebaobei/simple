@@ -292,13 +292,21 @@ describe('BinarySearchTreeNode', () => {
     expect(node['operator==='](node1)).toBeFalsy()
     expect(node['operator!=='](node1)).toBeTruthy()
   })
+  test('clone', () => {
+    let tree = new BinarySearchTree()
+    tree.insert(2,2)
+    tree.insert(3,3)
+    expect(tree.root.right.clone()).toEqual(tree.root.right)
+    expect(tree.root.clone()).toEqual(tree.root)
+  })
 })
 describe('BinarySearchTree', () => {
   it('insert & search', () => {
     let tree = new BinarySearchTree()
     tree.insert(obj[15].key, obj[15].value)
     expect(tree.search(obj[15].key)).toEqual(new BinarySearchTreeNode(obj[15].key, obj[15].value))
-    tree.insert(obj[8].key, obj[8].value)
+    let node8 = tree.insert(obj[8].key, obj[8].value)
+    expect(node8).toEqual(tree.root.left)
     let temp = []
     tree.traverse((node) => {
       temp.push({key: node.key, value: node.value})
@@ -355,7 +363,7 @@ describe('AVLTree', () => {
   test('AVLTree 34 1', () => { 
     let tree = new AVLTree()
     expect(tree.root).toBeNull()
-    expect(tree.AvlBalanced(tree.root)).toBeTruthy()
+    expect(tree.avlBalanced(tree.root)).toBeTruthy()
     // tree.insert(obj[15].key, obj[15].value)
     // tree.insert(obj[8].key, obj[8].value)
     // tree.insert(obj[5].key, obj[5].value)
@@ -469,7 +477,7 @@ describe('AVLTree', () => {
     tree.insert(20, 20)
     tree.insert(4, 4)
     tree.remove(20)
-    console.log(tree.root)
+    // console.log(tree.root)
     // tree.insert(6, 6)
     // tree.insert(10, 10)
     // tree.insert(14, 14)
@@ -489,7 +497,7 @@ describe('AVLTree', () => {
     ])
   })
 })
-describe.only('SplayTree', () => {
+describe('SplayTree', () => {
   test('SplayTree splay', () => {
     let tree = new SplayTree()
     // tree.root = tree.createBSTNode(5, 5)
