@@ -390,6 +390,7 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
   constructor() {
     super()
     this.root = null
+    // this._hot = null // 记忆热点
   }
   createBSTNode(k: N, v: T) {
     return new BinarySearchTreeNode(k, v)
@@ -431,8 +432,16 @@ class BinarySearchTree<T> extends BinaryTree<T> implements BST<T> {
       return newNode // 考虑是否返回插入的节点
     }
   }
+  // searchIn(k: N, node: BinarySearchTreeNodeOrNull<T>) {
+  //   if (!node || k === node.key) {
+  //     return node
+  //   }
+  //   this._hot = node
+  //   return this.searchIn(k, k < node.key ? node.left : node.right)
+  // }
   // 若存在则返回节点，否则返回null
   search(k: N, node: BinarySearchTreeNodeOrNull<T> = this.root) {
+    // return this.searchIn(k, node)
     if (!node || node.key === k) {
       return node
     } else if (node.key < k) {
@@ -730,7 +739,6 @@ class AVLTree<T> extends BinarySearchTree<T> implements AVLT<T> {
   }
 }
 
-// to test
 class SplayTree<T> extends BinarySearchTree<T> implements ST<T> {
   constructor() {
     super()
@@ -738,6 +746,7 @@ class SplayTree<T> extends BinarySearchTree<T> implements ST<T> {
   splay(v: BinarySearchTreeNodeOrNull<T>) {
     if (!v) {return null}
     let p = v.parent
+    if (!p) {return v} // 已经是根节点就不用再伸展了。
     let g = p.parent
     while(p && g) {
       let gg = g.parent // 未旋转时v的曾祖父。是旋转后v的父。
@@ -808,9 +817,21 @@ class SplayTree<T> extends BinarySearchTree<T> implements ST<T> {
     this.root = v
     return v
   }
-  search: (k: N) => BinarySearchTreeNodeOrNull<T>
-  insert: (k: N, v: T) => Error | BinarySearchTreeNode<T>
-  remove: (k: N) => void
+  searchSplayTreeNode(k: N) {
+    let node = this.search(k)
+    return this.splay(node)
+  }
+  insertSplayTreeNode(k: N, v: T) {
+    let node = this.insert(k, v)
+    // 若不是节点类型，则不执行伸展。
+    if (node instanceof BinarySearchTreeNode) {
+      return this.splay(node)
+    } else {
+      return node
+    }
+  }
+  // removeSplayTreeNode(k: N) {
+  // }
 }
 
 

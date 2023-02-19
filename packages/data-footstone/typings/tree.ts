@@ -120,9 +120,9 @@ interface RedBackTree<T> extends BinarySearchTree<T> {
 // 伸展树
 interface SplayTree<T> extends BinarySearchTree<T> {
   splay: (v: BinarySearchTreeNodeOrNull<T>) => BinarySearchTreeNodeOrNull<T>
-  search: (k: N) => BinarySearchTreeNodeOrNull<T>
-  insert: (k: N, v: T) => Error | BinarySearchTreeNode<T>
-  remove: (k: N) => void
+  searchSplayTreeNode: (k: N) => BinarySearchTreeNodeOrNull<T>
+  insertSplayTreeNode: (k: N, v: T) => Error | BinarySearchTreeNode<T>
+  // remove: (k: N) => void
   // q: (k: N) => void
 }
 // B+

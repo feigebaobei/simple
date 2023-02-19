@@ -317,6 +317,15 @@ describe('BinarySearchTree', () => {
     ])
     expect(tree.insert(obj[8].key, obj[8].value)).toEqual(new Error('has exist'))
   })
+  // test('_hot', () => {
+  //   let tree = new BinarySearchTree()
+  //   tree.insert(obj[15].key, obj[15].value)
+  //   expect(tree._hot).toEqual(new BinarySearchTreeNode(obj[15].key, obj[15].value))
+  //   tree.insert(obj[8].key, obj[8].value)
+  //   // expect(tree._hot).toBeNull()
+  //   // tree.search(obj[8].key)
+  //   expect(tree._hot).toEqual(new BinarySearchTreeNode(obj[8].key, obj[8].value))
+  // })
   it('remove', () => {
     let tree = new BinarySearchTree()
     af(Object.values(obj)).forEach(({key: k, value: v}) => {
@@ -500,7 +509,6 @@ describe('AVLTree', () => {
 describe('SplayTree', () => {
   test('SplayTree splay', () => {
     let tree = new SplayTree()
-    // tree.root = tree.createBSTNode(5, 5)
     tree.insert(8, 8)
     tree.insert(4, 4)
     tree.insert(12, 12)
@@ -538,7 +546,6 @@ describe('SplayTree', () => {
       { key: 13, value: 13 },
       { key: 15, value: 15 },
     ])
-
     // 只测试了一个分支。还有三个分支未测试。
     tree.splay(node2)
     temp = []
@@ -565,4 +572,96 @@ describe('SplayTree', () => {
       { key: 15, value: 15 },
     ])
   })
+  test('SplayTree search', () => {
+    let tree = new SplayTree()
+    tree.insert(8, 8)
+    tree.insert(4, 4)
+    tree.insert(12, 12)
+    tree.insert(2, 2)
+    tree.insert(6, 6)
+    tree.insert(10, 10)
+    tree.insert(14, 14)
+    tree.insert(1, 1)
+    tree.insert(3, 3)
+    tree.insert(5, 5)
+    tree.insert(7, 7)
+    tree.insert(9, 9)
+    tree.insert(11, 11)
+    tree.insert(13, 13)
+    tree.insert(15, 15)
+    tree.searchSplayTreeNode(8)
+    let temp = []
+    tree.traverse(node => {
+      temp.push({key: node.key, value: node.value})
+    }, 'preOrder')
+    expect(temp).toEqual([
+      { key: 8, value: 8 },
+      { key: 4, value: 4 },
+      { key: 2, value: 2 },
+      { key: 1, value: 1 },
+      { key: 3, value: 3 },
+      { key: 6, value: 6 },
+      { key: 5, value: 5 },
+      { key: 7, value: 7 },
+      { key: 12, value: 12 },
+      { key: 10, value: 10 },
+      { key: 9, value: 9 },
+      { key: 11, value: 11 },
+      { key: 14, value: 14 },
+      { key: 13, value: 13 },
+      { key: 15, value: 15 },
+    ])
+    // expect(temp).toEqual([
+    //   { key: 2, value: 2 },
+    //   { key: 1, value: 1 },
+    //   { key: 4, value: 4 },
+    //   { key: 3, value: 3 },
+    //   { key: 8, value: 8 },
+    //   { key: 6, value: 6 },
+    //   { key: 5, value: 5 },
+    //   { key: 7, value: 7 },
+    //   { key: 12, value: 12 },
+    //   { key: 10, value: 10 },
+    //   { key: 9, value: 9 },
+    //   { key: 11, value: 11 },
+    //   { key: 14, value: 14 },
+    //   { key: 13, value: 13 },
+    //   { key: 15, value: 15 },
+    // ])
+  })
+  test('SplayTree insert', () => {
+    let tree = new SplayTree()
+    tree.insertSplayTreeNode(8, 8)
+    let temp = []
+    tree.traverse((node) => {
+      temp.push({key: node.key, value: node.value})
+    }, 'preOrder')
+    expect(temp).toEqual([
+      { key: 8, value: 8 },
+    ])
+    tree.insertSplayTreeNode(15, 15)
+    temp = []
+    tree.traverse((node) => {
+      temp.push({key: node.key, value: node.value})
+    }, 'preOrder')
+    expect(temp).toEqual([
+      { key: 15, value: 15 },
+      { key: 8, value: 8 },
+    ])
+    tree.insertSplayTreeNode(12, 12)
+    temp = []
+    tree.traverse((node) => {
+      temp.push({key: node.key, value: node.value})
+    }, 'preOrder')
+    expect(temp).toEqual([
+      { key: 12, value: 12 },
+      { key: 8, value: 8 },
+      { key: 15, value: 15 },
+    ])
+  })
+  test('SplayTree remove', () => {
+
+  })
+
+
 })
