@@ -1,0 +1,45 @@
+{
+  "name": "crtp-cli",
+  "version": "0.0.10",
+  "description": "> TODO: description",
+  "keywords": [
+    "init",
+    "template",
+    "templateFile",
+    "templateDir"
+  ],
+  "author": "stone <feigebaobei@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/crtp-cli.js",
+  "bin": {
+    "crtp": "./bin/index.js"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib",
+    "bin",
+    "assets",
+    "utils"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feigebaobei/crtp.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "commander": "^7.2.0",
+    "execa": "^5.1.1",
+    "mkdirp": "^1.0.4"
+  },
+  "gitHead": "7a4a9ffb4986e881f4e175b3b8c1ca97f69db83c"
+}
