@@ -125,7 +125,22 @@ interface SplayTree<T> extends BinarySearchTree<T> {
   // remove: (k: N) => void
   // q: (k: N) => void
 }
+// B-tree
+interface BTreeNode<T> {
+  nodeList: []
+  childList: []
+}
+type BTreeNodeOrNull<T> = (BTreeNode<T> | null)
+interface BTree<T> {
+  order: N
+  searchBTreeNode: (k: N) => BTreeNodeOrNull<T>
+  insertBTreeNode: (k: N, v: T) => BTreeNode<T>
+  remove: (k: N) => BTreeNode<T>
+  resolveOverflow: (n: BTreeNode<T>) => void
+  resolveUnderflow: (n: BTreeNode<T>) => void
+}
 // B+
+
 // 平衡二叉树
 // 红黑树
 // 霍夫曼树
@@ -148,4 +163,6 @@ export {
   AVLTree,
   SplayTree,
   RedBackTree,
+  BTreeNode,
+  BTree,
 }

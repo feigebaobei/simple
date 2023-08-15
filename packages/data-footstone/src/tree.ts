@@ -11,6 +11,9 @@ import {
   // AVLTreeNodeOrNull as BinarySearchTreeNodeOrNull,
   AVLTree as AVLT,
   SplayTree as ST,
+  // BTree as BTree,
+  // BTree as BTreeIf,
+  // BTreeNode as BTNodeIf,
   RedBackTree as RBT,
   B,
   F,
@@ -833,6 +836,24 @@ class SplayTree<T> extends BinarySearchTree<T> implements ST<T> {
   // removeSplayTreeNode(k: N) {
   // }
 }
+// class BTreeNode<T> implements BTNodeIf<T> {
+//   constructor () {
+//     // this.order = order
+//   }
+//   search(k) {
+    
+//   }
+// }
+// class BTree<T> implements BTreeIf<T> {
+//   order: BTreeIf<T>['order']
+//   constructor (order) {
+//     this.order = order
+    
+//   }
+//   search(k: N) {
+    
+//   }
+// }
 
 
 // class RedBackTree<T> extends BinarySearchTree<T> implements RBT<T> {
@@ -849,5 +870,6 @@ export {
   BinarySearchTreeNode,
   AVLTree,
   SplayTree,
+  // BTree,
   // RedBackTree,
 }

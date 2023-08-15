@@ -27,6 +27,8 @@ import {
   // AVLTreeNodeOrNull,
   AVLTree,
   SplayTree,
+  BTreeNode,
+  BTree,
   RedBackTree,
 } from './Tree'
 import { Vertex,
@@ -88,6 +90,8 @@ export {
   // AVLTreeNodeOrNull,
   AVLTree,
   SplayTree,
+  BTreeNode,
+  BTree,
   RedBackTree,
   Vertex,
   Edge,

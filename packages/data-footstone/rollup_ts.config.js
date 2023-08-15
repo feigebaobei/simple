@@ -4,14 +4,14 @@
 // // import cssnano from 'cssnano'
 // import postcss from 'rollup-plugin-postcss'
 // import autoprefixer from 'autoprifixer'
-// import typescript from '@rollup/plugin-typescript'
+import typescript from '@rollup/plugin-typescript'
 // import strip from '@rollup/plugin-strip'
 export default [
   {
-    input: ['tscDist/src/index.js'],
+    input: ['src/index.ts'],
     output: [
       {
-        dir: 'dist_esm',
+        dir: 'tscDist',
         // entryFileNames: [name].js,
         assetFileNames: '[name]-[hash][extend]',
         chunkFileNames: '[name]-[hash].js',
@@ -22,18 +22,18 @@ export default [
         preserveModules: true, // 保留目录结构
         // preserveModulesRoot: 'src' // 将保留的模块目录结构放在根目录下该路径下
       },
-      {
-        dir: 'dist_cjs',
-        // entryFileNames: [name].js,
-        assetFileNames: '[name]-[hash][extend]',
-        chunkFileNames: '[name]-[hash].js',
-        format: 'cjs',
-        sourcemap: true,
-        compact: false,
-        // plugins: [terser()],
-        preserveModules: true, // 保留目录结构
-        // preserveModulesRoot: 'src' // 将保留的模块目录结构放在根目录下该路径下
-      },
+      // {
+      //   dir: 'dist_cjs',
+      //   // entryFileNames: [name].js,
+      //   assetFileNames: '[name]-[hash][extend]',
+      //   chunkFileNames: '[name]-[hash].js',
+      //   format: 'cjs',
+      //   sourcemap: true,
+      //   compact: false,
+      //   // plugins: [terser()],
+      //   preserveModules: true, // 保留目录结构
+      //   // preserveModulesRoot: 'src' // 将保留的模块目录结构放在根目录下该路径下
+      // },
     ],
     // external: ['react'], // 指定不打包的包。
     plugins: [
@@ -47,7 +47,12 @@ export default [
       //   ],
       //   // extract: 'css/index.css' // 抽离为单独的css文件
       // }),
-      // typescript(), // 使其可打包ts文件
+      typescript( // 使其可打包ts文件
+        {
+          declaration: true,
+          declarationDir: 'tscDist',
+        }
+      ),
       // strip(), // 删除开发、测试代码。
     ],
   },
