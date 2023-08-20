@@ -6,7 +6,7 @@
   "license": "ISC",
   "main": "lib/data-footstone.js",
   "type": "module",
-  "types": "./tscDist/src/index.d.ts",
+  "types": "./tscDist/src/typings/index.d.ts",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -14,7 +14,7 @@
   "exports": {
     ".": {
       "import": "./tscDist/index.js",
-      "types": "./tscDist/src/index.d.ts"
+      "types": "./tscDist/src/typings/index.d.ts"
     }
   },
   "repository": {
@@ -43,8 +43,7 @@
   "files": [
     "tscDist",
     "dist_cjs",
-    "dist_esm",
-    "typings"
+    "dist_esm"
   ],
   "keywords": [
     "data-footstone",

@@ -1,5 +1,5 @@
 import { S, N, B, A, F } from './baseType'
-import { SingleChain, DoublyChain } from './chain'
+import { SingleChain, IDoublyChain } from './chain'
 import { DoublyChainElement } from './chain'
 
 interface CacheNode<K, V> {
@@ -48,7 +48,7 @@ interface LfuNode<K, V> {
 }
 interface Lfu<K, V> {
   capacity: N
-  chain: DoublyChain<LfuNode<K, V>>
+  chain: IDoublyChain<LfuNode<K, V>>
   _createNode: (k: K, v: V, c: N) => LfuNode<K, V>
   _get: (k: K) => DoublyChainElement<LfuNode<K, V>> | undefined
   get: (k: K) => V | undefined

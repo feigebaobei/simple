@@ -2,7 +2,7 @@
 /*
 栈
 */
-import { Stack as StackI, N } from '../typings'
+import { Stack as StackI, N } from './typings'
 
 class Stack<T> implements StackI<T> {
   items: T[]

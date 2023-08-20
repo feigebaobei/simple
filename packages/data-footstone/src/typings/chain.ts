@@ -45,7 +45,7 @@ interface DoublyChainElement<T> {
   prev: DoublyChainElement<T> | null
 }
 // 双向链表
-interface DoublyChain<T> {
+interface IDoublyChain<T> {
   head: DoublyChainElement<T> | null
   tail: DoublyChainElement<T> | null
   length: N
@@ -95,7 +95,7 @@ export {
   SingleChainElementOrNull,
   SingleChain,
   DoublyChainElement,
-  DoublyChain,
+  IDoublyChain,
   SingleCircleChainElement,
   SingleCircleChain,
   DoublyCircleChainElement,

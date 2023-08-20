@@ -4,7 +4,7 @@ import {
   SingleChain as SC,
   SingleChainElement as SCE,
   SingleChainElementOrNull as SCEON,
-  DoublyChain as DC,
+  IDoublyChain as DC,
   DoublyChainElement as DCE,
   SingleCircleChain as SCC,
   SingleCircleChainElement as SCCE,
@@ -12,7 +12,7 @@ import {
   DoublyCircleChain as DCC,
   N,
   B,
-} from '../typings'
+} from './typings'
 
 // 考虑添加exchange功能
 // 可以使用removeAt() + insert()实现

@@ -19,7 +19,7 @@ export default [
         sourcemap: true,
         compact: false,
         // plugins: [terser()],
-        preserveModules: true, // 保留目录结构
+        // preserveModules: true, // 保留目录结构
         // preserveModulesRoot: 'src' // 将保留的模块目录结构放在根目录下该路径下
       },
       // {
@@ -50,7 +50,8 @@ export default [
       typescript( // 使其可打包ts文件
         {
           declaration: true,
-          declarationDir: 'tscDist',
+          // declarationDir: 'tscDist',
+          // useTsconfigDeclarationDir: true,
         }
       ),
       // strip(), // 删除开发、测试代码。

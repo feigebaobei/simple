@@ -7,7 +7,7 @@ import {
   DirectionGraph as DG,
   UndirectionGraph as UG,
    F, N, B, S
-} from '../typings'
+} from './typings'
 import { Queue } from './queue'
 import { af, NPF } from './helper'
 

@@ -1,7 +1,7 @@
 import {
   // N, S,
   A,
-} from '../typings'
+} from './typings'
 
 // 顺序查找
 // let findIndex = (arr: A[], item: A) => {

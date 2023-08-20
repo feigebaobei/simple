@@ -9,11 +9,11 @@ import {
   FifoNode as FFN,
   Fifo as FF,
   SingleChain as SC,
-  DoublyChain as DC,
+  IDoublyChain as DC,
   LfuNode as LN,
   Lfu as L,
   // DoublyChainElement,
-} from '../typings'
+} from './typings'
 
 // 未测试完
 class Cache<K, V> implements C<K, V> {

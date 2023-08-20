@@ -7,7 +7,7 @@ import {
   N,
   S,
   A,
-} from '../typings'
+} from './typings'
 
 let djb2HashFn: HashFn = (k: A) => {
   let h = 5381

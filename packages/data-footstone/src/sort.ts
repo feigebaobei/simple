@@ -1,4 +1,4 @@
-import { N, S, A, OrderType } from '../typings'
+import { N, S, A, OrderType } from './typings'
 // let clog = console.log
 
 // 冒泡

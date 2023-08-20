@@ -11,12 +11,12 @@ import {
 // 它太简单，考虑不暴露它。
 // import { PMap } from './pMap'
 import { HashMap, djb2HashFn, loseloseHashFn } from './hashMap'
-import {
-  BinaryTree,
-  BinarySearchTree,
-  AVLTree,
-  // RedBackTree,
-} from './tree'
+// import {
+//   BinaryTree,
+//   BinarySearchTree,
+//   AVLTree,
+//   // RedBackTree,
+// } from './tree'
 import * as sort from './sort'
 import { Lru, Fifo, Lfu } from './store'
 import { DirectionGraph,
@@ -36,9 +36,9 @@ export {
   djb2HashFn,
   loseloseHashFn,
   // BaseTree,
-  BinaryTree,
-  BinarySearchTree,
-  AVLTree,
+  // BinaryTree,
+  // BinarySearchTree,
+  // AVLTree,
   // RedBackTree,
   sort,
   Lru,
