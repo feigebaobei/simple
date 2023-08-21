@@ -18,7 +18,7 @@ import {
 // 可以使用removeAt() + insert()实现
 
 class BaseChain<T> implements BC<T> {
-  head: BCE<T>
+  head: BCE<T> | SCEON<T>
   length: N
   readonly capacity: number
   constructor(capacity: N = Number.POSITIVE_INFINITY) {
@@ -48,56 +48,6 @@ class BaseChain<T> implements BC<T> {
   isFull() {
     return this.length === this.capacity
   }
-  // for delelte after 2023/02/11
-  // 返回匹配元素的下标
-  // indexOf(v: T, all = false) {
-  //   if (this.length) {
-  //     let index = 0
-  //     let cur = this.head
-  //     let res: N[] | N // = []
-  //     if (all) {
-  //       res = []
-  //       while (cur) {
-  //         if (cur.value === v) {
-  //           res.push(index)
-  //         }
-  //         cur = cur.next
-  //         index++
-  //       }
-  //     } else {
-  //       res = -1
-  //       while (cur) {
-  //         if (cur.value === v) {
-  //           res = index
-  //           break
-  //         }
-  //         cur = cur.next
-  //         index++
-  //       }
-  //     }
-  //     return res
-  //   } else {
-  //     return -1
-  //   }
-  // }
-  // 是否要暴露此api
-  // getEleByIndex(i: N) {
-  //   if (this.isValidRange(i)) {
-  //     let index = 0
-  //     let cur = this.head
-  //     let res: T | undefined
-  //     while (cur) {
-  //       if (index === i) {
-  //         res = cur.value
-  //       }
-  //       cur = cur.next
-  //       index++
-  //     }
-  //     return res
-  //   } else {
-  //     return undefined
-  //   }
-  // }
 }
 
 class SingleChain<T> extends BaseChain<T> implements SC<T> {
