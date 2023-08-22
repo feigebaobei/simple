@@ -13,7 +13,7 @@ import {
   LfuNode as LN,
   Lfu as L,
   // DoublyChainElement,
-} from './typings'
+} from '../typings'
 
 // 未测试完
 class Cache<K, V> implements C<K, V> {

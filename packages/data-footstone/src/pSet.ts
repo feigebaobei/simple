@@ -1,4 +1,4 @@
-import { PSet as PS } from './typings'
+import { PSet as PS } from '../typings'
 
 class PSet<T> implements PS<T> {
   box: Set<T>

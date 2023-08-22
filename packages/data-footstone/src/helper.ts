@@ -1,6 +1,6 @@
 import {
      F, N, S, A
-  } from './typings'
+  } from '../typings'
   
   
 let af = Array.from

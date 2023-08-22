@@ -1,4 +1,4 @@
-import { PMap as FM } from './typings'
+import { PMap as FM } from '../typings'
 
 class PMap<T, G> implements FM<T, G> {
   box: Map<T, G>

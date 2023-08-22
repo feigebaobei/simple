@@ -7,7 +7,7 @@ import {
   A,
   N,
   B,
-} from './typings'
+} from '../typings'
 
 // 可以抽象出BaseQueue
 class BaseQueue implements BQ {
