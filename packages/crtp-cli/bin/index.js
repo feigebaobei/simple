@@ -8,8 +8,12 @@ const mkdirp = require('mkdirp')
 const path = require('path')
 const util = require('util')
 const chalk = require('chalk')
-// const execa = require('execa')
 const childProcess = require('child_process')
+// const execa = require('execa')
+// const ora = require('ora')
+// const spawn = require('cross-spawn');
+// import ora from 'ora'
+const Spinner = require('cli-spinner').Spinner
 
 // 工具
 const {log} = console
@@ -368,6 +372,229 @@ let configValidate = async (userOption) => {
 	}
 }
 
+let initProject = (userOption) => {
+	let cmd = `express ${userOption.projectName}`
+	let cwd = path.resolve(process.cwd(), userOption.dir)
+	let initProjectP = new Promise((s, j) => {
+		childProcess.exec(cmd, {
+			cwd
+		}, (err, data) => {
+			err ? j(err) : s(data)
+		})
+	}).then(() => {
+		log(chalk.blue(`初始化项目${cwd} - 完成`))
+		return new Promise((s, j) => {
+			childProcess.exec(`crtp initFile .gitignore --file ${cwd}/${userOption.projectName}/.gitignore`, {
+				cwd,
+			}, err => {
+				err ? j(err) : s()
+			})
+		})
+	}).then(() => {
+		return new Promise((s, j) => {
+			childProcess.exec(`crtp initFile .yarnrc --file ${cwd}/${userOption.projectName}/.yarnrc`, {
+				cwd,
+			}, err => {
+				err ? j(err) : s()
+			})
+		})
+	}).then(() => {
+		return pUtil.pWriteFile(`${cwd}/${userOption.projectName}/tsconfig.json`, `{
+			"compilerOptions": {
+			  "target": "es2016",
+			  "module": "commonjs",
+			  "outDir": "./tscDist",
+			  "esModuleInterop": true,
+			  "forceConsistentCasingInFileNames": true,
+			  "strict": true,
+			  "skipLibCheck": true
+			},
+			"include": ["src/**/*.ts"],
+			"exclude": ["node_modules"]
+		  }
+		  `, 'utf-8').then(() => {
+			  log(chalk.blue(`创建tsconfig.json - 完成`))
+			  return 
+		  })
+	})
+	// 移动或覆盖文件
+	.then(() => {
+		return new Promise((s, j) => {
+			childProcess.exec(`crtp initFile expressTsIndex.ts --file ${cwd}/${userOption.projectName}/src/index.ts`, {
+				cwd,
+			}, err => {
+				err ? j(err) : s()
+			})
+		})
+	})
+	.then(() => {
+		return new Promise((s, j) => {
+			childProcess.exec(`crtp initFile expressTsApp.ts --file ${cwd}/${userOption.projectName}/src/app.ts`, {
+				cwd,
+			}, err => {
+				err ? j(err) : s()
+			})
+		})
+	}).then(() => {
+		mkdirp(`${cwd}/${userOption.projectName}/src/routes`).then(() => {
+			return pUtil.pReadFile(`${cwd}/${userOption.projectName}/routes/index.js`, 'utf-8')
+		})
+		.then((textContent) => {
+			textContent = textContent.replace(/var express = require\(['"]express['"]\);?/, '')
+			textContent = "import * as express from 'express'\n" + textContent
+			textContent = textContent.replace(/module.exports = router;?/, 'export default router')
+			return pUtil.pWriteFile(`${cwd}/${userOption.projectName}/src/routes/index.ts`, textContent, 'utf-8').then(() => {
+				log(chalk.blue(`初始化${cwd}/${userOption.projectName}/src/routes/index.ts - 完成`))
+				return
+			})
+		})
+	}).then(() => {
+		mkdirp(`${cwd}/${userOption.projectName}/src/routes`).then(() => {
+			return pUtil.pReadFile(`${cwd}/${userOption.projectName}/routes/users.js`, 'utf-8')
+		})
+		.then((textContent) => {
+			textContent = textContent.replace(/var express = require\(['"]express['"]\);?/, '')
+			textContent = "import * as express from 'express'\n" + textContent
+			textContent = textContent.replace(/module.exports = router;?/, 'export default router')
+			return pUtil.pWriteFile(`${cwd}/${userOption.projectName}/src/routes/users.ts`, textContent, 'utf-8').then(() => {
+				log(chalk.blue(`初始化${cwd}/${userOption.projectName}/src/routes/users.ts - 完成`))
+				return
+			})
+		})
+	}).then(() => {
+		return pUtil.pReadFile(`${cwd}/${userOption.projectName}/bin/www`, 'utf-8').then((textContent) => {
+			// console.log(
+			// 	textContent
+			// )
+			textContent = textContent.replace(/var app = require\(['"]\.\.\/app['"]\)/, "var app = require\('../src/app'\)")
+			return pUtil.pWriteFile(`${cwd}/${userOption.projectName}/bin/www`, textContent, 'utf-8').then(() => {
+				log(chalk.blue(`修改${cwd}/${userOption.projectName}/bin/www - 完成`))
+				return
+			})
+		})
+	})
+	// 删除原文件
+	.then(() => {
+		// pUtil.pRm(`${cwd}/${userOption.projectName}/`)
+		return new Promise((s, j) => {
+			childProcess.exec(`rm -rf routes`, {
+				cwd: `${cwd}/${userOption.projectName}`
+			}, (err) => {
+				err ? j(err) : s()
+			})
+		})
+	}).then(() => {
+		return new Promise((s, j) => {
+			childProcess.exec(`rm app.js`, {
+				cwd: `${cwd}/${userOption.projectName}`
+			}, (err) => {
+				err ? j(err) : s()
+			})
+		})
+	})
+	.then(() => {
+		return new Promise((s, j) => {
+			childProcess.exec(`rm -rf bin`, {
+				cwd: `${cwd}/${userOption.projectName}`
+			}, (err) => {
+				err ? j(err) : s()
+			})
+		})
+	})
+	// 设置脚本
+	.then(() => {
+		return new Promise((s, j) => {
+				childProcess.exec(`npm pkg set scripts.dev="concurrently \\"npx tsc --watch\\" \\"nodemon -q tscDist/index.js\\""`, {
+				cwd: `${cwd}/${userOption.projectName}`
+			}, (err) => {
+				err ? j(err) : s()
+			})
+		})
+	})
+	.then(() => {
+		return new Promise((s, j) => {
+				childProcess.exec(`npm pkg set scripts.dev-ts-node="ts-node src/index.ts"`, {
+				cwd: `${cwd}/${userOption.projectName}`
+			}, (err) => {
+				// err ? j(err) : s()
+				if (err) {
+					j(err)
+				} else {
+					s()
+				}
+			})
+		})
+	})
+	.then(() => {
+		return new Promise((s, j) => {
+				childProcess.exec(`npm pkg set scripts.start="echo hi"`, {
+				cwd: `${cwd}/${userOption.projectName}`
+			}, (err) => {
+				// err ? j(err) : s()
+				if (err) {
+					j(err)
+				} else {
+					log(chalk.blue('设置脚本 - 完成'))
+					s()
+				}
+			})
+		})
+	})
+	// 安装依赖
+	.then(() => {
+		log(chalk('安装依赖中'))
+		return new Promise((s, j) => {
+			childProcess.spawnSync('yarn', ['add', '--dev', 'typescript', 'ts-node', '@types/express', '@types/node', 'concurrently', 'nodemon', '@types/cookie-parser', '@types/morgan'], {
+				cwd: `${cwd}/${userOption.projectName}`
+			})
+			// s(spinner)
+			s()
+		})
+	})
+	// .then(() => {
+	// 	return new Promise((s) => {
+	// 		childProcess.spawnSync('yarn', ['add', 'global', 'ts-node'], {
+	// 			cwd: `${cwd}/${userOption.projectName}`
+	// 		})
+	// 		s()
+	// 	})
+	// })
+	.then(() => {
+		return new Promise((s) => {
+			childProcess.spawnSync('yarn', ['install'], {
+				cwd: `${cwd}/${userOption.projectName}`
+			})
+			s()
+		})
+	})
+	.then(() => {
+		// spinner.stop()
+		log(chalk.blue('安装依赖 - 完成'))
+		log(chalk.blue(`调整项目${cwd} - 完成`))
+	})
+	// 启动项目
+	.then(() => {
+		if (userOption.start) {
+			log(chalk.blue(''))
+			childProcess.execSync('npm run dev', {
+				cwd: `${cwd}/${userOption.projectName}`
+			}, () => {
+				log(chalk.blue('已经启动'))
+				log(chalk.blue('请访问 localhost:3000'))
+			})
+		} else {
+			log(chalk.blue(''))
+			log(chalk.blue('请执行'))
+			log(chalk.blue(`cd ${cwd}/${userOption.projectName}`))
+			log(chalk.blue('npm run dev'))
+		}
+	})
+	.catch((err) => {
+		log(chalk.red(`初始化项目${cwd} - 失败`))
+		console.log('err', err)
+	})
+}
+
 // crtp init
 // 初始化配置文件
 // 测试通过
@@ -532,6 +759,30 @@ program
 	.option('--config [configFilePath]', '指定配置文件的路径', './crtp.config.json')
 	.action((options) => {
 		configValidate(options)
+	})
+
+// 创建express&typescript项目
+// crtp configValidate --config
+// 测试通过
+program
+	.command('initProject')
+	.description('创建express&typescript项目')
+	// 设置了默认值
+	.option('--dir [dir]', '指定项目所在的目录', './')
+	.option('--projectName [projectName]', '项目的名称', 'project-name')
+	.option('--start [start]', '是否启动', false)
+	.action((options) => {
+		path.resolve(process.cwd(), options.dir, options.projectName)
+		// 校验
+		// if (path.resolve(process.cwd(), options.dir))
+		pUtil.pReaddir(path.resolve(process.cwd(), options.dir)).then((files) => {
+			if (files.includes(options.projectName)) {
+				log(chalk.red(`已经存在指定目录，不能创建项目。 - 失败`))
+			} else {
+				// 初始化项目
+				initProject(options)
+			}
+		})
 	})
 
 
