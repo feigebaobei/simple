@@ -23,6 +23,8 @@
 crtp initFile readme.md --file ./first/readme.md
 # 添加自定义的模板文件
 crtp addFile first.json --file ./first/projName/package.json
+# 创建express&ts的应用。需要先安装yarn
+crtp initProject --projectName first
 ```
 
 ## configuration
@@ -71,6 +73,10 @@ crtp addFile first.json --file ./first/projName/package.json
 ||--npmrc|boolean 默认为true|是否生成 .npmrc 文件|||||
 ||--prettier|boolean 默认为true|是否生成.prettierignore .prettierrc.json|||||
 ||--readme|boolean 默认为true|是否生成 readme.md|||||
+|initProject|||创建express&ts的应用|||||
+||--dir|默念 ./|指定应用所在的目录|||||
+||--projectName|默认 project-name|应用的名称|||||
+||--start|默认 false|在创建成功后是否启动项目|||||
 
 ## 模板文件（或目录）
 用于初始化文件。

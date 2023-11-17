@@ -29,6 +29,6 @@
 
 ## todo
 
-> 未来迭代计划。
+> 解决BaseChain/DoublyChain的类型错误
 > 未来迭代计划。
 > 未来迭代计划。
