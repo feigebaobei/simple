@@ -84,6 +84,7 @@ crtp initProject --projectName first
 - readme.md
 - demo.md
 - .gitignore
+- vue3.vue
 
 ## principle
 - 模板文件应该由脚本生成。
