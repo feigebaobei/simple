@@ -142,20 +142,20 @@
             let clog = console.log
             // ref
             let formRef = ref<FormInst | null>(null)
-            let formR = reative({
+            let formR = reactive({
                 model: {
                     age: null,
                     name: null,
                     strongPoint: null,
                     strongPointList: [
-                        {lable: '抒情诗', value: 1},
-                        {lable: '辩论', value: 11},
-                        {lable: '好吃', value: 21},
+                        {label: '抒情诗', value: 1},
+                        {label: '辩论', value: 11},
+                        {label: '好吃', value: 21},
                     ],
                 },
                 rules: {},
             })
-            let tableR = reative<{
+            let tableR = reactive<{
                 columns: DataTableColumn[];
                 dataSource: TableItem[];
                 pagination: Pagination;
@@ -209,7 +209,7 @@
                                             }
                                         },
                                         {
-                                            default: () => h('span', '确定要删除吗？')，
+                                            default: () => h('span', '确定要删除吗？'),
                                             trigger: () => 
                                                 h(
                                                     MsButton,
@@ -265,6 +265,15 @@
                 // 调用接口
             }
             // event fn
+            let onlyOpenPopConfirm = (index: N) => {
+                Object.keys(showR).forEach((k, i) => {
+                    if (i === index) {
+                        showR[k] = true;
+                    } else {
+                        showR[k] = false;
+                    }
+                })
+            }
             let sqlButtonClickHandler = () => {
                 clog('sqlButtonClickHandler')
                 reqData()
@@ -285,6 +294,9 @@
             }
             let confirmOkButtonClickHandler = (row: TableItem) => {
                 clog('confirmOkButtonClickHandler', row)
+            }
+            let tableEditButtonClickHandler = (row: TableItem) => {
+                clog('tableEditButtonClickHandler', row)
             }
             // watch
             watchEffect(() => {
