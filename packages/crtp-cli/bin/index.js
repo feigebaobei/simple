@@ -615,7 +615,7 @@ program
 	.command('initFile <fileType>')
 	// .option('-d, --debug', 'output extra debugging')
 	// .option('--debug', 'output extra debugging')
-	.description('以指定模板文件为模板创建文件。')
+	.description('以指定模板文件创建文件。')
 	.option('--file [file...]', 'name and path of file')
 	// Macro substitution
 	.option('-st, --macroSubstitution [macroSubstitution...]', 'please input origin target') // 设置替换项可优化

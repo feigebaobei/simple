@@ -4,6 +4,7 @@
   "description": "> TODO: description",
   "keywords": [
     "init",
+    "initFile",
     "template",
     "templateFile",
     "templateDir"
@@ -33,14 +34,23 @@
     "url": "git+https://github.com/feigebaobei/crtp.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "rollup -c --bundleConfigAsCjs"
   },
   "dependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-strip": "^3.0.4",
+    "@rollup/plugin-typescript": "^11.1.5",
     "chalk": "^4.1.1",
     "cli-spinner": "^0.2.10",
     "commander": "^7.2.0",
+    "cross-spawn": "^7.0.3",
     "execa": "^5.1.1",
     "mkdirp": "^1.0.4"
   },
-  "gitHead": "7a4a9ffb4986e881f4e175b3b8c1ca97f69db83c"
+  "gitHead": "7a4a9ffb4986e881f4e175b3b8c1ca97f69db83c",
+  "devDependencies": {
+    "rollup": "^4.4.1"
+  }
 }

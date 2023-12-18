@@ -1,5 +1,5 @@
 <template>
-    <div>MsBaseComp</div>
+    <div>MsBaseComp list&drawer的组件模板</div>
 </template>
 
 <script lang="ts">
