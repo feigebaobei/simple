@@ -595,14 +595,27 @@ let initProject = (userOption) => {
 	})
 }
 
-let precheck = (fragment, filePath) => {
+let extractPackage = () => {
+	return pUtil.pReadFile(path.resolve(__dirname, '../package.json'), 'utf-8').then(res => {
+		return JSON.parse(res)
+	})
+}
+
+let precheck = (filePath) => {
+	return pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
+		// 在新加插入功能时注意修改此正则。
+		let reg = /<template>.*<\/template>.*<script.*export\sdefault\sdefineComponent.*setup.*\/\/\sref.*\/\/\smethods.*\/\/\sevent\sfn.*\/\/\sexec.*return\s{.*\/\/sref.*\/\/\smethods.*\/\/\sevent\sfn.*<style/s
+		return reg.test(textContent)
+	})
+}
+let insertFragment = (fragment, filePath) => {
 	// 取出片段中需要的界碑
 	// 取出指定文件，判断是否全有需要的界碑。
 	// 从配置文件中取position与界碑的对应关系
 	let config = require('../fragment/modal.js')
 	// log('config', config)
 	// let {pReadFile, pWriteFile} = pUtil
-	pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
+	return pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
 		// 测试通过
 		config.template.forEach(item => {
 			let reg
@@ -863,9 +876,12 @@ program
 	// .option('--Version', 'list version of crtp-cli')
 	.option('-v, --Version', 'list version of crtp-cli')
 	.action(() => {
-		pUtil.pReadFile(path.resolve(__dirname, '../package.json'), 'utf-8').then(res => {
-			log(JSON.parse(res).version)
+		extractPackage().then(json => {
+			log(json.version)
 		})
+		// pUtil.pReadFile(path.resolve(__dirname, '../package.json'), 'utf-8').then(res => {
+		// 	log(JSON.parse(res).version)
+		// })
 	})
 
 // crtp isExistFile <filename>
@@ -977,11 +993,26 @@ program
 	.description('为指定的文件插入指定代码片段')
 	.option('--file <file>', '指定文件')
 	.action((fragment, options) => {
-		// 预检文件是否满足插入条件
-		let filePath = path.resolve(process.cwd(), options.file)
-		if (precheck(fragment, filePath)) {
+		// 判断版本。beta版本可用，gamma版本不可用
+		extractPackage().then((json) => {
+			if (json.version.includes('beta') || json.version.includes('alpha')) {
+				return true
+			} else {
+				log(chalk.red('当前不是alpha/beta版本，不能使用此功能。'))
+				return Promise.reject()
+			}
+		}).then(() => {
+			// 预检文件是否满足插入条件
+			let filePath = path.resolve(process.cwd(), options.file)
+			// 预检通过才能使用。
+			if (precheck(filePath)) {
+				// log(true)
+				insertFragment(fragment, filePath)
+			} else {
+				log(chalk.red(`${filePath}缺少相关界碑，无法执行此命令。`))
+			}
 
-		}
+		}).catch(() => {})
 	})
 
 // 整理代码
