@@ -595,6 +595,191 @@ let initProject = (userOption) => {
 	})
 }
 
+let precheck = (fragment, filePath) => {
+	// 取出片段中需要的界碑
+	// 取出指定文件，判断是否全有需要的界碑。
+	// 从配置文件中取position与界碑的对应关系
+	let config = require('../fragment/modal.js')
+	// log('config', config)
+	// let {pReadFile, pWriteFile} = pUtil
+	pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
+		// 测试通过
+		config.template.forEach(item => {
+			let reg
+			switch (item.position) {
+				case 'end':
+				default:
+					reg = /(<\/template>)/s
+					textContent = textContent.replace(reg, `${item.content}\n$1`)
+					break
+			}
+		})
+		// 测试通过
+		config.script.forEach(item => {
+			let reg
+			switch (item.position) {
+				case 'setup.ref':
+					reg = /(?<=setup\s?\(.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?provide)/s
+					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+					break
+				case 'setup.return.ref':
+					reg = /(?<=setup\s?\(.*\/\/\s?exec.*return.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?methods.*)/s
+					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t\t`)
+					break
+				case 'setup.event':
+					reg = /(?<=setup\s?\(.*)(\/\/\s?event\sfn.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
+					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+					break
+				case 'setup.return.event': // x
+					reg = /(?<=setup\s?\(.*\/\/\s?exec.*return\s{.*)(\/\/\s?event\sfn.*?)(?=})/s
+					textContent = textContent.replace(reg, `$1\t${item.content}\n\t\t\t`)
+					break;
+			}
+		})
+		// 测试通过
+		config.style.forEach(item => {
+			let reg
+			switch (item.position) {
+				case 'end':
+				default:
+					reg = /(<\/style>)/s
+					textContent = textContent.replace(reg, `${item.content}\n$1`)
+					break;
+			}
+		})
+		Object.entries(config.check) // [[k, v], ...]
+		.forEach(([k, v]) => {
+			// 是否有中
+				// 是否有指定值
+					// null
+					// 插入单个值
+				// 插入整个
+			let reg // 正则
+			let subString = '' // 取出成块的子串
+			let componentStr = '' // 要插入的文本 // todo
+			switch (k) {
+				// case 'import':
+				// 	reg = /import\s?{.*?}\s?from\s?'vue'/s
+				// 	if (reg.test(textContent)) {
+
+				// 	} else {
+				// 		reg = /(?<=<script.*)(\/\/\s?组件.*)(?=\/\/\s?验证.*export\sdefault\sdefineComonent)/s
+				// 		let value = `import { ${v.join(', ')}} from '${k}'`
+				// 		textContent = textContent.replace(reg, `$1${value}`)
+				// 	}
+				// 	break;
+				case 'import':
+					reg = /(?<=<script.*)((\/\/\s?)?import.*)(?=export\sdefault\sdefineComponent)/s
+					let result = reg.exec(textContent)
+					// log(result)
+					if (result) {
+						// 找到
+						let importArr = result[0].split(/(\n)(?=.*import)/) // 取出每一条import语句。可能有空元素。
+						importArr = importArr.filter(item => !!item)
+						// log('importArr', importArr, importArr.length)
+						Object.entries(v).forEach(([package, eleArr]) => {
+							// reg = /from\s?''/
+							// log([package, eleArr])
+							reg = new RegExp(`from\\s?['"]${package}['"]`)
+							// log('reg', reg)
+							let index = importArr.findIndex(item => reg.test(item))
+							// log('index', index)
+							if (index >= 0) {
+								// 是否已注释
+								reg = /^\s*\/\//
+								// log('reg', reg)
+								// log(importArr[index], reg.test(importArr[index]))
+								if (reg.test(importArr[index])) {
+									// log('index', index)
+									// 有注释，直接插入。
+									importArr[index] = `import { ${eleArr.join(', ')}, } from '${package}'`
+									// log('importArr[index]', importArr[index])
+								} else {
+									// 未注释
+									reg = new RegExp(`(?<=import\\s?{)(.*)(?=}\\s?from\\s?['"]${package}['"])`, 's')
+									let result = reg.exec(importArr[index])
+									// log('reg', reg)
+									// log('result', result)
+									if (result) {
+										let t = result[0]
+										// log('t', t)
+										let compItemArr = []
+										eleArr.forEach(ele => {
+											reg = new RegExp(`[\\W]${ele}[\\W]`)
+											// log('reg', reg)
+											if (!reg.test(t)) {
+												compItemArr.push(ele)
+											}
+										})
+										importArr[index] = `import { ${compItemArr.join(', ')}, ${result.input.slice(result.index)}`
+										// log('importArr[index]', importArr[index])
+									} else {
+										// 应该总是存在
+									}
+									importArr[index]
+								}
+								// importArr[index] = 'xx'
+							}
+						})
+						textContent = textContent.slice(0, result.index) + importArr.join('') + textContent.slice(result.index + result[0].length)
+						// log('textContent', textContent)
+					} else {
+						// 不应该没有
+					}
+					break;
+				case 'components':
+					// // 取出一块代码。处理后插入。
+					reg = /(?<=defineComponent\({.*name:\s?'\w*?',\n\s*)(\S.*)(?=\n\s*\/\/\s?directives)/s
+					let execResult = reg.exec(textContent)
+					// log(131231, execResult)
+					if (execResult) {
+						// 处理后插入。
+						subString = execResult[0]
+						// log('subString', subString)
+						let arr = subString.split('\n')
+						arr.forEach
+						// 是否是注释状态
+						reg = /\s*?\/\//
+						if (reg.test(subString)) {
+							componentStr = `components: {\n${v.join(',\n')}\n},`
+						} else {
+							// log('无注释', subString)
+							reg = /(?<={)(.*)(?=})/s
+							let tr = reg.exec(subString)
+							let compItemArr = []
+							// log(tr)
+							if (tr) {
+								let s = tr[0]
+								v.forEach(item => {
+									if (!s.includes(item)) {
+										compItemArr.push(item)
+									}
+								})
+								let forInsertStr = compItemArr.join(',\n')
+								forInsertStr += ',\n'
+								componentStr = `components: {${forInsertStr}${s.slice(1)}},`
+							} else {
+								// 不应该无匹配
+							}
+						}
+						textContent = textContent.slice(0, execResult.index) + componentStr + textContent.slice(execResult.index + execResult[0].length)
+					} else { // 未找到
+						// 直接插入
+						reg = /(\s*\/\/\s?directives)/
+						componentStr = `components: {${v.join(',\n')}},`
+						textContent = textContent.replace(reg, `\n${componentStr}$1`)
+					}
+					break;
+			}
+		})
+		return textContent
+	}).then(textContent => {
+		// log('textContent', textContent)
+		return pUtil.pWriteFile(filePath, textContent, 'utf-8')
+	}).then(() => {
+		log(chalk.blue(`插入${fragment} - 完成`))
+	})
+}
 // crtp init
 // 初始化配置文件
 // 测试通过
@@ -785,6 +970,29 @@ program
 		})
 	})
 
+// 插入代码片断
+// crtp insert modal --file ./index.vue
+program
+	.command('insert <fragment>')
+	.description('为指定的文件插入指定代码片段')
+	.option('--file <file>', '指定文件')
+	.action((fragment, options) => {
+		// 预检文件是否满足插入条件
+		let filePath = path.resolve(process.cwd(), options.file)
+		if (precheck(fragment, filePath)) {
+
+		}
+	})
+
+// 整理代码
+// crtp lint --file ./index.vue
+// program
+// 	.command('lint')
+// 	.description('整理代码')
+// 	.option('--file <file>', '指定文件')
+// 	.action((fragment, options) => {
+// 		// 预检文件是否满足插入条件
+// 	})
 
 
 program.parse(process.argv)
