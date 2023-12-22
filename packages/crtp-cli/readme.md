@@ -46,13 +46,14 @@ crtp initProject --projectName first
 |addFile|||把指定文件设置为模板文件||||
 ||`<filename>`||模板文件名||||
 ||`--[file] <file>`||要成为模板文件的路径||||
+|addFragment|||按指定碎片目录生成碎片文件。todo||||
 |initDir|||按指定模板目录生成目录||||
 ||`<dirName>`||模板目录名||||
 ||`--dir [dir...]`||目标目录名||||
 |addDir|||把指定目录设置为模板目录||||
 ||`<dirName>`||模板目录名||||
 ||`--dir <dir>`||要成为模板目录的路径||||
-|list / ls|||列出所有模板文件||||
+|list / ls|||列出所有模板文件+碎片文件||||
 |isExistFile|||查询指定模板文件是否存在||||
 ||`<filename>`||模板文件名||||
 |delFile|||删除指定模板文件||||
@@ -77,6 +78,9 @@ crtp initProject --projectName first
 ||--dir|默念 ./|指定应用所在的目录|||||
 ||--projectName|默认 project-name|应用的名称|||||
 ||--start|默认 false|在创建成功后是否启动项目|||||
+|insert|||在指定的文件中插入代码片段（亦称“碎片”）||||0.0.14-beta.2|
+||`<fragment>`|||指定碎片||||
+||--file|||指定文件||||
 
 ## 模板文件（或目录）
 用于初始化文件。

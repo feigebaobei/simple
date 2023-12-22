@@ -171,12 +171,38 @@ let addDir = (dirName, userOption) => {
 }
 
 let list = () => {
-	fsPromises.readdir(path.resolve(__dirname, '../assets')).then(async function (elementList) {
-		elementList.forEach(async function(ele) {
-			let stats = await fsPromises.stat(path.resolve(__dirname, `../assets/${ele}`))
-			isDir = stats.isDirectory()
-			// 考虑对齐后输出
-			log(`${chalk.blue(ele)}		${isDir ? 'directory' : 'file'}`)
+	Promise.resolve().then(() => {
+		log('模板')
+		return true
+	}).then(() => {
+		return fsPromises.readdir(path.resolve(__dirname, '../assets')).then((eleArr) => {
+			let pArr = eleArr.map(ele => {
+				return fsPromises.stat(path.resolve(__dirname, `../assets/${ele}`))
+			})
+			return Promise.all(pArr).then(arr => {
+				return arr.map((stats, index) => {
+					return {
+						isDirectory: stats.isDirectory(),
+						ele: eleArr[index],
+					}
+				})
+			})
+		}).then((arr) => {
+			arr.forEach(item => {
+				log(`${chalk.blue(item.ele)}	${item.isDirectory ? 'directory' : 'file'}`)
+			})
+			return true
+		})
+	}).then(() => {
+		log('碎片')
+		return
+	}).then(() => {
+		return fsPromises.readdir(path.resolve(__dirname, '../fragment')).then((eleArr) => {
+			eleArr.forEach(ele => {
+				let reg = /^(\w*)(?=\.js$)/
+				log(`${chalk.blue(reg.exec(ele)[0])}`)
+			})
+			return
 		})
 	})
 }
@@ -1024,6 +1050,11 @@ program
 // 	.action((fragment, options) => {
 // 		// 预检文件是否满足插入条件
 // 	})
+// 因与eslint/pritter功能相近，先不开发它。
+
+// 
+
+
 
 
 program.parse(process.argv)
