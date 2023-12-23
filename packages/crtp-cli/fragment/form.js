@@ -1,59 +1,86 @@
 let obj = {
-    // 暂时只支持position: "end".content的值可以是任意值。
-    "template": [{
-        "position": "end",
-        "content": `<ms-drawer v-model:show="drawerR.visible" :width="502">
-    <ms-drawer-content class="drawerContent" :body-style="{backgroundColor: '#F7F5FA'}">
-        <p class="creatServiceTitle">{{ drawerR.title }}</p>
-        <ms-card :bordered="false" class="createServiceCard">
-            <p>placeholder</p>
-        </ms-card>
-    </ms-drawer-content>
-    <template #footer>
-        <ms-space justify="end" :size="8">
-            <ms-button @click="drawerCancelButtonClickH">关闭</ms-button>
-            <ms-button type="primary" @click="drawerOkButtonClickH">确定</ms-button>
-        </ms-space>
-    </template>
-    </ms-drawer>`
+    template: [{
+        position: "end",
+        content: `<ms-form
+            ref="formRef"
+            :label-placement="'left'"
+            :label-width="'auto'"
+            :model="formR.model"
+            :rules="formR.rules"
+        >
+            <ms-grid :cols="4" :x-gap="24">
+            <ms-form-item-gi label="年龄">
+                <ms-input v-model:value="formR.model.age" />
+            </ms-form-item-gi>
+            <ms-form-item-gi label="姓名">
+                <ms-input v-model:value="formR.model.name" />
+            </ms-form-item-gi>
+            <ms-form-item-gi label="特长">
+                <ms-select
+                    v-model:value="formR.model.strongPoint"
+                    :options="formR.model.strongPointList"
+                />
+            </ms-form-item-gi>
+            <ms-grid-item>
+                <ms-space justify="start" :size="8">
+                    <ms-button type="primary" @click="sqlButtonHandler">查询</ms-button>
+                    <ms-button @click="sqlButtonHandler">重置</ms-button>
+                </ms-space>
+            </ms-grid-item>
+            </ms-grid>
+        </ms-form>`
     }],
-    "script": [
-        // position的值只有几种。是枚举的。
+    script: [
         {
             position: "setup.ref",
-            content: `let drawerR = reactive({
-                visible: false,
-                title: 'title',
+            content: `let formRef = ref<FormInst | null>(null);
+            let formR = reactive({
+                model: {
+                    age: null,
+                    name: null,
+                    strongPoint: null,
+                    strongPointList: [
+                        { label: '抒情诗', value: 1 },
+                        { label: '辩论', value: 11 },
+                        { label: '好吃', value: 21 },
+                    ],
+                },
+                rules: {},
             })`
         },
         {
-            position: "setup.return.ref",
-            content: `drawerR,`
+            position: "setup.event",
+            content: `let sqlButtonClickHandler = () => {
+                console.log('sqlButtonClickHandler', formR)
+                // reqData()
+            }
+            let resetButtonClickHandler = () => {
+                console.log('resetButtonClickHandler')
+            }`
         },
         {
-            position: "setup.event",
-            content: `let drawerCancelButtonClickH = () => {}
-            let drawerOkButtonClickH = () => {}`
+            position: "setup.return.ref",
+            content: `formRef,
+            formR,`
         },
         {
             position: "setup.return.event",
-            content: `drawerCancelButtonClickH,
-                drawerOkButtonClickH,`
+            content: `sqlButtonClickHandler,
+            resetButtonClickHandler,`
         },
     ],
-    "style": [{
-        position: 'end',
-        content: `\t.apply {
-        color: red;
-    }`,
-    }],
+    style: [],
     check: {
-        // 暂时开放2个
-        import: {
-            'ms-ui': ["MsDrawer", "MsDrawerContent", "MsCard", "MsSpace", "MsButton"],
-            vue: ["reactive"],
+        importUtils: {
+            vue: ['ref', "reactive"],
         },
-        components: ["MsDrawer", "MsDrawerContent", "MsCard", "MsSpace", "MsButton"],
+        importComponents: {
+            'ms-ui': ['MsForm', 'MsGrid', 'MsFormItemGi', 'MsInput', 'MsSelect', 'MsGridItem', 'MsSpace', 'MsButton', ],
+        },
+        type: {
+            'ms-ui': ['FormInst'],
+        },
+        components: ['MsForm', 'MsGrid', 'MsFormItemGi', 'MsInput', 'MsSelect', 'MsGridItem', 'MsSpace', 'MsButton', ],
     }
 }
 module.exports = obj

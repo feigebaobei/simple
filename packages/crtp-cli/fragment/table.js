@@ -1,8 +1,8 @@
 let obj = {
     // 暂时只支持position: "end".content的值可以是任意值。
-    "template": [{
-        "position": "end",
-        "content": `<ms-drawer v-model:show="drawerR.visible" :width="502">
+    template: [{
+        position: "end",
+        content: `<ms-drawer v-model:show="drawerR.visible" :width="502">
     <ms-drawer-content class="drawerContent" :body-style="{backgroundColor: '#F7F5FA'}">
         <p class="creatServiceTitle">{{ drawerR.title }}</p>
         <ms-card :bordered="false" class="createServiceCard">
@@ -17,7 +17,7 @@ let obj = {
     </template>
     </ms-drawer>`
     }],
-    "script": [
+    script: [
         // position的值只有几种。是枚举的。
         {
             position: "setup.ref",
@@ -48,10 +48,11 @@ let obj = {
     }`,
     }],
     check: {
-        // 暂时开放2个
-        import: {
-            'ms-ui': ["MsDrawer", "MsDrawerContent", "MsCard", "MsSpace", "MsButton"],
+        importUtils: {
             vue: ["reactive"],
+        },
+        importComponents: {
+            'ms-ui': ["MsDrawer", "MsDrawerContent", "MsCard", "MsSpace", "MsButton"],
         },
         components: ["MsDrawer", "MsDrawerContent", "MsCard", "MsSpace", "MsButton"],
     }
