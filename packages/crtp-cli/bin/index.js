@@ -638,11 +638,10 @@ let insertFragment = (fragment, filePath) => {
 	// 取出片段中需要的界碑
 	// 取出指定文件，判断是否全有需要的界碑。
 	// 从配置文件中取position与界碑的对应关系
-	let config = require('../fragment/modal.js')
+	let config = require(`../fragment/${fragment}.js`)
 	// log('config', config)
 	// let {pReadFile, pWriteFile} = pUtil
 	return pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
-		// 测试通过
 		config.template.forEach(item => {
 			let reg
 			switch (item.position) {
@@ -653,7 +652,6 @@ let insertFragment = (fragment, filePath) => {
 					break
 			}
 		})
-		// 测试通过
 		config.script.forEach(item => {
 			let reg
 			switch (item.position) {
@@ -675,7 +673,6 @@ let insertFragment = (fragment, filePath) => {
 					break;
 			}
 		})
-		// 测试通过
 		config.style.forEach(item => {
 			let reg
 			switch (item.position) {
@@ -695,86 +692,94 @@ let insertFragment = (fragment, filePath) => {
 				// 插入整个
 			let reg // 正则
 			let subString = '' // 取出成块的子串
-			let componentStr = '' // 要插入的文本 // todo
+			let componentStr = '' // 要插入的文本
+			let execResult
 			switch (k) {
-				// case 'import':
-				// 	reg = /import\s?{.*?}\s?from\s?'vue'/s
-				// 	if (reg.test(textContent)) {
-
-				// 	} else {
-				// 		reg = /(?<=<script.*)(\/\/\s?组件.*)(?=\/\/\s?验证.*export\sdefault\sdefineComonent)/s
-				// 		let value = `import { ${v.join(', ')}} from '${k}'`
-				// 		textContent = textContent.replace(reg, `$1${value}`)
-				// 	}
-				// 	break;
-				case 'import':
-					reg = /(?<=<script.*)((\/\/\s?)?import.*)(?=export\sdefault\sdefineComponent)/s
-					let result = reg.exec(textContent)
-					// log(result)
-					if (result) {
-						// 找到
-						let importArr = result[0].split(/(\n)(?=.*import)/) // 取出每一条import语句。可能有空元素。
-						importArr = importArr.filter(item => !!item)
-						// log('importArr', importArr, importArr.length)
+				case 'importUtils':
+					reg = /(?<=<script.*\/\/\sutils)(.*)(?=\/\/\scomponents.*export\sdefault\sdefineComponent)/s
+					execResult = reg.exec(textContent)
+					// log(execResult)
+					if (execResult) { // 应该总是存在
+						let importArr = execResult[0].split(/(\n)(?=.*import)/)
+						// log(importArr)
 						Object.entries(v).forEach(([package, eleArr]) => {
-							// reg = /from\s?''/
-							// log([package, eleArr])
-							reg = new RegExp(`from\\s?['"]${package}['"]`)
-							// log('reg', reg)
-							let index = importArr.findIndex(item => reg.test(item))
-							// log('index', index)
+							reg = new RegExp(`from\\s['"]${package}['"]`)
+							let index = importArr.findIndex(item => reg.test(item)) // 找到引入的包
+							// log(index)
 							if (index >= 0) {
 								// 是否已注释
 								reg = /^\s*\/\//
-								// log('reg', reg)
-								// log(importArr[index], reg.test(importArr[index]))
 								if (reg.test(importArr[index])) {
-									// log('index', index)
-									// 有注释，直接插入。
-									importArr[index] = `import { ${eleArr.join(', ')}, } from '${package}'`
-									// log('importArr[index]', importArr[index])
+									reg = new RegExp(`\\/\\/\\s?import\\s?{.*?}\\s?from\\s?['"]${package}['"]`, 's')
+									importArr[index] = importArr[index].replace(reg, `import {${eleArr.join(',\n')}} from '${package}'`)
 								} else {
 									// 未注释
 									reg = new RegExp(`(?<=import\\s?{)(.*)(?=}\\s?from\\s?['"]${package}['"])`, 's')
 									let result = reg.exec(importArr[index])
-									// log('reg', reg)
-									// log('result', result)
 									if (result) {
 										let t = result[0]
-										// log('t', t)
 										let compItemArr = []
 										eleArr.forEach(ele => {
 											reg = new RegExp(`[\\W]${ele}[\\W]`)
-											// log('reg', reg)
 											if (!reg.test(t)) {
 												compItemArr.push(ele)
 											}
 										})
-										importArr[index] = `import { ${compItemArr.join(', ')}, ${result.input.slice(result.index)}`
-										// log('importArr[index]', importArr[index])
-									} else {
-										// 应该总是存在
+										importArr[index] = `import { ${compItemArr.join(',\n')}, ${result.input.slice(result.index)}`
 									}
-									importArr[index]
 								}
-								// importArr[index] = 'xx'
+							} else {
+								importArr.push(`import {${eleArr.join(',\n')},\n} from '${package}'\n`)
 							}
 						})
-						textContent = textContent.slice(0, result.index) + importArr.join('') + textContent.slice(result.index + result[0].length)
-						// log('textContent', textContent)
-					} else {
-						// 不应该没有
+						textContent = textContent.slice(0, execResult.index) + importArr.join('') + textContent.slice(execResult.index + execResult[0].length)
 					}
-					break;
+					break
+				case 'importComponents':
+					reg = /(?<=<script.*\/\/\scomponents)(.*)(?=\/\/\scheck.*export\sdefault\sdefineComponent)/s
+					execResult = reg.exec(textContent)
+					if (execResult) { // 应该总是存在
+						let importArr = execResult[0].split(/(\n)(?=.*import)/)
+						Object.entries(v).forEach(([package, eleArr]) => {
+							reg = new RegExp(`from\\s['"]${package}['"]`)
+							let index = importArr.findIndex(item => reg.test(item)) // 找到引入的包
+							if (index >= 0) {
+								// 是否已注释
+								reg = /^\s*\/\//
+								if (reg.test(importArr[index])) {
+									// 已注释，直接插入
+									reg = new RegExp(`\\/\\/\\s?import\\s?{.*?}\\s?from\\s?['"]${package}['"]`, 's')
+									importArr[index] = importArr[index].replace(reg, `import {${eleArr.join(',\n')}} from '${package}'`)
+								} else {
+									// 未注释
+									reg = new RegExp(`(?<=import\\s?{)(.*)(?=}\\s?from\\s?['"]${package}['"])`, 's')
+									let result = reg.exec(importArr[index])
+									if (result) { // 应该总是存在
+										let t = result[0]
+										let compItemArr = []
+										eleArr.forEach(ele => {
+											reg = new RegExp(`[\\W]${ele}[\\W]`)
+											if (!reg.test(t)) {
+												compItemArr.push(ele)
+											}
+										})
+										importArr[index] = `import { ${compItemArr.join(',\n')}, ${result.input.slice(result.index)}`
+									}
+								}
+							} else {
+								importArr.push(`import {${eleArr.join(',\n')},\n} from '${package}'\n`)
+							}
+						})
+						textContent = textContent.slice(0, execResult.index) + importArr.join('') + textContent.slice(execResult.index + execResult[0].length)
+					}
+					break
 				case 'components':
 					// // 取出一块代码。处理后插入。
 					reg = /(?<=defineComponent\({.*name:\s?'\w*?',\n\s*)(\S.*)(?=\n\s*\/\/\s?directives)/s
-					let execResult = reg.exec(textContent)
-					// log(131231, execResult)
+					execResult = reg.exec(textContent)
 					if (execResult) {
 						// 处理后插入。
 						subString = execResult[0]
-						// log('subString', subString)
 						let arr = subString.split('\n')
 						arr.forEach
 						// 是否是注释状态
@@ -782,11 +787,9 @@ let insertFragment = (fragment, filePath) => {
 						if (reg.test(subString)) {
 							componentStr = `components: {\n${v.join(',\n')}\n},`
 						} else {
-							// log('无注释', subString)
 							reg = /(?<={)(.*)(?=})/s
 							let tr = reg.exec(subString)
 							let compItemArr = []
-							// log(tr)
 							if (tr) {
 								let s = tr[0]
 								v.forEach(item => {
@@ -794,9 +797,7 @@ let insertFragment = (fragment, filePath) => {
 										compItemArr.push(item)
 									}
 								})
-								let forInsertStr = compItemArr.join(',\n')
-								forInsertStr += ',\n'
-								componentStr = `components: {${forInsertStr}${s.slice(1)}},`
+								componentStr = `components: {${compItemArr.join(',\n')},\n${s.slice(1)}},`
 							} else {
 								// 不应该无匹配
 							}
@@ -804,9 +805,56 @@ let insertFragment = (fragment, filePath) => {
 						textContent = textContent.slice(0, execResult.index) + componentStr + textContent.slice(execResult.index + execResult[0].length)
 					} else { // 未找到
 						// 直接插入
-						reg = /(\s*\/\/\s?directives)/
+						reg = /(?<=export\sdefault\sdefineComponent.*)(\s*\/\/\s?directives)/s
 						componentStr = `components: {${v.join(',\n')}},`
 						textContent = textContent.replace(reg, `\n${componentStr}$1`)
+					}
+					break;
+				case 'type':
+					reg = /(?<=<script.*\/\/\s?type\/interface)(.*)(?=export\sdefault\sdefineComponent)/s
+					execResult = reg.exec(textContent)
+					if (execResult) {
+						// 处理后插入
+						subString = execResult[0]
+						let importArr = subString.split(/(\n)(?=.*import)/)
+						importArr = importArr.filter(item => !!item)
+						Object.entries(v).forEach(([package, eleArr]) => {
+							reg = new RegExp(`from\\s['"]${package}['"]`)
+							let index = importArr.findIndex(item => reg.test(item))
+							// 是否引入引包
+							if (index >= 0) {
+								reg = /^\s*\/\//
+								if (reg.test(importArr[index])) {
+									// 有注释，直接插入
+									// importArr[index] = `import type { ${eleArr.join(', ')}, } from '${package}'\n`
+									reg = new RegExp(`\\/\\/\\s?import\\s?type\\s?{.*?}\\s?from\\s?['"]${package}['"]`, 's')
+									importArr[index] = importArr[index].replace(reg, `import type{ ${eleArr.join(', ')}, } from '${package}'`)
+								} else {
+									// 未注释
+									// 取出已经引入的内容
+									reg = new RegExp(`(?<=import\\stype\\s?{)(.*)(?=}\\sfrom\\s?['"]${package}['"])`, 's')
+									let result = reg.exec(importArr[index])
+									if (result) {
+										let t = result[0]
+										let compItemArr = []
+										eleArr.forEach(ele => {
+											reg = new RegExp(`[\\W]${ele}[\\W]`)
+											if (!reg.test(t)) {
+												compItemArr.push(ele)
+											}
+										})
+										importArr[index] = `import type { ${compItemArr.join(', ')}, ${result.input.slice(result.index)}`
+									} else {
+										// 应该总是存在
+									}
+								}
+							} else {
+								importArr.push(`\nimport type {${eleArr.join(', ')}, } from '${package}'\n\n`)
+							}
+						})
+						textContent = textContent.slice(0, execResult.index) + importArr.join('\n') + textContent.slice(execResult.index + execResult[0].length)
+					} else {
+						// 应该总是有
 					}
 					break;
 			}
