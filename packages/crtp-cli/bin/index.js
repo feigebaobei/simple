@@ -14,6 +14,7 @@ const childProcess = require('child_process')
 // const spawn = require('cross-spawn');
 // import ora from 'ora'
 const Spinner = require('cli-spinner').Spinner
+const crtpCliConfig = require('./config.jss')
 
 // 工具
 const {log} = console
@@ -627,11 +628,100 @@ let extractPackage = () => {
 	})
 }
 
+// todo 考虑删除此方法
 let precheck = (filePath) => {
+	return checkFile(filePath)
+}
+let checkFile = (filePath) => {
 	return pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
 		// 在新加插入功能时注意修改此正则。
 		let reg = /<template>.*<\/template>.*<script.*export\sdefault\sdefineComponent.*setup.*\/\/\sref.*\/\/\smethods.*\/\/\sevent\sfn.*\/\/\sexec.*return\s{.*\/\/sref.*\/\/\smethods.*\/\/\sevent\sfn.*<style/s
 		return reg.test(textContent)
+	})
+}
+// 检查碎片文件是否合法
+let checkFragment = (filePath) => {
+	let errorCode = {
+		1: '读取碎片文件失败',
+		11: '无法解决为js对象',
+		21: 'template不是数组',
+		31: 'template数组中position的值不合法',
+		41: 'template数组中content的值不合法',
+		51: 'script不是数组',
+		61: 'script数组中position的值不合法',
+		71: 'script数组中content的值不合法',
+		81: 'style不是数组',
+		91: 'style数组中position的值不合法',
+		101: 'style数组中content的值不合法',
+		111: 'check中对象的key的值不合法',
+		121: 'check中对象的value值不是字符串组成的数组',
+	}
+	return new Promise((s, j) => {
+		return pUtil.pReadFile(filePath, 'utf-8').catch(() => {
+			return Promise.reject(1)
+		})
+	}).then((textContent) => {
+		try {
+			let obj = JSON.parse(textContent)
+			return obj
+		} catch(error) {
+			return Promise.reject(11)
+		}
+	}).then((obj) => {
+		if (obj.template) {
+			if (Array.isArray(obj.template)) {
+				for (let i = 0; i < obj.template.length; i++) {
+					if (!crtpCliConfig.template.includes(obj.template[i].position)) {
+						return Promise.reject(31)
+					}
+					if (!crtpCliConfig.template.contentConstructorStringEnum.includes(util.getType(obj.template[i].content))) {
+						return Promise.reject(41)
+					}
+				}
+			} else {
+				return Promise.reject(21)
+			}
+		}
+		if (obj.script) {
+			if (Array.isArray(obj.script)) {
+				for (let i = 0; i < obj.script.length; i++) {
+					if (!crtpCliConfig.script.positionEnum.includes(obj.script[i].position)) {
+						return Promise.reject(61)
+					}
+					if (!crtpCliConfig.script.contentConstructorStringEnum.includes(util.getType(obj.script[i].content))) {
+						return Promise.reject(71)
+					}
+				}
+			} else {
+				return Promise.reject(51)
+			}
+		}
+		if (obj.style) {
+			if (Array.isArray(obj.style)) {
+				for (let i = 0; i < obj.style.length; i++) {
+					if (!crtpCliConfig.style.positionEnum.includes(obj.style[i].position)) {
+						return Promise.reject(91)
+					}
+					if (!crtpCliConfig.style.contentConstructorStringEnum.includes(util.getType(obj.style[i].content))) {
+						return Promise.reject(101)
+					}
+				}
+			} else {
+				return Promise.reject(81)
+			}
+		}
+		if (obj.check) {
+			if (!crtpCliConfig.check.keyEnum.includes(Object.values(obj.check))) {
+				return Promise.reject(111)
+			}
+			// 待优化
+			let values = Object.values(obj.check)
+			if (Array.isArray(values) && values.every(item => ['String'].includes(util.getType(item)))) {
+				return Promise.reject(121)
+			}
+		}
+	}).catch(code => {
+		log(chalk.red(`${filePath} ${errorCode[code]} - 失败`))
 	})
 }
 let insertFragment = (fragment, filePath) => {
@@ -1080,7 +1170,6 @@ program
 			let filePath = path.resolve(process.cwd(), options.file)
 			// 预检通过才能使用。
 			if (precheck(filePath)) {
-				// log(true)
 				insertFragment(fragment, filePath)
 			} else {
 				log(chalk.red(`${filePath}缺少相关界碑，无法执行此命令。`))
@@ -1088,6 +1177,17 @@ program
 
 		}).catch(() => {})
 	})
+
+// // 检查模板文件和碎片文件
+// // crtp checkTemplate
+// // crtp checkFragment
+// program.command('checkFragment <fragment>')
+// 	.description('检查指定的碎片文件是否合法')
+// 	// .option()
+// 	.action((fragment) => {
+// 		// 
+// 	})
+
 
 // 整理代码
 // crtp lint --file ./index.vue

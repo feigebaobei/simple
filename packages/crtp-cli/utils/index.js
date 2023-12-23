@@ -23,10 +23,6 @@ var _traverse = function (mark, directory) {
     }
 };
 
-// module.exports = {
-
-// }
-
 let tranvers = function (mark, directory) {
     directory = directory || process.cwd();
     
@@ -55,10 +51,13 @@ let npmRegistry = {
     guazi: 'http://npm.guazi-corp.com/',
   
 }
+
+let getType = (o) => Object.prototype.toString.call(o).slice(8, -1) // 返回构造函数的名字 大写开头
+
 module.exports = {
 	tranvers,
     fillEmpty,
     afterDay,
-    npmRegistry
+    npmRegistry,
+    getType,
 }
-// export 

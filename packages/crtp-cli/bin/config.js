@@ -6,4 +6,20 @@ module.exports = {
 	'ASSETSBASEDEMOPAGE': '../assets/baseDemoPage.vue',
 	'ASSETSCOMPDOC': '../assets/compDoc.md',
 	FRAGEMENTDIR: '../fragment',
+	template: {
+		positionEnum: ['end'],
+		contentConstructorStringEnum: ['String'],
+	},
+	script: {
+		positionEnum: ['setup.ref', "setup.event", "setup.return.ref", "setup.return.event"],
+		contentConstructorStringEnum: ['String'],
+	},
+	style: {
+		positionEnum: ['end'],
+		contentConstructorStringEnum: ['String'],
+	},
+	check: {
+		keyEnum: ['importUtils', 'importComponents', 'type', 'components'],
+		valueValueConstructorStringEnum: 'String[]',
+	}
 }
