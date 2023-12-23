@@ -3,18 +3,18 @@
 </template>
 
 <script lang="ts">
-    // 工具方法
+    // utils
     import {
         defineComponent,
         ref,
-        // onMounted,
+        onMounted,
     } from 'vue'
-    // 组件
+    // components
     // import { MsButton } from 'ms-ui'
-    // 验证
-    // 配置项
-    // 指令
-    // 数据
+    // check
+    // config
+    // directives
+    // data
     // hooks
     // import { useRouter } from 'vue-router'
     // type/interface
@@ -32,7 +32,7 @@
             //     default: '',
             // },
         },
-        emits: ['blur'],
+        // emits: ['blur'],
         setup() // props, ctx
         {
             // inject
@@ -50,9 +50,9 @@
             // event fn
             // watch
             // lifeCircle
-            // onMounted(() => {
-            //     init()
-            // })
+            onMounted(() => {
+                init()
+            })
             // exec
             return {
                 // variable
