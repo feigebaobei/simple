@@ -41,12 +41,7 @@ let obj = {
                 drawerOkButtonClickH,`
         },
     ],
-    "style": [{
-        position: 'end',
-        content: `\t.apply {
-        color: red;
-    }`,
-    }],
+    style: [],
     check: {
         importUtils: {
             vue: ["reactive"],

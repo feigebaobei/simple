@@ -17,8 +17,6 @@
 
 ## usage
 ```shell
-# 在当前目录下生成配置文件
-# crtp init
 # 在指定目录创建一个指定的模板文件
 crtp initFile readme.md --file ./first/readme.md
 # 添加自定义的模板文件
@@ -28,6 +26,7 @@ crtp initProject --projectName first
 ```
 
 ## configuration
+暂时不需要它
 默认配置文件：`<root>/crtp.config.js`
 
 ## api
@@ -37,7 +36,7 @@ crtp initProject --projectName first
 |command|options|value|说明|demo||version|
 |-|-|-|-|-|-|-|
 ||-v, --Version||列出当前版本||||
-|init|||生成配置文件||||
+|init|||生成配置文件|||0.0.14-beta.4-|
 |initFile |||以指定模板文件为模板创建文件。||||
 ||`<fileType>`||模板文件名||||
 ||--file [file...]||目标文件路径||||
@@ -78,7 +77,7 @@ crtp initProject --projectName first
 ||--dir|默念 ./|指定应用所在的目录|||||
 ||--projectName|默认 project-name|应用的名称|||||
 ||--start|默认 false|在创建成功后是否启动项目|||||
-|insert|||在指定的文件中插入代码片段（亦称“碎片”）||||0.0.14-beta.2|
+|insert|||在指定的文件中插入代码片段（亦称“碎片”）||||0.0.14-beta.2+ 非gamma有效。|
 ||`<fragment>`|||指定碎片||||
 ||--file|||指定文件||||
 
@@ -89,6 +88,120 @@ crtp initProject --projectName first
 - demo.md
 - .gitignore
 - vue3.vue
+
+## 界碑说明
+在内置的`vue3.vue`文件中有若干注释，用于标记特定位置。在下文中称为界碑。
+界碑是不能删除的。
+
+```js
+<template>                                          使用组件
+    <div>MsBaseComp</div>
+</template>
+
+<script lang="ts">
+    // utils                                        引入工具类方法
+    import {
+        defineComponent,
+        ref,
+        onMounted,
+    } from 'vue'
+    // components                                   引入组件
+    // import { MsButton } from 'ms-ui'
+    // check                                        引入校验方法
+    // config                                       引入配置项
+    // directives                                   引入指令
+    // data                                         引入数据
+    // hooks                                        引入钩子
+    // import { useRouter } from 'vue-router'
+    // type/interface                               引入类型
+
+    export default defineComponent({
+        name: 'MsBaseComp',                         组件名
+        // components: {                            声明组件
+        //     MsButton,
+        // },
+        // directives                               声明指令
+        // inheritAttrs: false,
+        props: {
+            // fieldKey: {
+            //     type: String,
+            //     default: '',
+            // },
+        },
+        // emits: ['blur'],
+        setup() // props, ctx                       setup方法
+        {
+            // inject                               定义注入者
+            // hooks                                定义钩子
+            // variable                             定义变量
+            // let clog = console.log
+            // ref                                  定义响应式对象
+            let elementRef = ref()
+            // computed                             定义计算类对象
+            // provide                              定义提供者
+            // methods                              定义方法
+            let init = () => {
+                
+            }
+            // event fn                             定义事件的回调方法
+            // watch                                定义监听器。watch/watchEffect
+            // lifeCircle                           定义生命周期方法
+            onMounted(() => {
+                init()
+            })
+            // exec                                 在setup中执行的方法
+            return {
+                // variable                         输出变量
+                // ref                              输出响应式对象
+                elementRef,
+                // computed                         输出计算类对象
+                // methods                          输出方法
+                // event fn                         输出事件回调方法
+            }
+        }
+    })
+</script>
+
+<style lang="less" scoped>                          定义样式
+</style>
+```
+
+## 碎片文件
+
+### 适用范围
+目标文件中的相关界碑。
+
+### 字段说明
+
+```ts
+interface template {
+    position: 'end' // 在template内的最后插入
+    content: string // 插入的内容
+}[]
+interface script {
+    position: 'setup.ref' // 在setup方法内的ref界碑处追加
+     | 'setup.event' // 在setup方法内的event fn界碑处追加
+     | 'setup.return.ref' // 在setup方法的return内的ref界碑处追加
+     | 'setup.return.event' // 在setup方法的return内的event fn界碑处追加
+    content: string
+}[]
+interface style {
+    position: 'end' // 在style内追加
+    content: string
+}[]
+interface check {
+    importUtils?: {
+        [k: string]: string[]
+    }
+    importComponents?: {
+        [k: string]: string[]
+    }
+    type?: {
+        [k: string]: string[]
+    }
+    components?: string[]
+}
+```
 
 ## principle
 - 模板文件应该由脚本生成。

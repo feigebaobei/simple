@@ -43,7 +43,7 @@ let obj = {
     ],
     style: [{
         position: 'end',
-        content: `\t.apply {
+        content: `\t.creatServiceTitle {
         color: red;
     }`,
     }],

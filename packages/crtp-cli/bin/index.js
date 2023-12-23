@@ -960,15 +960,16 @@ let insertFragment = (fragment, filePath) => {
 // crtp init
 // 初始化配置文件
 // 测试通过
-program
-	.command('init')
-	.description('初始化配置文件')
-	.action(async function () {
-		let projPath = path.resolve(process.cwd())
-		let cont = await fsPromises.readFile(path.resolve(__dirname, '../assets/crtp.config.js'), 'utf-8')
-		fsPromises.writeFile(path.resolve(projPath, './crtp.config.js'), cont)
-		log(chalk.blue('初始化完成'))
-	})
+// program
+// 	.command('init')
+// 	.description('初始化配置文件')
+// 	.action(async function () {
+// 		// todo 因无作用，无不在生产版本中暴露。
+// 		let projPath = path.resolve(process.cwd())
+// 		let cont = await fsPromises.readFile(path.resolve(__dirname, '../assets/crtp.config.js'), 'utf-8')
+// 		fsPromises.writeFile(path.resolve(projPath, './crtp.config.js'), cont)
+// 		log(chalk.blue('初始化完成'))
+// 	})
 
 // crtp initFile <fileType> [--file ...]
 // 以指定模板文件为模板创建文件。
