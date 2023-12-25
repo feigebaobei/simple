@@ -754,8 +754,6 @@ let insertFragment = (fragment, filePath) => {
 			tips = config.tips
 		}
 	}
-	// log('config', config)
-	// let {pReadFile, pWriteFile} = pUtil
 	return pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
 		config.template.forEach(item => {
 			let reg
@@ -991,10 +989,6 @@ let insertFragment = (fragment, filePath) => {
 		// log('textContent', textContent)
 		return pUtil.pWriteFile(filePath, textContent, 'utf-8')
 	}).then(() => {
-		// 考虑到项目初期，先提示。
-		// switch (fragment) {
-		// 	case 'table': 
-		// }
 		tips.forEach(item => {
 			switch (item.level) {
 				case 'error':

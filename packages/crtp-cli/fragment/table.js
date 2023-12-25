@@ -77,7 +77,7 @@ let obj = {
                                             text: true,
                                             type: 'primary',
                                             onClick: () => {
-                                                onlyOpenPopConfirm(index)
+                                                onlyOpenPopconfirm(index)
                                             }
                                         }, {
                                             default: () => '删除',
@@ -191,7 +191,7 @@ let obj = {
         content: `.footer-pagination {
             padding: 8px;
             display: flex;
-            justify-content: end;
+            justify-content: flex-end;
         }`
     }],
     check: {
