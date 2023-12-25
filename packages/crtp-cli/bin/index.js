@@ -655,6 +655,9 @@ let checkFragment = (filePath) => {
 		101: 'style数组中content的值不合法',
 		111: 'check中对象的key的值不合法',
 		121: 'check中对象的value值不是字符串组成的数组',
+		131: 'tips不是数组',
+		141: 'tips中对象的message的值不合法',
+		151: 'tips中对象的level的值不合法',
 	}
 	return new Promise((s, j) => {
 		return pUtil.pReadFile(filePath, 'utf-8').catch(() => {
@@ -720,6 +723,20 @@ let checkFragment = (filePath) => {
 				return Promise.reject(121)
 			}
 		}
+		if (obj.tips) {
+			if (Array.isArray(obj.tips)) {
+				for (let i = 0; i < obj.tips.length; i++) {
+					if (!crtpCliConfig.tips.messageConstructorStringEnum.includes(obj.tips[i].message)) {
+						return Promise.reject(141)
+					}
+					if (!crtpCliConfig.tips.levelEnum.includes(obj.tips[i].level)) {
+						return Promise.reject(151)
+					}
+				}
+			} else {
+				return Promise.reject(131)
+			}
+		}
 	}).catch(code => {
 		log(chalk.red(`${filePath} ${errorCode[code]} - 失败`))
 	})
@@ -729,6 +746,14 @@ let insertFragment = (fragment, filePath) => {
 	// 取出指定文件，判断是否全有需要的界碑。
 	// 从配置文件中取position与界碑的对应关系
 	let config = require(`../fragment/${fragment}.js`)
+	// 应该有处理碎片文件为规范对象的方法。
+		// 如:数组不能为undefined。
+	let tips = []
+	if (config.tips) {
+		if (Array.isArray(config.tips)) {
+			tips = config.tips
+		}
+	}
 	// log('config', config)
 	// let {pReadFile, pWriteFile} = pUtil
 	return pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
@@ -754,7 +779,7 @@ let insertFragment = (fragment, filePath) => {
 					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 					break
 				case 'setup.methods':
-					reg = /(?<=setup\s?\(.*)(\/\/\smethods.*)(?=\/\/\sevent\sfn)/s
+					reg = /(?<=setup\s?\(.*)(\/\/\smethods.*)(?=\/\/\sevent\sfn.*\/\/\sexec)/s
 					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 					break;
 				case 'setup.return.ref':
@@ -768,6 +793,10 @@ let insertFragment = (fragment, filePath) => {
 				case 'custom':
 					reg = /(?<=<script.*)(\/\/\scustom.*)(?=\n\s*?export\sdefault\sdefineComponent)/s
 					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+					tips.push({
+						message: '最好不要在custom中插入内容。',
+						level: 'warning',
+					})
 					break;
 			}
 		})
@@ -961,6 +990,32 @@ let insertFragment = (fragment, filePath) => {
 	}).then(textContent => {
 		// log('textContent', textContent)
 		return pUtil.pWriteFile(filePath, textContent, 'utf-8')
+	}).then(() => {
+		// 考虑到项目初期，先提示。
+		// switch (fragment) {
+		// 	case 'table': 
+		// }
+		tips.forEach(item => {
+			switch (item.level) {
+				case 'error':
+					log(chalk.red(item.message))
+					break
+				case 'warning':
+					log(chalk.yellow(item.message))
+					break
+				case 'log':
+					log(chalk.blue(item.message))
+					break;
+				case 'tip':
+				default:
+					log(item.message)
+					break
+				case 'success':
+					log(chalk.green(item.message))
+					break
+			}
+		})
+		return true
 	}).then(() => {
 		log(chalk.blue(`插入${fragment} - 完成`))
 	})

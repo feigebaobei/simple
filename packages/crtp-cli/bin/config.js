@@ -24,5 +24,9 @@ module.exports = {
 	check: {
 		keyEnum: ['importUtils', 'importComponents', 'type', 'components'],
 		valueValueConstructorStringEnum: 'String[]',
+	},
+	tips: {
+		messageConstructorStringEnum: ['String'],
+		levelEnum: ['error', 'warning', 'log', 'tip', 'success'],
 	}
 }

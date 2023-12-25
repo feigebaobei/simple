@@ -19,14 +19,14 @@ let obj = {
                 :page-sizes="tableR.pagination.pageSizes"
                 :on-update:page="(page) => servePageChangeHandler(page)"
                 :on-update:page-size="(pageSize) => servePageSizeChangeHandler(pageSize)"
-            >
+            />
         </div>`
     }],
     script: [
         {
             position: "setup.ref",
             content: `let tableR = reactive<{
-                columns: DataTableColumns[];
+                columns: DataTableColumn[];
                 dataSource: TableItem[];
                 pagination: Pagination;
             }>({
@@ -50,7 +50,7 @@ let obj = {
                         fixed: 'right',
                         key: 'operator',
                         render(row, index) {
-                            return h(MsSpace, null {
+                            return h(MsSpace, null, {
                                 default: () => [
                                     h(MsButton, {
                                         text: true,
@@ -176,8 +176,8 @@ let obj = {
                 pageDefault: number;
                 pageSize: number;
                 pageSizeDefault?: number;
-                showSizePicker?: number;
-                pageSizes?: number;
+                showSizePicker?: boolean;
+                pageSizes?: number[];
                 pageCount?: number;
                 total?: number;
                 onChange?: (page: number) => void;
@@ -205,6 +205,12 @@ let obj = {
             'ms-ui': ['DataTableColumn'],
         },
         components: ["MsDataTable", "MsPagination"],
-    }
+    },
+    tips: [
+        {
+            message: '请在init()中执行reqData()',
+            level: 'warning',
+        }
+    ]
 }
 module.exports = obj
