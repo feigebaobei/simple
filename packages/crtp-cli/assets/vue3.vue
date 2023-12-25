@@ -18,6 +18,7 @@
     // hooks
     // import { useRouter } from 'vue-router'
     // type/interface
+    // custom
 
     export default defineComponent({
         name: 'MsBaseComp',

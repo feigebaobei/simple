@@ -114,6 +114,7 @@ crtp initProject --projectName first
     // hooks                                        引入钩子
     // import { useRouter } from 'vue-router'
     // type/interface                               引入类型
+    // custom                                       本vue文件级的数据、方法等。
 
     export default defineComponent({
         name: 'MsBaseComp',                         组件名
@@ -183,6 +184,7 @@ interface script {
      | 'setup.event' // 在setup方法内的event fn界碑处追加
      | 'setup.return.ref' // 在setup方法的return内的ref界碑处追加
      | 'setup.return.event' // 在setup方法的return内的event fn界碑处追加
+     | 'custom' // 在custom界碑处追加。一般不要在这里写代码。
     content: string
 }[]
 interface style {
@@ -203,9 +205,7 @@ interface check {
 }
 ```
 
-## principle
-- 模板文件应该由脚本生成。
-- 应该由脚本控制项目结构变化。
+## [principle](https://github.com/feigebaobei/simple/blob/master/principle.md)
 
 ### 初始化项目
 使用`child_process`调用`npm init -y`。现修改package.json。

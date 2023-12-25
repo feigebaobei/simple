@@ -14,7 +14,7 @@ const childProcess = require('child_process')
 // const spawn = require('cross-spawn');
 // import ora from 'ora'
 const Spinner = require('cli-spinner').Spinner
-const crtpCliConfig = require('./config.jss')
+const crtpCliConfig = require('./config.js')
 
 // 工具
 const {log} = console
@@ -749,17 +749,25 @@ let insertFragment = (fragment, filePath) => {
 					reg = /(?<=setup\s?\(.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?provide)/s
 					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 					break
-				case 'setup.return.ref':
-					reg = /(?<=setup\s?\(.*\/\/\s?exec.*return.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?methods.*)/s
-					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t\t`)
-					break
 				case 'setup.event':
 					reg = /(?<=setup\s?\(.*)(\/\/\s?event\sfn.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
 					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 					break
-				case 'setup.return.event': // x
+				case 'setup.methods':
+					reg = /(?<=setup\s?\(.*)(\/\/\smethods.*)(?=\/\/\sevent\sfn)/s
+					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+					break;
+				case 'setup.return.ref':
+					reg = /(?<=setup\s?\(.*\/\/\s?exec.*return.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?methods.*)/s
+					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t\t`)
+					break
+				case 'setup.return.event':
 					reg = /(?<=setup\s?\(.*\/\/\s?exec.*return\s{.*)(\/\/\s?event\sfn.*?)(?=})/s
 					textContent = textContent.replace(reg, `$1\t${item.content}\n\t\t\t`)
+					break;
+				case 'custom':
+					reg = /(?<=<script.*)(\/\/\scustom.*)(?=\n\s*?export\sdefault\sdefineComponent)/s
+					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 					break;
 			}
 		})
@@ -901,7 +909,7 @@ let insertFragment = (fragment, filePath) => {
 					}
 					break;
 				case 'type':
-					reg = /(?<=<script.*\/\/\s?type\/interface)(.*)(?=export\sdefault\sdefineComponent)/s
+					reg = /(?<=<script.*\/\/\s?type\/interface)(.*)(?=\n\s*?\/\/\scustom)/s
 					execResult = reg.exec(textContent)
 					if (execResult) {
 						// 处理后插入
