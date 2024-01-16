@@ -1014,6 +1014,16 @@ let insertFragment = (fragment, filePath) => {
 		log(chalk.blue(`插入${fragment} - 完成`))
 	})
 }
+
+let addFragment = (filename, userOption) => {
+	pUtil.pReadFile(path.resolve(process.cwd(), userOption.file), 'utf-8').then((textContent) => {
+		return pUtil.pWriteFile(path.resolve(__dirname, '../fragment', filename), textContent, 'utf-8')
+	}).then(() => {
+		log(chalk.blue(`添加碎片文件${filename} - 完成`))
+	}).catch(() => {
+		log(chalk.red(`添加碎片文件${filename} - 失败`))
+	})
+}
 // crtp init
 // 初始化配置文件
 // 测试通过
@@ -1234,6 +1244,17 @@ program
 			}
 
 		}).catch(() => {})
+	})
+
+// crtp addFragment <filename> --file <path/to/file.ext>
+// 把指定文件设置为模板文件
+// 测试通过
+program
+	.command('addFragment <filename>')
+	.description('把指定文件设置为碎片文件')
+	.option('--file <file>', 'path to file')
+	.action((filename, options) => {
+		addFragment(filename, options)
 	})
 
 // // 检查模板文件和碎片文件
