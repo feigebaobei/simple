@@ -39,11 +39,11 @@
     let elementRef = ref()
     let boxR = reactive({})
     // computed
-    // provide
     // method
     let init = () => {
         clog('init')
     }
+    // provide
     // event
     // watch
     // lifeCircle

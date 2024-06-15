@@ -23,8 +23,8 @@ let obj = {
                 </ms-form-item-gi>
                 <ms-grid-item>
                     <ms-space justify="start" :size="8">
-                        <ms-button type="primary" @click="sqlButtonHandler">查询</ms-button>
-                        <ms-button @click="sqlButtonHandler">重置</ms-button>
+                        <ms-button type="primary" @click="sqlButtonClickHandler">查询</ms-button>
+                        <ms-button @click="resetButtonClickHandler">重置</ms-button>
                     </ms-space>
                 </ms-grid-item>
             </ms-grid>
@@ -56,7 +56,8 @@ let obj = {
             }
             let resetButtonClickHandler = () => {
                 console.log('resetButtonClickHandler')
-            }`
+            }
+`
         },
         {
             position: "setup.return.ref",

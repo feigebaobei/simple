@@ -43,12 +43,12 @@
             // ref
             let elementRef = ref()
             // computed
-            // methods
+            // method
             let init = () => {
                 
             }
             // provide
-            // eventFn
+            // event
             // watch
             // lifeCircle
             onMounted(() => {
