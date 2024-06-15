@@ -55,7 +55,7 @@ let obj = {
             })`
         },
         {
-            position: 'setup.methods',
+            position: 'setup.method',
             content: `let resetForm = () => {
                 formR.model.one = formR.model.oneDefault
                 formR.model.two = formR.model.twoDefault

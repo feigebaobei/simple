@@ -113,7 +113,7 @@ let obj = {
             const showR = reactive({})`
         },
         {
-            position: 'setup.methods',
+            position: 'setup.method',
             content: `
             const reqData = () => {
                 // 调用接口

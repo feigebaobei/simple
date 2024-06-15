@@ -24,7 +24,8 @@ let obj = {
             content: `let drawerR = reactive({
                 visible: false,
                 title: 'title',
-            })`
+            })
+`
         },
         {
             position: "setup.return.ref",
@@ -33,7 +34,8 @@ let obj = {
         {
             position: "setup.event",
             content: `let drawerCancelButtonClickH = () => {}
-            let drawerOkButtonClickH = () => {}`
+            let drawerOkButtonClickH = () => {}
+`
         },
         {
             position: "setup.return.event",
