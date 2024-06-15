@@ -782,8 +782,8 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 			switch (item.position) {
 				case 'end':
 				default:
-					reg = /(<\/template>)/s
-					textContent = textContent.replace(reg, `${item.content}\n$1`)
+					reg = /(?<=^<template>.*)()(?=<\/template>\s{1,}<script)/s
+					textContent = textContent.replace(reg, `$1${item.content}`)
 					break
 			}
 		})
