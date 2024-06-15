@@ -798,15 +798,19 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 							textContent = textContent.replace(reg, `$1${item.content}`)
 							break;
 						case 'setup.event':
-							reg = /(?<=script.*)(\/\/\s?event.*)(?=\/\/\s?watch.*)/s
+							reg = /(?<=script.*)(\/\/\s?event.*)(?=\/\/\swatch.*\/\/slifeCircle)/s
 							textContent = textContent.replace(reg, `$1${item.content}`)
 							break;
 						case 'setup.eventFn':
-							reg = /(?<=script.*)(\/\/\s?eventFn.*)(?=\/\/\s?watch.*)/s
+							reg = /(?<=script.*)(\/\/\s?eventFn.*)(?=\/\/\swatch.*\/\/\slifeCircle)/s
 							textContent = textContent.replace(reg, `$1${item.content}`)
 							break;
-						case 'setup.methods':
-							reg = /(?<=<script\ssetup.*\/\/\sprovide)(\/\/\smethod.*)(?=\/\/\seventFn.*<\/script>)/s
+						case 'setup.method':
+							reg = /(?<=<script\ssetup.*\/\/\scomputed)(\/\/\smethod.*)(?=\/\/\sprovide.*\/\/\sevent)/s
+							textContent = textContent.replace(reg, `$1${item.content}`)
+							break;
+						case 'setup.methods': // 下版本删除
+							reg = /(?<=<script\ssetup.*\/\/\scomputed)(\/\/\smethods.*)(?=\/\/\sprovide.*\/\/\sevent)/s
 							textContent = textContent.replace(reg, `$1${item.content}`)
 							break;
 						// case 'expose': // 
@@ -844,12 +848,19 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 							break
 						case 'setup.event':
+							reg = /(?<=setup\s?\(.*)(\/\/\s?event.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
+							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							break
 						case 'setup.eventFn':
 							reg = /(?<=setup\s?\(.*)(\/\/\s?eventFn.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
 							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 							break
-						case 'setup.methods':
-							reg = /(?<=setup\s?\(.*)(\/\/\smethods.*)(?=\/\/\seventFn.*\/\/\sexec)/s
+						case 'setup.method':
+							reg = /(?<=setup\s?\(.*)(\/\/\smethod.*)(?=\/\/\sprovide.*\/\/\sevent)/s
+							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							break;
+						case 'setup.methods': // 下版本删除
+							reg = /(?<=setup\s?\(.*)(\/\/\smethods.*)(?=\/\/\ssprovide.*\/\/\sevent)/s
 							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 							break;
 						case 'setup.return.ref':
