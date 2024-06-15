@@ -798,6 +798,9 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 							textContent = textContent.replace(reg, `$1${item.content}`)
 							break;
 						case 'setup.event':
+							reg = /(?<=script.*)(\/\/\s?event.*)(?=\/\/\s?watch.*)/s
+							textContent = textContent.replace(reg, `$1${item.content}`)
+							break;
 						case 'setup.eventFn':
 							reg = /(?<=script.*)(\/\/\s?eventFn.*)(?=\/\/\s?watch.*)/s
 							textContent = textContent.replace(reg, `$1${item.content}`)
@@ -919,12 +922,14 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 										let t = result[0]
 										let compItemArr = []
 										eleArr.forEach(ele => {
-											reg = new RegExp(`[\\W]${ele}[\\W]`)
+											reg = new RegExp(`(?<=,?\\s?)(${ele}),`)
 											if (!reg.test(t)) {
 												compItemArr.push(ele)
 											}
 										})
-										importArr[index] = `import { ${compItemArr.join(',\n')}, ${result.input.slice(result.index)}`
+										if (compItemArr.length) {
+											importArr[index] = `import { ${compItemArr.join(',\n')}, ${result.input.slice(result.index)}`
+										}
 									}
 								}
 							} else {
@@ -957,12 +962,15 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 										let t = result[0]
 										let compItemArr = []
 										eleArr.forEach(ele => {
-											reg = new RegExp(`[\\W]${ele}[\\W]`)
+											// reg = new RegExp(`[\\W]${ele}[\\W]`)
+											reg = new RegExp(`(?<=,?\\s?)(${ele}),`)
 											if (!reg.test(t)) {
 												compItemArr.push(ele)
 											}
 										})
-										importArr[index] = `import { ${compItemArr.join(',\n')}, ${result.input.slice(result.index)}`
+										if (compItemArr.length) {
+											importArr[index] = `import { ${compItemArr.join(',\n')}, ${result.input.slice(result.index)}`
+										}
 									}
 								}
 							} else {
@@ -1037,12 +1045,14 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 										let t = result[0]
 										let compItemArr = []
 										eleArr.forEach(ele => {
-											reg = new RegExp(`[\\W]${ele}[\\W]`)
+											reg = new RegExp(`(?<=,?\\s?)(${ele}),`)
 											if (!reg.test(t)) {
 												compItemArr.push(ele)
 											}
 										})
-										importArr[index] = `import type { ${compItemArr.join(', ')}, ${result.input.slice(result.index)}`
+										if (compItemArr.length) {
+											importArr[index] = `import type { ${compItemArr.join(', ')}, ${result.input.slice(result.index)}`
+										}
 									} else {
 										// 应该总是存在
 									}
