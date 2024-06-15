@@ -54,6 +54,7 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
   head: SCEON<T>
   length: N
   capacity: number
+  // _current: null | T // 没想好怎么算使用。
   // constructor 是实例化的过程。参数是为整个对象执行实例化时需要的内容。
   // 不应该是使用时的数据。即使这个功能方便后续使用。
   constructor(capacity: N = Number.POSITIVE_INFINITY) {
@@ -197,6 +198,9 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
       return new SingleChain()
     }
   }
+  // get current(): T | null {
+  //   return this._current
+  // }
 }
 
 class DoublyChain<T> extends BaseChain<T> implements DC<T> {

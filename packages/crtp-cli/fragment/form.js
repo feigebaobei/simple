@@ -9,24 +9,24 @@ let obj = {
             :rules="formR.rules"
         >
             <ms-grid :cols="4" :x-gap="24">
-            <ms-form-item-gi label="年龄">
-                <ms-input v-model:value="formR.model.age" />
-            </ms-form-item-gi>
-            <ms-form-item-gi label="姓名">
-                <ms-input v-model:value="formR.model.name" />
-            </ms-form-item-gi>
-            <ms-form-item-gi label="特长">
-                <ms-select
-                    v-model:value="formR.model.strongPoint"
-                    :options="formR.model.strongPointList"
-                />
-            </ms-form-item-gi>
-            <ms-grid-item>
-                <ms-space justify="start" :size="8">
-                    <ms-button type="primary" @click="sqlButtonHandler">查询</ms-button>
-                    <ms-button @click="sqlButtonHandler">重置</ms-button>
-                </ms-space>
-            </ms-grid-item>
+                <ms-form-item-gi label="年龄">
+                    <ms-input v-model:value="formR.model.age" />
+                </ms-form-item-gi>
+                <ms-form-item-gi label="姓名">
+                    <ms-input v-model:value="formR.model.name" />
+                </ms-form-item-gi>
+                <ms-form-item-gi label="特长">
+                    <ms-select
+                        v-model:value="formR.model.strongPoint"
+                        :options="formR.model.strongPointList"
+                    />
+                </ms-form-item-gi>
+                <ms-grid-item>
+                    <ms-space justify="start" :size="8">
+                        <ms-button type="primary" @click="sqlButtonHandler">查询</ms-button>
+                        <ms-button @click="sqlButtonHandler">重置</ms-button>
+                    </ms-space>
+                </ms-grid-item>
             </ms-grid>
         </ms-form>`
     }],

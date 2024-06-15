@@ -21,8 +21,6 @@
 crtp initFile readme.md --file ./first/readme.md
 # 添加自定义的模板文件
 crtp addFile first.json --file ./first/projName/package.json
-# 创建express&ts的应用。需要先安装yarn
-crtp initProject --projectName first
 ```
 
 ## configuration
@@ -36,7 +34,7 @@ crtp initProject --projectName first
 |command|options|value|说明|demo||version|
 |-|-|-|-|-|-|-|
 ||-v, --Version||列出当前版本||||
-|init|||生成配置文件|||0.0.14-beta.4-|
+|init|||生成配置文件。本质是执行`crtp initFile crtp.config.js`|||0.0.14-beta.9+|
 |initFile |||以指定模板文件为模板创建文件。||||
 ||`<fileType>`||模板文件名||||
 ||--file [file...]||目标文件路径||||
@@ -55,7 +53,7 @@ crtp initProject --projectName first
 |list / ls|||列出所有模板文件+碎片文件||||
 |isExistFile|||查询指定模板文件是否存在||||
 ||`<filename>`||模板文件名||||
-|delFile|||删除指定模板文件||||
+|delFile|||删除指定模板文件。尽量不要删除内置的模板文件。||||
 ||`<filename>`||模板文件名||||
 |delDir|||删除指定模板目录|||待开发|
 |initProj||||||待完善|
@@ -73,11 +71,11 @@ crtp initProject --projectName first
 ||--npmrc|boolean 默认为true|是否生成 .npmrc 文件|||||
 ||--prettier|boolean 默认为true|是否生成.prettierignore .prettierrc.json|||||
 ||--readme|boolean 默认为true|是否生成 readme.md|||||
-|initProject|||创建express&ts的应用|||||
+|initProject|||创建express&ts的应用||||0.0.15版本删除此功能|
 ||--dir|默念 ./|指定应用所在的目录|||||
 ||--projectName|默认 project-name|应用的名称|||||
 ||--start|默认 false|在创建成功后是否启动项目|||||
-|insert|||在指定的文件中插入代码片段（亦称“碎片”）||||0.0.14-beta.2+ 非gamma有效。|
+|insert|||在指定的文件中插入代码片段（亦称“碎片”）||||0.0.14-beta.2+ 非gamma版本有效。|
 ||`<fragment>`|||指定碎片||||
 ||--file|||指定文件||||
 
@@ -144,7 +142,7 @@ crtp initProject --projectName first
             let init = () => {
                 
             }
-            // event fn                             定义事件的回调方法
+            // eventFn                             定义事件的回调方法
             // watch                                定义监听器。watch/watchEffect
             // lifeCircle                           定义生命周期方法
             onMounted(() => {
@@ -157,7 +155,7 @@ crtp initProject --projectName first
                 elementRef,
                 // computed                         输出计算类对象
                 // methods                          输出方法
-                // event fn                         输出事件回调方法
+                // eventFn                          输出事件回调方法
             }
         }
     })
@@ -176,19 +174,20 @@ crtp initProject --projectName first
 
 ```ts
 interface template {
-    position: 'end' // 在template内的最后插入
+    position: 'end' // 在template内的最后插入。当前只支持'end'.
     content: string // 插入的内容
 }[]
 interface script {
     position: 'setup.ref' // 在setup方法内的ref界碑处追加
-     | 'setup.event' // 在setup方法内的event fn界碑处追加
-     | 'setup.return.ref' // 在setup方法的return内的ref界碑处追加
-     | 'setup.return.event' // 在setup方法的return内的event fn界碑处追加
+     | 'setup.eventFn' // 在setup方法内的eventFn界碑处追加
+     | 'setup.return.ref' // 在setup方法的return内的ref界碑处追加。只在非setup语法糖时有效。
+     | 'setup.return.event' // 在setup方法的return内的eventFn界碑处追加。只在非setup语法糖时有效。
+    //  | 'expose' // 在setup语法糖时使用defineExpose暴露相关属性。暂时不开放。
      | 'custom' // 在custom界碑处追加。一般不要在这里写代码。
     content: string
 }[]
 interface style {
-    position: 'end' // 在style内追加
+    position: 'end' // 在style内追加。当前只支持'end'
     content: string
 }[]
 interface check {

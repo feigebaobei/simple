@@ -1,19 +1,24 @@
 let obj = {
     template: [{
         position: "end",
-        content: `<ms-button @click="xxxButtonClickHandler">button</ms-button>`
+        content: `<ms-button @click="xxxButtonClickHandler">xxxButton</ms-button>`
     }],
     script: [
         {
             position: "setup.event",
             content: `let xxxButtonClickHandler = () => {
                 console.log('xxxButtonClickHandler')
-            }`
+            }
+`
         },
-        {
-            position: "setup.return.event",
-            content: `xxxButtonClickHandler,`
-        },
+        // {
+        //     position: "setup.return.event",
+        //     content: `xxxButtonClickHandler,`
+        // },
+        // {
+        //     position: "expose",
+        //     content: `xxxButtonClickHandler,`
+        // },
     ],
     style: [],
     check: {

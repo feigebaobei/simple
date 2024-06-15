@@ -1,31 +1,31 @@
 let obj = {
     template: [{
         position: "end",
-        content: `<ms-form :label-placement="'left'" :label-width="'auto'" :model="formR.model" :rules="forms.rules">
+        content: `<ms-form :label-placement="'left'" :label-width="'auto'" :model="formR.model" :rules="formR.rules">
         <ms-row :gutter="24">
-        <ms-col :span="8">
-            <ms-form-item label="one" path="one">
-                <ms-input v-model:value="form.model.one" clearable placeholder="请输入" />
-            </ms-form-item>
-        </ms-col>
-        <ms-col :span="8">
-            <ms-form-item label="two">
-                <ms-input v-model:value="form.model.two" clearable placeholder="请输入" />
-            </ms-form-item>
-        </ms-col>
-        <ms-col :span="8">
-            <ms-form-item label="three">
-                <ms-select v-model:value="form.model.three" clearable :options="form.model.greyTagOptions" />
-            </ms-form-item>
-        </ms-col>
-        <ms-col :span="24">
-            <ms-space :size="8">
-            <ms-button type="primary" @click="searchButtonClickH">查询</ms-button>
-            <ms-button @click="resetButtonClickH">重置</ms-button>
-            </ms-space>
-        </ms-col>
+            <ms-col :span="8">
+                <ms-form-item label="one" path="one">
+                    <ms-input v-model:value="formR.model.one" clearable placeholder="请输入" />
+                </ms-form-item>
+            </ms-col>
+            <ms-col :span="8">
+                <ms-form-item label="two">
+                    <ms-input v-model:value="formR.model.two" clearable placeholder="请输入" />
+                </ms-form-item>
+            </ms-col>
+            <ms-col :span="8">
+                <ms-form-item label="three">
+                    <ms-select v-model:value="formR.model.three" clearable :options="formR.model.greyTagOptions" />
+                </ms-form-item>
+            </ms-col>
+            <ms-col :span="24">
+                <ms-space :size="8">
+                <ms-button type="primary" @click="searchButtonClickH">查询</ms-button>
+                <ms-button @click="resetButtonClickH">重置</ms-button>
+                </ms-space>
+            </ms-col>
         </ms-row>
-        </ms-form>`
+    </ms-form>`
     }],
     script: [
         {

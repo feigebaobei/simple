@@ -627,15 +627,36 @@ let extractPackage = () => {
 		return JSON.parse(res)
 	})
 }
-
-// todo 考虑删除此方法
-let precheck = (filePath) => {
-	return checkFile(filePath)
+// config
+let readConfig = () => {
+	let configPath = path.resolve(process.cwd(), './crtp.config.cjs')
+	// 在node中使用import引入的对象会包含default属性
+	// return import(configPath).then((configAllContent) => {
+	// 	// return {configAllContent}
+	// 	return configAllContent.default
+	// })
+	return Promise.resolve(require(configPath))
 }
-let checkFile = (filePath) => {
+let checkFile = (filePath, grammerSugar) => {
 	return pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
+		// let configPath = path.resolve(process.cwd(), './crtp.config.js')
+		// // 在node中使用import引入的对象会包含default属性
+		// return import(configPath).then((configAllContent) => {
+		// 	return {configAllContent, textContent}
+		// })
+	// }).then(({configAllContent, textContent}) => {
+		// let config = configAllContent.default
+		// log('config', config)
+		let reg
+		switch (grammerSugar) {
+			case 'setup':
+				reg = /<template>.*<\/template>.*<script.*<\/script>.*<style/s
+				break;
+			default:
+				reg = /<template>.*<\/template>.*<script.*export\sdefault\sdefineComponent.*setup.*\/\/\sref.*\/\/\smethods.*\/\/\seventFn.*\/\/\sexec.*return\s{.*\/\/sref.*\/\/\smethods.*\/\/\seventFn.*<style/s
+				break;
+		}
 		// 在新加插入功能时注意修改此正则。
-		let reg = /<template>.*<\/template>.*<script.*export\sdefault\sdefineComponent.*setup.*\/\/\sref.*\/\/\smethods.*\/\/\sevent\sfn.*\/\/\sexec.*return\s{.*\/\/sref.*\/\/\smethods.*\/\/\sevent\sfn.*<style/s
 		return reg.test(textContent)
 	})
 }
@@ -741,7 +762,7 @@ let checkFragment = (filePath) => {
 		log(chalk.red(`${filePath} ${errorCode[code]} - 失败`))
 	})
 }
-let insertFragment = (fragment, filePath) => {
+let insertFragment = (fragment, filePath, grammerSugar) => {
 	// 取出片段中需要的界碑
 	// 取出指定文件，判断是否全有需要的界碑。
 	// 从配置文件中取position与界碑的对应关系
@@ -755,6 +776,7 @@ let insertFragment = (fragment, filePath) => {
 		}
 	}
 	return pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
+		// 插入html代码
 		config.template.forEach(item => {
 			let reg
 			switch (item.position) {
@@ -765,39 +787,89 @@ let insertFragment = (fragment, filePath) => {
 					break
 			}
 		})
-		config.script.forEach(item => {
-			let reg
-			switch (item.position) {
-				case 'setup.ref':
-					reg = /(?<=setup\s?\(.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?provide)/s
-					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
-					break
-				case 'setup.event':
-					reg = /(?<=setup\s?\(.*)(\/\/\s?event\sfn.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
-					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
-					break
-				case 'setup.methods':
-					reg = /(?<=setup\s?\(.*)(\/\/\smethods.*)(?=\/\/\sevent\sfn.*\/\/\sexec)/s
-					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
-					break;
-				case 'setup.return.ref':
-					reg = /(?<=setup\s?\(.*\/\/\s?exec.*return.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?methods.*)/s
-					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t\t`)
-					break
-				case 'setup.return.event':
-					reg = /(?<=setup\s?\(.*\/\/\s?exec.*return\s{.*)(\/\/\s?event\sfn.*?)(?=})/s
-					textContent = textContent.replace(reg, `$1\t${item.content}\n\t\t\t`)
-					break;
-				case 'custom':
-					reg = /(?<=<script.*)(\/\/\scustom.*)(?=\n\s*?export\sdefault\sdefineComponent)/s
-					textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
-					tips.push({
-						message: '最好不要在custom中插入内容。',
-						level: 'warning',
-					})
-					break;
-			}
-		})
+		// 插入js代码
+		switch (grammerSugar) {
+			case 'setup': // 待测试
+				config.script.forEach(item => {
+					let reg
+					switch(item.position) {
+						case 'setup.ref':
+							reg = /(?<=<script\ssetup.*\/\/\s?variable.*)(\/\/\s?ref.*)(?=\/\/\scomputed.*<\/script>)/s
+							textContent = textContent.replace(reg, `$1${item.content}`)
+							break;
+						case 'setup.event':
+						case 'setup.eventFn':
+							reg = /(?<=script.*)(\/\/\s?eventFn.*)(?=\/\/\s?watch.*)/s
+							textContent = textContent.replace(reg, `$1${item.content}`)
+							break;
+						case 'setup.methods':
+							reg = /(?<=<script\ssetup.*\/\/\sprovide)(\/\/\smethod.*)(?=\/\/\seventFn.*<\/script>)/s
+							textContent = textContent.replace(reg, `$1${item.content}`)
+							break;
+						// case 'expose': // 
+						// 	reg = /(?<=<script.*\/\/\sexpose\n)(.*)(?=<\/script>)/
+						// 	let execResult = reg.exec(textContent)
+						// 	if (execResult) { // 应该总是存在
+						// 		// execResult
+						// 		if (textContent) {
+						// 		}
+						// 	} else { // 未找到
+						// 		// 直接插入
+						// 		// reg = /(?<=)(\/\/\ssexpose\n)(.*<\/script>)/
+						// 		// let str = `defineExpose({${item.content}})`
+						// 		// textContent = textContent.replace(reg, `\n${str}$1`)
+						// 	}
+						// 	textContent = textContent.replace(ref, `$1${item.content}`)
+						// 	break;
+						case 'custom':
+							reg = /(?<=<script.*)(\/\/\scustom.*)(?=\/\/\sref<\/script>)/s
+							textContent = textContent.replace(reg, `$1${item.content}`)
+							tips.push({
+								message: '最好不要在custom中插入内容。',
+								level: 'warning',
+							})
+							break;
+					}
+				})
+				break;
+			default:
+				config.script.forEach(item => {
+					let reg
+					switch (item.position) {
+						case 'setup.ref':
+							reg = /(?<=setup\s?\(.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?provide)/s
+							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							break
+						case 'setup.event':
+						case 'setup.eventFn':
+							reg = /(?<=setup\s?\(.*)(\/\/\s?eventFn.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
+							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							break
+						case 'setup.methods':
+							reg = /(?<=setup\s?\(.*)(\/\/\smethods.*)(?=\/\/\seventFn.*\/\/\sexec)/s
+							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							break;
+						case 'setup.return.ref':
+							reg = /(?<=setup\s?\(.*\/\/\s?exec.*return.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?methods.*)/s
+							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t\t`)
+							break
+						case 'setup.return.event':
+							reg = /(?<=setup\s?\(.*\/\/\s?exec.*return\s{.*)(\/\/\s?eventFn.*?)(?=})/s
+							textContent = textContent.replace(reg, `$1\t${item.content}\n\t\t\t`)
+							break;
+						case 'custom':
+							reg = /(?<=<script.*)(\/\/\scustom.*)(?=\n\s*?export\sdefault\sdefineComponent)/s
+							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							tips.push({
+								message: '最好不要在custom中插入内容。',
+								level: 'warning',
+							})
+							break;
+					}
+				})
+				break;
+		}
+		// 插入css代码
 		config.style.forEach(item => {
 			let reg
 			switch (item.position) {
@@ -808,6 +880,7 @@ let insertFragment = (fragment, filePath) => {
 					break;
 			}
 		})
+		// 插入check代码
 		Object.entries(config.check) // [[k, v], ...]
 		.forEach(([k, v]) => {
 			// 是否有中
@@ -821,7 +894,8 @@ let insertFragment = (fragment, filePath) => {
 			let execResult
 			switch (k) {
 				case 'importUtils':
-					reg = /(?<=<script.*\/\/\sutils)(.*)(?=\/\/\scomponents.*export\sdefault\sdefineComponent)/s
+					// 向后找2个界碑
+					reg = /(?<=<script.*\/\/\sutils)(.*)(?=\/\/\scomponents.*\/\/\scheck.*\/\/sconfig)/s
 					execResult = reg.exec(textContent)
 					// log(execResult)
 					if (execResult) { // 应该总是存在
@@ -861,7 +935,7 @@ let insertFragment = (fragment, filePath) => {
 					}
 					break
 				case 'importComponents':
-					reg = /(?<=<script.*\/\/\scomponents)(.*)(?=\/\/\scheck.*export\sdefault\sdefineComponent)/s
+					reg = /(?<=<script.*\/\/\scomponents)(.*)(?=\/\/\scheck.*\/\/\sconfig.*\/\/\sdirectives)/s
 					execResult = reg.exec(textContent)
 					if (execResult) { // 应该总是存在
 						let importArr = execResult[0].split(/(\n)(?=.*import)/)
@@ -898,8 +972,8 @@ let insertFragment = (fragment, filePath) => {
 						textContent = textContent.slice(0, execResult.index) + importArr.join('') + textContent.slice(execResult.index + execResult[0].length)
 					}
 					break
-				case 'components':
-					// // 取出一块代码。处理后插入。
+				case 'components': // 只对 defineComponent 代码有效
+					// 取出一块代码。处理后插入。
 					reg = /(?<=defineComponent\({.*name:\s?'\w*?',\n\s*)(\S.*)(?=\n\s*\/\/\s?directives)/s
 					execResult = reg.exec(textContent)
 					if (execResult) {
@@ -936,7 +1010,7 @@ let insertFragment = (fragment, filePath) => {
 					}
 					break;
 				case 'type':
-					reg = /(?<=<script.*\/\/\s?type\/interface)(.*)(?=\n\s*?\/\/\scustom)/s
+					reg = /(?<=<script.*\/\/\s?type\/interface)(.*)(?=\n\s*?\/\/\scustom.*\/\/\sdirectives)/s
 					execResult = reg.exec(textContent)
 					if (execResult) {
 						// 处理后插入
@@ -1027,16 +1101,17 @@ let addFragment = (filename, userOption) => {
 // crtp init
 // 初始化配置文件
 // 测试通过
-// program
-// 	.command('init')
-// 	.description('初始化配置文件')
-// 	.action(async function () {
-// 		// todo 因无作用，无不在生产版本中暴露。
-// 		let projPath = path.resolve(process.cwd())
-// 		let cont = await fsPromises.readFile(path.resolve(__dirname, '../assets/crtp.config.js'), 'utf-8')
-// 		fsPromises.writeFile(path.resolve(projPath, './crtp.config.js'), cont)
-// 		log(chalk.blue('初始化完成'))
-// 	})
+program
+	.command('init')
+	.description('初始化配置文件')
+	.action(async function () {
+		let projPath = path.resolve(process.cwd())
+		// let cont = await 
+		fsPromises.readFile(path.resolve(__dirname, '../assets/crtp.config.js'), 'utf-8').then(bf => {
+			return fsPromises.writeFile(path.resolve(projPath, './crtp.config.js'), bf)
+		})
+		log(chalk.blue('初始化完成'))
+	})
 
 // crtp initFile <fileType> [--file ...]
 // 以指定模板文件为模板创建文件。
@@ -1234,16 +1309,23 @@ program
 				return Promise.reject()
 			}
 		}).then(() => {
+			return readConfig()
+		}).then((config) => {
 			// 预检文件是否满足插入条件
 			let filePath = path.resolve(process.cwd(), options.file)
-			// 预检通过才能使用。
-			if (precheck(filePath)) {
-				insertFragment(fragment, filePath)
-			} else {
-				log(chalk.red(`${filePath}缺少相关界碑，无法执行此命令。`))
-			}
-
-		}).catch(() => {})
+			// 预检指定的file是否可以插入碎片。若通过才能插入。
+			return checkFile(filePath, config.grammerSugar).then(b => {
+				if (b) {
+					log('开始插入')
+					insertFragment(fragment, filePath, config.grammerSugar)
+				} else {
+					log(chalk.red(`${filePath}缺少相关界碑，无法执行此命令。`))
+				}
+			})
+		// }).then((b) => {
+		}).catch((error) => {
+			log(error)
+		})
 	})
 
 // crtp addFragment <filename> --file <path/to/file.ext>
