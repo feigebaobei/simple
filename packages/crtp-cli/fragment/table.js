@@ -133,7 +133,7 @@ let obj = {
 `
         },
         {
-            position: "setup.event",
+            position: "setup.eventFn",
             content: `
             const servePageChangeHandler = (curPage: number) => {
                 tableR.pagination.page = curPage;
@@ -159,7 +159,7 @@ let obj = {
             content: `tableR,`
         },
         {
-            position: "setup.return.event",
+            position: "setup.return.eventFn",
             content: `servePageChangeHandler,
                 servePageSizeChangeHandler,`
         },

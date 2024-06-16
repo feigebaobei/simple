@@ -49,7 +49,7 @@ let obj = {
             })`
         },
         {
-            position: "setup.event",
+            position: "setup.eventFn",
             content: `let sqlButtonClickHandler = () => {
                 console.log('sqlButtonClickHandler', formR)
                 // reqData()
@@ -65,7 +65,7 @@ let obj = {
             formR,`
         },
         {
-            position: "setup.return.event",
+            position: "setup.return.eventFn",
             content: `sqlButtonClickHandler,
             resetButtonClickHandler,`
         },

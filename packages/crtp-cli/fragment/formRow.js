@@ -63,7 +63,7 @@ let obj = {
             }`
         },
         {
-            position: "setup.event",
+            position: "setup.eventFn",
             content: `let searchButtonClickH = () => {
                 console.log('searchButtonClickH')
             }
@@ -78,7 +78,7 @@ let obj = {
             formR,`
         },
         {
-            position: "setup.return.event",
+            position: "setup.return.eventFn",
             content: `searchButtonClickH,
             resetButtonClickH,`
         },

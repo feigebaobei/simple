@@ -32,13 +32,13 @@ let obj = {
             content: `drawerR,`
         },
         {
-            position: "setup.event",
+            position: "setup.eventFn",
             content: `let drawerCancelButtonClickH = () => {}
             let drawerOkButtonClickH = () => {}
 `
         },
         {
-            position: "setup.return.event",
+            position: "setup.return.eventFn",
             content: `drawerCancelButtonClickH,
                 drawerOkButtonClickH,`
         },
