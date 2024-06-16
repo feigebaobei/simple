@@ -656,7 +656,7 @@ let checkFile = (filePath, grammerSugar) => {
 let checkFragment = (filePath) => {
 	let errorCode = {
 		1: '读取碎片文件失败',
-		11: '无法解决为js对象',
+		11: '无法解析为js对象',
 		21: 'template不是数组',
 		31: 'template数组中position的值不合法',
 		41: 'template数组中content的值不合法',
@@ -667,30 +667,42 @@ let checkFragment = (filePath) => {
 		91: 'style数组中position的值不合法',
 		101: 'style数组中content的值不合法',
 		111: 'check中对象的key的值不合法',
-		121: 'check中对象的value值不是字符串组成的数组',
+		// 121: 'check中对象的value值不是字符串组成的数组',
+		121: 'check中对象的value值不合法',
 		131: 'tips不是数组',
 		141: 'tips中对象的message的值不合法',
 		151: 'tips中对象的level的值不合法',
 	}
-	return new Promise((s, j) => {
-		return pUtil.pReadFile(filePath, 'utf-8').catch(() => {
-			return Promise.reject(1)
-		})
-	}).then((textContent) => {
-		try {
-			let obj = JSON.parse(textContent)
-			return obj
-		} catch(error) {
-			return Promise.reject(11)
-		}
-	}).then((obj) => {
+	// return new Promise((s, j) => {
+	// 	return pUtil.pReadFile(filePath, 'utf-8').catch(() => {
+	// 		return Promise.reject(1)
+	// 	})
+	// })
+	// return pUtil.pReadFile(filePath, 'utf-8').catch(() => {
+	// 	return Promise.reject(1)
+	// })
+	return new Promise((s, _j) => {
+		s(require(filePath))
+	}).catch((error) => {
+		log(error)
+		return Promise.reject(1)
+	})
+	// .then((textContent) => {
+	// 	try {
+	// 		let obj = JSON.parse(textContent)
+	// 		return obj
+	// 	} catch(error) {
+	// 		return Promise.reject(11)
+	// 	}
+	// })
+	.then((obj) => {
 		if (obj.template) {
 			if (Array.isArray(obj.template)) {
 				for (let i = 0; i < obj.template.length; i++) {
-					if (!crtpCliConfig.template.includes(obj.template[i].position)) {
+					if (!crtpCliConfig.template.positionEnum.includes(obj.template[i].position)) {
 						return Promise.reject(31)
 					}
-					if (!crtpCliConfig.template.contentConstructorStringEnum.includes(util.getType(obj.template[i].content))) {
+					if (!crtpCliConfig.template.contentConstructorStringEnum.includes(utils.getType(obj.template[i].content))) {
 						return Promise.reject(41)
 					}
 				}
@@ -704,7 +716,7 @@ let checkFragment = (filePath) => {
 					if (!crtpCliConfig.script.positionEnum.includes(obj.script[i].position)) {
 						return Promise.reject(61)
 					}
-					if (!crtpCliConfig.script.contentConstructorStringEnum.includes(util.getType(obj.script[i].content))) {
+					if (!crtpCliConfig.script.contentConstructorStringEnum.includes(utils.getType(obj.script[i].content))) {
 						return Promise.reject(71)
 					}
 				}
@@ -718,7 +730,7 @@ let checkFragment = (filePath) => {
 					if (!crtpCliConfig.style.positionEnum.includes(obj.style[i].position)) {
 						return Promise.reject(91)
 					}
-					if (!crtpCliConfig.style.contentConstructorStringEnum.includes(util.getType(obj.style[i].content))) {
+					if (!crtpCliConfig.style.contentConstructorStringEnum.includes(utils.getType(obj.style[i].content))) {
 						return Promise.reject(101)
 					}
 				}
@@ -727,19 +739,30 @@ let checkFragment = (filePath) => {
 			}
 		}
 		if (obj.check) {
-			if (!crtpCliConfig.check.keyEnum.includes(Object.values(obj.check))) {
+			if (!Array.from(Object.keys(obj.check)).every(key => crtpCliConfig.check.keyEnum.includes(key))) {
 				return Promise.reject(111)
 			}
+			// if (!crtpCliConfig.check.keyEnum.includes(Object.keys(obj.check))) {
+			// 	return Promise.reject(111)
+			// }
 			// 待优化
-			let values = Object.values(obj.check)
-			if (Array.isArray(values) && values.every(item => ['String'].includes(util.getType(item)))) {
+			let values = Array.from(Object.values(obj.check))
+			let b = values.every(item => {
+				if (Array.isArray(item)) {
+					return item.every(subItem => ['String'].includes(utils.getType(subItem)))
+				} else { // obj
+					let arr = Array.from(Object.values(item)).flat()
+					return arr.every(subItem => ['String'].includes(utils.getType(subItem)))
+				}
+			})
+			if (!b) {
 				return Promise.reject(121)
 			}
 		}
 		if (obj.tips) {
 			if (Array.isArray(obj.tips)) {
 				for (let i = 0; i < obj.tips.length; i++) {
-					if (!crtpCliConfig.tips.messageConstructorStringEnum.includes(obj.tips[i].message)) {
+					if (!crtpCliConfig.tips.messageConstructorStringEnum.includes(utils.getType(obj.tips[i].message))) {
 						return Promise.reject(141)
 					}
 					if (!crtpCliConfig.tips.levelEnum.includes(obj.tips[i].level)) {
@@ -750,8 +773,10 @@ let checkFragment = (filePath) => {
 				return Promise.reject(131)
 			}
 		}
+		return true
 	}).catch(code => {
 		log(chalk.red(`${filePath} ${errorCode[code]} - 失败`))
+		// return Promise.reject(`${filePath} ${errorCode[code]} - 失败`)
 	})
 }
 let insertFragment = (fragment, filePath, grammerSugar) => {
@@ -1095,10 +1120,10 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 				case 'warning':
 					log(chalk.yellow(item.message))
 					break
-				case 'log':
+				case 'info':
 					log(chalk.blue(item.message))
 					break;
-				case 'tip':
+				// case 'tip':
 				default:
 					log(item.message)
 					break
@@ -1114,12 +1139,12 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 }
 
 let addFragment = (filename, userOption) => {
-	// todo 添加碎片文件时校验是否正确。
 	pUtil.pReadFile(path.resolve(process.cwd(), userOption.file), 'utf-8').then((textContent) => {
-		return pUtil.pWriteFile(path.resolve(__dirname, '../fragment', filename), textContent, 'utf-8')
+		return pUtil.pWriteFile(path.resolve(__dirname, '../fragment', `${filename}.js`), textContent, 'utf-8')
 	}).then(() => {
 		log(chalk.blue(`添加碎片文件${filename} - 完成`))
-	}).catch(() => {
+	}).catch((e) => {
+		log(e)
 		log(chalk.red(`添加碎片文件${filename} - 失败`))
 	})
 }
@@ -1366,7 +1391,12 @@ program
 	.description('把指定文件设置为碎片文件')
 	.option('--file <file>', 'path to file')
 	.action((filename, options) => {
-		addFragment(filename, options)
+		log('addFragment', filename, options)
+		checkFragment(path.resolve(process.cwd(), options.file)).then(() => {
+			addFragment(filename, options)
+		}).catch((error) => {
+			log('error', error)
+		})
 	})
 
 // // 检查模板文件和碎片文件
@@ -1377,7 +1407,7 @@ program
 // 	// .option()
 // 	.action((fragment) => {
 // 		// 
-// 	})
+// // 	})
 
 
 // 整理代码

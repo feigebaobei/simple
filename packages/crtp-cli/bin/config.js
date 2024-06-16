@@ -13,8 +13,8 @@ module.exports = {
 		contentConstructorStringEnum: ['String'],
 	},
 	script: {
-		positionEnum: ['setup.ref', "setup.event",
-			"setup.return.ref", "setup.return.event",
+		positionEnum: ['setup.ref', "setup.eventFn",
+			"setup.return.ref", "setup.return.eventFn",
 			'custom',
 		],
 		contentConstructorStringEnum: ['String'],
@@ -29,7 +29,7 @@ module.exports = {
 	},
 	tips: {
 		messageConstructorStringEnum: ['String'],
-		levelEnum: ['error', 'warning', 'log', 'tip', 'success'],
+		levelEnum: ['error', 'warning', 'info', 'success'],
 	},
 	defaultConfig,
 }
