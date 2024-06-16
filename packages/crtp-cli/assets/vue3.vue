@@ -25,8 +25,8 @@
         // components: {
         //     MsButton,
         // },
-        // directives
         // inheritAttrs: false,
+        // directives
         props: {
             // fieldKey: {
             //     type: String,
@@ -48,7 +48,7 @@
                 
             }
             // provide
-            // event
+            // eventFn
             // watch
             // lifeCircle
             onMounted(() => {
@@ -60,7 +60,7 @@
                 // ref
                 elementRef,
                 // computed
-                // methods
+                // method
                 // eventFn
             }
         }

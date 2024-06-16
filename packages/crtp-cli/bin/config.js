@@ -1,3 +1,5 @@
+const defaultConfig = require("./default.config");
+
 // 相对于<root>/bin/index.js文件。
 module.exports = {
 	'ASSETSREADMEMD': '../assets/readme.md',
@@ -28,5 +30,6 @@ module.exports = {
 	tips: {
 		messageConstructorStringEnum: ['String'],
 		levelEnum: ['error', 'warning', 'log', 'tip', 'success'],
-	}
+	},
+	defaultConfig,
 }

@@ -11,6 +11,7 @@
     + 列出自定义模板文件（或目录）
     + 查询自定义模板文件（或目录）
     + 删除自定义模板文件（或目录）
+- 内置默认配置项
 
 ## install
 `npm i crtp-cli -g`
@@ -85,13 +86,79 @@ crtp addFile first.json --file ./first/projName/package.json
 - readme.md
 - demo.md
 - .gitignore
-- vue3.vue
+- vue3.vue         不使用setup语法糖的*.vue模板
+- vue3Setup.vue      使用setup语法糖的*.vue模板
 
 ## 界碑说明
-在内置的`vue3.vue`文件中有若干注释，用于标记特定位置。在下文中称为界碑。
+在内置的`vue3Setup.vue`文件中有若干注释，用于标记特定位置。在下文中称为界碑。
 界碑是不能删除的。
 
+### vue3Setup.vue
 ```js
+<template>
+    <div>MsBaseComp</div>
+</template>
+
+<script setup lang="ts">
+    // utils                                        引入工具类方法
+    import {
+        ref,
+        reactive,
+        onMounted,
+    } from 'vue'
+    // components                                   引入组件
+    // import { MsButton } from 'ms-ui'
+    // check                                        引入校验方法
+    // config                                       引入配置项
+    // directives                                   引入指令
+    // data                                         引入数据
+    // hooks                                        引入钩子
+    // import { useRouter } from 'vue-router'
+    // type/interface                               引入类型
+    // custom                                       本vue文件级的数据、方法等。
+    let clog = console.log
+
+    defineOptions({
+        // name: '',                         组件名
+        // inheritAttrs: false,
+    })
+    // directives                                   声明指令
+    let props = defineProps({
+        // fieldKey: {
+        //     type: String,
+        //     default: ''
+        // },
+    })
+    // let emit = defineEmits(['eventName'])
+    // inject                                       定义注入者
+    // hooks                                        使用钩子
+    // variable                                     定义变量
+    // ref                                          定义响应式对象。ref/reactive
+    let elementRef = ref()
+    let boxR = reactive({})
+    // computed                                     定义计算类对象
+    // method                                       定义方法
+    let init = () => {
+        clog('init')
+    }
+    // provide                                      定义提供者
+    // eventFn                                      定义事件的回调方法
+    // watch                                        定义监听器。watch/watchEffect
+    // lifeCircle                                   定义生命周期方法
+    // exec
+    onMounted(() => {
+        init()
+    })
+    // expose
+    // defineExpose({elementRef})                   暴露变量、响应式对象、计算类对象、方法、事件回调方法
+</script>
+
+<style lang="less" scoped>                          定义样式
+</style>
+```
+
+### vue3.vue
+```
 <template>                                          使用组件
     <div>MsBaseComp</div>
 </template>
@@ -119,8 +186,8 @@ crtp addFile first.json --file ./first/projName/package.json
         // components: {                            声明组件
         //     MsButton,
         // },
-        // directives                               声明指令
         // inheritAttrs: false,
+        // directives                               声明指令
         props: {
             // fieldKey: {
             //     type: String,
@@ -131,17 +198,17 @@ crtp addFile first.json --file ./first/projName/package.json
         setup() // props, ctx                       setup方法
         {
             // inject                               定义注入者
-            // hooks                                定义钩子
+            // hooks                                使用钩子
             // variable                             定义变量
             // let clog = console.log
-            // ref                                  定义响应式对象
+            // ref                                  定义响应式对象。ref/reactive
             let elementRef = ref()
             // computed                             定义计算类对象
-            // provide                              定义提供者
-            // methods                              定义方法
+            // method                               定义方法
             let init = () => {
                 
             }
+            // provide                              定义提供者
             // eventFn                             定义事件的回调方法
             // watch                                定义监听器。watch/watchEffect
             // lifeCircle                           定义生命周期方法
@@ -168,7 +235,7 @@ crtp addFile first.json --file ./first/projName/package.json
 ## 碎片文件
 
 ### 适用范围
-目标文件中的相关界碑。
+目标文件中有相关界碑。
 
 ### 字段说明
 
@@ -203,6 +270,17 @@ interface check {
     components?: string[]
 }
 ```
+## 配置文件
+crtp.config.cjs
+当前只运行一种格式
+```
+module.exports = {
+    assets: "./assets",                        // 模板文件的目录
+    fragment: "./fragment",   // todo 未使用它  // 碎片文件的目录
+    npmClient: "npm",                          // 包管理器
+    grammerSugar: "setup", // setup | 非setup  // 语法糖
+}
+```
 
 ## [principle](https://github.com/feigebaobei/simple/blob/master/principle.md)
 
@@ -228,7 +306,6 @@ interface check {
 > 接入测试工具  
 > 本项目中基于各开发类框架开发。为它们提供配置文件。或在一个目录中统一管理配置文件，或……
 > 开发模块的顺序
-> 优先级 cli > crtp.config.js > 默认配置
 > 支持 cli / js
 > 验证配置文件是否正确  
 

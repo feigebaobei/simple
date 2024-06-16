@@ -23,7 +23,7 @@
 
     defineOptions({
         // name: '',
-        inheritAttrs: false,
+        // inheritAttrs: false,
     })
     // directives
     let props = defineProps({
@@ -44,7 +44,7 @@
         clog('init')
     }
     // provide
-    // event
+    // eventFn
     // watch
     // lifeCircle
     onMounted(() => {

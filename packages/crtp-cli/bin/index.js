@@ -630,30 +630,22 @@ let extractPackage = () => {
 // config
 let readConfig = () => {
 	let configPath = path.resolve(process.cwd(), './crtp.config.cjs')
-	// 在node中使用import引入的对象会包含default属性
-	// return import(configPath).then((configAllContent) => {
-	// 	// return {configAllContent}
-	// 	return configAllContent.default
-	// })
-	return Promise.resolve(require(configPath))
+	return new Promise((s, _j) => {
+		let o = require(configPath)
+		s(o)
+	}).catch(() => {
+		return Promise.resolve({})
+	})
 }
 let checkFile = (filePath, grammerSugar) => {
 	return pUtil.pReadFile(filePath, 'utf-8').then((textContent) => {
-		// let configPath = path.resolve(process.cwd(), './crtp.config.js')
-		// // 在node中使用import引入的对象会包含default属性
-		// return import(configPath).then((configAllContent) => {
-		// 	return {configAllContent, textContent}
-		// })
-	// }).then(({configAllContent, textContent}) => {
-		// let config = configAllContent.default
-		// log('config', config)
 		let reg
 		switch (grammerSugar) {
 			case 'setup':
 				reg = /<template>.*<\/template>.*<script.*<\/script>.*<style/s
 				break;
 			default:
-				reg = /<template>.*<\/template>.*<script.*export\sdefault\sdefineComponent.*setup.*\/\/\sref.*\/\/\smethods.*\/\/\seventFn.*\/\/\sexec.*return\s{.*\/\/sref.*\/\/\smethods.*\/\/\seventFn.*<style/s
+				reg = /<template>.*<\/template>.*<script.*export\sdefault\sdefineComponent.*setup.*\/\/\sref.*?\/\/\smethod.*?\/\/\seventFn.*\/\/\sexec.*return\s{.*\/\/\sref.*\/\/\smethod.*\/\/\seventFn.*<style/s
 				break;
 		}
 		// 在新加插入功能时注意修改此正则。
@@ -797,20 +789,20 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 							reg = /(?<=<script\ssetup.*\/\/\s?variable.*)(\/\/\s?ref.*)(?=\/\/\scomputed.*<\/script>)/s
 							textContent = textContent.replace(reg, `$1${item.content}`)
 							break;
-						case 'setup.event':
-							reg = /(?<=script.*)(\/\/\s?event.*)(?=\/\/\swatch.*\/\/slifeCircle)/s
-							textContent = textContent.replace(reg, `$1${item.content}`)
-							break;
+						// case 'setup.event':
+						// 	reg = /(?<=script.*)(\/\/\s?event.*)(?=\/\/\swatch.*\/\/slifeCircle)/s
+						// 	textContent = textContent.replace(reg, `$1${item.content}`)
+						// 	break;
 						case 'setup.eventFn':
 							reg = /(?<=script.*)(\/\/\s?eventFn.*)(?=\/\/\swatch.*\/\/\slifeCircle)/s
 							textContent = textContent.replace(reg, `$1${item.content}`)
 							break;
 						case 'setup.method':
-							reg = /(?<=<script\ssetup.*\/\/\scomputed)(\/\/\smethod.*)(?=\/\/\sprovide.*\/\/\sevent)/s
+							reg = /(?<=<script\ssetup.*\/\/\scomputed)(\/\/\smethod.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
 							textContent = textContent.replace(reg, `$1${item.content}`)
 							break;
 						case 'setup.methods': // 下版本删除
-							reg = /(?<=<script\ssetup.*\/\/\scomputed)(\/\/\smethods.*)(?=\/\/\sprovide.*\/\/\sevent)/s
+							reg = /(?<=<script\ssetup.*\/\/\scomputed)(\/\/\smethods.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
 							textContent = textContent.replace(reg, `$1${item.content}`)
 							break;
 						// case 'expose': // 
@@ -844,31 +836,31 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 					let reg
 					switch (item.position) {
 						case 'setup.ref':
-							reg = /(?<=setup\s?\(.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?provide)/s
+							reg = /(?<=setup\s?\(.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?method)/s
 							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 							break
-						case 'setup.event':
-							reg = /(?<=setup\s?\(.*)(\/\/\s?event.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
-							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
-							break
+						// case 'setup.event':
+						// 	reg = /(?<=setup\s?\(.*)(\/\/\s?event.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
+						// 	textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+						// 	break
 						case 'setup.eventFn':
 							reg = /(?<=setup\s?\(.*)(\/\/\s?eventFn.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
 							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 							break
 						case 'setup.method':
-							reg = /(?<=setup\s?\(.*)(\/\/\smethod.*)(?=\/\/\sprovide.*\/\/\sevent)/s
+							reg = /(?<=setup\s?\(.*)(\/\/\smethod.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
 							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 							break;
 						case 'setup.methods': // 下版本删除
-							reg = /(?<=setup\s?\(.*)(\/\/\smethods.*)(?=\/\/\ssprovide.*\/\/\sevent)/s
+							reg = /(?<=setup\s?\(.*)(\/\/\smethods.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
 							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
 							break;
 						case 'setup.return.ref':
-							reg = /(?<=setup\s?\(.*\/\/\s?exec.*return.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?methods.*)/s
+							reg = /(?<=setup\s?\(.*\/\/\s?exec.*return.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?method.*)/s
 							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t\t`)
 							break
-						case 'setup.return.event':
-							reg = /(?<=setup\s?\(.*\/\/\s?exec.*return\s{.*)(\/\/\s?eventFn.*?)(?=})/s
+						case 'setup.return.eventFn':
+							reg = /(?<=setup\s?\(.*\/\/\s?exec.*return\s{.*)(\/\/\s?eventFn.*?)(?=}\s*\n\s*}\s*\n\s*}\)\s*\n\s*<\/script>)/s // todo 这里有问题
 							textContent = textContent.replace(reg, `$1\t${item.content}\n\t\t\t`)
 							break;
 						case 'custom':
@@ -933,7 +925,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 										let t = result[0]
 										let compItemArr = []
 										eleArr.forEach(ele => {
-											reg = new RegExp(`(?<=,?\\s?)(${ele}),`)
+											reg = new RegExp(`(?<=,?\\s?)(${ele}),?`)
 											if (!reg.test(t)) {
 												compItemArr.push(ele)
 											}
@@ -973,8 +965,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 										let t = result[0]
 										let compItemArr = []
 										eleArr.forEach(ele => {
-											// reg = new RegExp(`[\\W]${ele}[\\W]`)
-											reg = new RegExp(`(?<=,?\\s?)(${ele}),`)
+											reg = new RegExp(`(?<=,?\\s?)(${ele}),?`)
 											if (!reg.test(t)) {
 												compItemArr.push(ele)
 											}
@@ -1006,20 +997,32 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 							componentStr = `components: {\n${v.join(',\n')}\n},`
 						} else {
 							reg = /(?<={)(.*)(?=})/s
-							let tr = reg.exec(subString)
+							let tr = reg.exec(subString) // 取出{}内的文本
 							let compItemArr = []
 							if (tr) {
 								let s = tr[0]
+								// log('tr', tr)
 								v.forEach(item => {
-									if (!s.includes(item)) {
+									// reg = new RegExp(`(?<=\\{?,?\\s?)(${item})(?=[,\\s}])`)
+									// log('s', s)
+									reg = new RegExp(`(?<=\\b)(${item})(?=\\b)`)
+									// log('reg.test(s)', reg, reg.test(s))
+									if (!reg.test(s)) {
 										compItemArr.push(item)
 									}
 								})
-								componentStr = `components: {${compItemArr.join(',\n')},\n${s.slice(1)}},`
+								// log('compItemArr', compItemArr)
+								if (compItemArr.length) {
+									// componentStr = `components: { ${compItemArr.join(',\n')},\n${s.slice(1)}},`
+									componentStr = `components: { ${compItemArr.join(',\n')},\n${s.slice(0)}},`
+								} else {
+									componentStr = subString
+								}
 							} else {
 								// 不应该无匹配
 							}
 						}
+						// log('componentStr', componentStr)
 						textContent = textContent.slice(0, execResult.index) + componentStr + textContent.slice(execResult.index + execResult[0].length)
 					} else { // 未找到
 						// 直接插入
@@ -1056,7 +1059,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 										let t = result[0]
 										let compItemArr = []
 										eleArr.forEach(ele => {
-											reg = new RegExp(`(?<=,?\\s?)(${ele}),`)
+											reg = new RegExp(`(?<=,?\\s?)(${ele}),?`)
 											if (!reg.test(t)) {
 												compItemArr.push(ele)
 											}
@@ -1111,6 +1114,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 }
 
 let addFragment = (filename, userOption) => {
+	// todo 添加碎片文件时校验是否正确。
 	pUtil.pReadFile(path.resolve(process.cwd(), userOption.file), 'utf-8').then((textContent) => {
 		return pUtil.pWriteFile(path.resolve(__dirname, '../fragment', filename), textContent, 'utf-8')
 	}).then(() => {
@@ -1320,6 +1324,7 @@ program
 	.command('insert <fragment>')
 	.description('为指定的文件插入指定代码片段')
 	.option('--file <file>', '指定文件')
+	.option('--grammerSugar [grammerSugar]', '语法糖') // 不设置默认值
 	.action((fragment, options) => {
 		// 判断版本。beta版本可用，gamma版本不可用
 		extractPackage().then((json) => {
@@ -1331,6 +1336,10 @@ program
 			}
 		}).then(() => {
 			return readConfig()
+		}).then((config) => {
+			// 项目中的 cli > crtp.config.cjs > defultConfig
+			config = Object.assign({}, crtpCliConfig.defaultConfig, config, {grammerSugar: options.grammerSugar || config.grammerSugar} )
+			return config
 		}).then((config) => {
 			// 预检文件是否满足插入条件
 			let filePath = path.resolve(process.cwd(), options.file)
