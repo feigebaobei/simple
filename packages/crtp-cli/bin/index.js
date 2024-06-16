@@ -779,6 +779,16 @@ let checkFragment = (filePath) => {
 		// return Promise.reject(`${filePath} ${errorCode[code]} - 失败`)
 	})
 }
+// let opTips = (tips, reg, textContent) => {
+// 	if (reg.test(textContent)) {
+// 		textContent = textContent.replace(reg, `$1${item.content}`)
+// 	} else {
+// 		tips.push({
+// 			message: `插入script.${item.position} - 失败`,
+// 			level: 'error',
+// 		})
+// 	}
+// }
 let insertFragment = (fragment, filePath, grammerSugar) => {
 	// 取出片段中需要的界碑
 	// 取出指定文件，判断是否全有需要的界碑。
@@ -798,21 +808,40 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 			let reg
 			switch (item.position) {
 				case 'end':
-				default:
 					reg = /(?<=^<template>.*)()(?=<\/template>\s{1,}<script)/s
-					textContent = textContent.replace(reg, `$1${item.content}`)
+					if (reg.test(textContent)) {
+						textContent = textContent.replace(reg, `$1${item.content}`)
+					} else {
+						tips.push({
+							message: `插入template.${item.position} - 失败`,
+							level: 'error',
+						})
+					}
+					break;
+				default:
+					tips.push({
+						message: `插入template.${item.position} - 失败`,
+						level: 'error',
+					})
 					break
 			}
 		})
 		// 插入js代码
 		switch (grammerSugar) {
-			case 'setup': // 待测试
+			case 'setup':
 				config.script.forEach(item => {
 					let reg
 					switch(item.position) {
 						case 'setup.ref':
 							reg = /(?<=<script\ssetup.*\/\/\s?variable.*)(\/\/\s?ref.*)(?=\/\/\scomputed.*<\/script>)/s
-							textContent = textContent.replace(reg, `$1${item.content}`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error'
+								})
+							}
 							break;
 						// case 'setup.event':
 						// 	reg = /(?<=script.*)(\/\/\s?event.*)(?=\/\/\swatch.*\/\/slifeCircle)/s
@@ -820,15 +849,36 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 						// 	break;
 						case 'setup.eventFn':
 							reg = /(?<=script.*)(\/\/\s?eventFn.*)(?=\/\/\swatch.*\/\/\slifeCircle)/s
-							textContent = textContent.replace(reg, `$1${item.content}`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							break;
 						case 'setup.method':
 							reg = /(?<=<script\ssetup.*\/\/\scomputed)(\/\/\smethod.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
-							textContent = textContent.replace(reg, `$1${item.content}`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							break;
 						case 'setup.methods': // 下版本删除
 							reg = /(?<=<script\ssetup.*\/\/\scomputed)(\/\/\smethods.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
-							textContent = textContent.replace(reg, `$1${item.content}`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							break;
 						// case 'expose': // 
 						// 	reg = /(?<=<script.*\/\/\sexpose\n)(.*)(?=<\/script>)/
@@ -846,8 +896,15 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 						// 	textContent = textContent.replace(ref, `$1${item.content}`)
 						// 	break;
 						case 'custom':
-							reg = /(?<=<script.*)(\/\/\scustom.*)(?=\/\/\sref<\/script>)/s
-							textContent = textContent.replace(reg, `$1${item.content}`)
+							reg = /(?<=<script.*)(\/\/\scustom.*)(?=\/\/\sdefineOptions.*\/\/\sdirectives)/s
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							tips.push({
 								message: '最好不要在custom中插入内容。',
 								level: 'warning',
@@ -862,7 +919,14 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 					switch (item.position) {
 						case 'setup.ref':
 							reg = /(?<=setup\s?\(.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?method)/s
-							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							break
 						// case 'setup.event':
 						// 	reg = /(?<=setup\s?\(.*)(\/\/\s?event.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
@@ -870,27 +934,75 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 						// 	break
 						case 'setup.eventFn':
 							reg = /(?<=setup\s?\(.*)(\/\/\s?eventFn.*)(?=\/\/\s?watch.*\/\/\s?lifeCircle)/s
-							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							// textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							break
 						case 'setup.method':
 							reg = /(?<=setup\s?\(.*)(\/\/\smethod.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
-							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							// textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							break;
 						case 'setup.methods': // 下版本删除
 							reg = /(?<=setup\s?\(.*)(\/\/\smethods.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
-							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							// textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							break;
 						case 'setup.return.ref':
 							reg = /(?<=setup\s?\(.*\/\/\s?exec.*return.*)(\/\/\s?ref.*)(?=\/\/\s?computed.*\/\/\s?method.*)/s
-							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t\t`)
+							// textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t\t`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							break
 						case 'setup.return.eventFn':
 							reg = /(?<=setup\s?\(.*\/\/\s?exec.*return\s{.*)(\/\/\s?eventFn.*?)(?=}\s*\n\s*}\s*\n\s*}\)\s*\n\s*<\/script>)/s // todo 这里有问题
-							textContent = textContent.replace(reg, `$1\t${item.content}\n\t\t\t`)
+							// textContent = textContent.replace(reg, `$1\t${item.content}\n\t\t\t`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							break;
 						case 'custom':
 							reg = /(?<=<script.*)(\/\/\scustom.*)(?=\n\s*?export\sdefault\sdefineComponent)/s
-							textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							// textContent = textContent.replace(reg, `$1${item.content}\n\t\t\t`)
+							if (reg.test(textContent)) {
+								textContent = textContent.replace(reg, `$1${item.content}`)
+							} else {
+								tips.push({
+									message: `插入script.${item.position} - 失败`,
+									level: 'error',
+								})
+							}
 							tips.push({
 								message: '最好不要在custom中插入内容。',
 								level: 'warning',
@@ -905,9 +1017,22 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 			let reg
 			switch (item.position) {
 				case 'end':
+					reg = /(?<=.*)(<\/style>)/s
+					// textContent = textContent.replace(reg, `${item.content}$1`)
+					if (reg.test(textContent)) {
+						textContent = textContent.replace(reg, `${item.content}$1`)
+					} else {
+						tips.push({
+							message: `插入style.${item.position} - 失败`,
+							level: 'error',
+						})
+					}
+					break;
 				default:
-					reg = /(<\/style>)/s
-					textContent = textContent.replace(reg, `${item.content}\n$1`)
+					tips.push({
+						message: `插入style.${item.position} - 失败`,
+						level: 'error',
+					})
 					break;
 			}
 		})
@@ -1123,12 +1248,11 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 				case 'info':
 					log(chalk.blue(item.message))
 					break;
-				// case 'tip':
-				default:
-					log(item.message)
-					break
 				case 'success':
 					log(chalk.green(item.message))
+					break
+				default:
+					log(item.message)
 					break
 			}
 		})
