@@ -22,6 +22,10 @@
 crtp initFile readme.md --file ./first/readme.md
 # 添加自定义的模板文件
 crtp addFile first.json --file ./first/projName/package.json
+# 为指定文件插入碎片
+crtp insert button --file ./first/first.vue
+# 添加自定义碎片
+crtp addFragment mb --file ./first.cjs
 ```
 
 ## configuration
@@ -79,6 +83,9 @@ crtp addFile first.json --file ./first/projName/package.json
 |insert|||在指定的文件中插入代码片段（亦称“碎片”）||||0.0.14-beta.2+ 非gamma版本有效。|
 ||`<fragment>`|||指定碎片||||
 ||--file|||指定文件||||
+|addFragment|||添加自定义碎片||||0.0.14-beta.10+ 非gamma版本有效。|
+||`<fragment>`|||碎片的名称||||
+||--file|||指定文件。只支持`*.cjs`格式||||
 
 ## 模板文件（或目录）
 用于初始化文件。
@@ -118,6 +125,7 @@ crtp addFile first.json --file ./first/projName/package.json
     // custom                                       本vue文件级的数据、方法等。
     let clog = console.log
 
+    // defineOptions
     defineOptions({
         // name: '',                         组件名
         // inheritAttrs: false,

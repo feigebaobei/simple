@@ -684,7 +684,7 @@ let checkFragment = (filePath) => {
 	return new Promise((s, _j) => {
 		s(require(filePath))
 	}).catch((error) => {
-		log(error)
+		// log(error)
 		return Promise.reject(1)
 	})
 	// .then((textContent) => {
@@ -775,8 +775,8 @@ let checkFragment = (filePath) => {
 		}
 		return true
 	}).catch(code => {
-		log(chalk.red(`${filePath} ${errorCode[code]} - 失败`))
-		// return Promise.reject(`${filePath} ${errorCode[code]} - 失败`)
+		// log(chalk.red(`${filePath} ${errorCode[code]} - 失败`))
+		return Promise.reject(`${filePath} ${errorCode[code]} - 失败`)
 	})
 }
 // let opTips = (tips, reg, textContent) => {
@@ -784,7 +784,7 @@ let checkFragment = (filePath) => {
 // 		textContent = textContent.replace(reg, `$1${item.content}`)
 // 	} else {
 // 		tips.push({
-// 			message: `插入script.${item.position} - 失败`,
+// 			message: `插入script ${item.position} - 失败`,
 // 			level: 'error',
 // 		})
 // 	}
@@ -813,14 +813,14 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 						textContent = textContent.replace(reg, `$1${item.content}`)
 					} else {
 						tips.push({
-							message: `插入template.${item.position} - 失败`,
+							message: `插入template ${item.position} - 失败`,
 							level: 'error',
 						})
 					}
 					break;
 				default:
 					tips.push({
-						message: `插入template.${item.position} - 失败`,
+						message: `插入template ${item.position} - 失败`,
 						level: 'error',
 					})
 					break
@@ -838,7 +838,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error'
 								})
 							}
@@ -853,29 +853,29 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
 							break;
 						case 'setup.method':
-							reg = /(?<=<script\ssetup.*\/\/\scomputed)(\/\/\smethod.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
+							reg = /(?<=<script\ssetup.*\/\/\scomputed.*)(\/\/\smethod.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
 							if (reg.test(textContent)) {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
 							break;
 						case 'setup.methods': // 下版本删除
-							reg = /(?<=<script\ssetup.*\/\/\scomputed)(\/\/\smethods.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
+							reg = /(?<=<script\ssetup.*\/\/\scomputed.*)(\/\/\smethods.*)(?=\/\/\sprovide.*\/\/\seventFn)/s
 							if (reg.test(textContent)) {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
@@ -901,7 +901,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
@@ -923,7 +923,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
@@ -939,7 +939,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
@@ -951,7 +951,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
@@ -963,7 +963,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
@@ -975,7 +975,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
@@ -987,7 +987,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
@@ -999,7 +999,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 								textContent = textContent.replace(reg, `$1${item.content}`)
 							} else {
 								tips.push({
-									message: `插入script.${item.position} - 失败`,
+									message: `插入script ${item.position} - 失败`,
 									level: 'error',
 								})
 							}
@@ -1051,7 +1051,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 			switch (k) {
 				case 'importUtils':
 					// 向后找2个界碑
-					reg = /(?<=<script.*\/\/\sutils)(.*)(?=\/\/\scomponents.*\/\/\scheck.*\/\/sconfig)/s
+					reg = /(?<=<script.*\/\/\sutils)(.*)(?=\/\/\scomponents.*\/\/\scheck.*\/\/\sconfig)/s
 					execResult = reg.exec(textContent)
 					// log(execResult)
 					if (execResult) { // 应该总是存在
@@ -1343,6 +1343,7 @@ program
 program
 	.command('list')
 	.alias('ls')
+	.description('列出所有模板文件 & 碎片文件')
 	.action(() => {
 		list()
 	})
@@ -1515,7 +1516,7 @@ program
 	.description('把指定文件设置为碎片文件')
 	.option('--file <file>', 'path to file')
 	.action((filename, options) => {
-		log('addFragment', filename, options)
+		// log('addFragment', filename, options)
 		checkFragment(path.resolve(process.cwd(), options.file)).then(() => {
 			addFragment(filename, options)
 		}).catch((error) => {

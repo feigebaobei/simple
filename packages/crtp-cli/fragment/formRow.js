@@ -52,7 +52,8 @@ let obj = {
                         trigger: ['input', 'blur'],
                     }
                 },
-            })`
+            })
+`
         },
         {
             position: 'setup.method',

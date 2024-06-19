@@ -21,6 +21,7 @@
     // custom
     let clog = console.log
 
+    // defineOptions
     defineOptions({
         // name: '',
         // inheritAttrs: false,

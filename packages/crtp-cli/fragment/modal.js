@@ -8,13 +8,13 @@ let obj = {
         <ms-card :bordered="false" class="createServiceCard">
             <p>placeholder</p>
         </ms-card>
+        <template #footer>
+            <ms-space justify="end" :size="8">
+                <ms-button @click="drawerCancelButtonClickH">关闭</ms-button>
+                <ms-button type="primary" @click="drawerOkButtonClickH">确定</ms-button>
+            </ms-space>
+        </template>
     </ms-drawer-content>
-    <template #footer>
-        <ms-space justify="end" :size="8">
-            <ms-button @click="drawerCancelButtonClickH">关闭</ms-button>
-            <ms-button type="primary" @click="drawerOkButtonClickH">确定</ms-button>
-        </ms-space>
-    </template>
     </ms-drawer>`
     }],
     script: [
