@@ -1,7 +1,7 @@
 {
   "name": "crtp-cli",
-  "version": "0.0.14-beta.11",
-  "description": "> TODO: description",
+  "version": "0.0.14",
+  "description": "manager template&fragment",
   "keywords": [
     "init",
     "initFile",

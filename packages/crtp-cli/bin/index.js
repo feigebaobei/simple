@@ -15,6 +15,7 @@ const childProcess = require('child_process')
 // import ora from 'ora'
 const Spinner = require('cli-spinner').Spinner
 const crtpCliConfig = require('./config.js')
+const archiver = require('archiver');
 
 // 工具
 const {log} = console
@@ -1268,8 +1269,53 @@ let addFragment = (filename, userOption) => {
 	}).then(() => {
 		log(chalk.blue(`添加碎片文件${filename} - 完成`))
 	}).catch((e) => {
-		log(e)
+		// log(e)
 		log(chalk.red(`添加碎片文件${filename} - 失败`))
+	})
+}
+let archiver = (options) => {
+	// const output = fs.createWriteStream(__dirname + '/example.zip')
+	const output = fs.createWriteStream(path.resolve(process.cwd(), `./${options.output}.${options.format}`))
+	const archive = archiver(options.format, {
+		zlib: {level: options.level} // 设置压缩级别
+	})
+	// output.on('close', () => {
+	// 	clog('close')
+	// })
+	// output.on('end', () => {
+	// 	clog('end')
+	// })
+	// archive.on('warning', () => {
+	// 	clog('warning')
+	// })
+	// archive.on('error', () => {
+	// 	clog('error')
+	// })
+	archive.pipe(output) // 对接管道
+	// let file1 = __dirname + '/file1.txt'
+	// archive.append(fs.createReadStream(file1), {name: 'file1.txt'})
+	// archive.append('string cheese', {name: 'file2.txt'})
+	// archive.append(Buffer.from('buff it!'), {name: 'file3.txt'})
+	// archive.file('string', {name: 'file4.txt'}) // .file & .append 都是添加文件
+	// archive.directory('subdir/', 'new-subdir') // 把subdir目录添加到压缩文件的new-subdir目录中
+	// archive.directory('subdir/', flase) // 把subdir目录下的文件添加到压缩文件的根目录。
+	// archive.glob('file*.txt', {cwd: __dirname}) // 添加符合glob pattern的文件。
+	// archive.finalize()
+	options.input.forEach(item => {
+		if (item.endsWith('/')) { // 目录
+			let arr = item.split('/')
+			let newName = arr[arr.length - 2]
+			archive.directory(item, newName)
+		} else { // 文件
+			let arr = item.split('/')
+			let newName = arr[arr.length - 1]
+			archive.append(fs.createReadStream(item), {name: newName})
+		}
+	})
+	archive.finalize().then(() => {
+		log(chalk.blue(`压缩文件${options.output} - 完成`))
+	}).catch(() => {
+		log(chalk.red(`压缩文件${options.output} - 失败`))
 	})
 }
 // crtp init
@@ -1522,6 +1568,25 @@ program
 		}).catch((error) => {
 			log('error', error)
 		})
+	})
+// crtp archiver <filename> --file <path/to/file.ext>
+// 把指定文件压缩
+// 未测试
+program
+	.command('archiver')
+	.description('把指定文件压缩')
+	.option('--format <format>', '指定压缩文件格式', 'zip')
+	.option('--level [level]', '压缩的级别', '9')
+	.option('--input <file...>', 'name and path to file')
+	.option('--output <outputFileName>', 'dist') // 无扩展名
+	.action((_, options) => {
+		// log('addFragment', filename, options)
+		// checkFragment(path.resolve(process.cwd(), options.file)).then(() => {
+		// 	addFragment(filename, options)
+		// }).catch((error) => {
+		// 	log('error', error)
+		// })
+		archiver(options)
 	})
 
 // // 检查模板文件和碎片文件

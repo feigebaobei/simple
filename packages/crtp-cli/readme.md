@@ -86,6 +86,11 @@ crtp addFragment mb --file ./first.cjs
 |addFragment|||添加自定义碎片||||0.0.14-beta.10+ 非gamma版本有效。|
 ||`<fragment>`|||碎片的名称||||
 ||--file|||指定文件。只支持`*.cjs`格式||||
+|archiver|||压缩指定文件|||||
+||--format||压缩文件的格式|||||
+||--level|默认为9|压缩级别|||||
+||--input|文件组成的数组|压缩文件的格式|||||
+||--output||压缩文件名|||||
 
 ## 模板文件（或目录）
 用于初始化文件。
