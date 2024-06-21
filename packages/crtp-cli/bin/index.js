@@ -1273,9 +1273,8 @@ let addFragment = (filename, userOption) => {
 		log(chalk.red(`添加碎片文件${filename} - 失败`))
 	})
 }
-let archiver = (options) => {
-	// const output = fs.createWriteStream(__dirname + '/example.zip')
-	const output = fs.createWriteStream(path.resolve(process.cwd(), `./${options.output}.${options.format}`))
+let archiverFn = (options) => {
+	const output = fs.createWriteStream(path.resolve(process.cwd(), `${options.output}.${options.format}`))
 	const archive = archiver(options.format, {
 		zlib: {level: options.level} // 设置压缩级别
 	})
@@ -1575,18 +1574,18 @@ program
 program
 	.command('archiver')
 	.description('把指定文件压缩')
-	.option('--format <format>', '指定压缩文件格式', 'zip')
+	.option('--format [format]', '指定压缩文件格式', 'zip')
 	.option('--level [level]', '压缩的级别', '9')
 	.option('--input <file...>', 'name and path to file')
-	.option('--output <outputFileName>', 'dist') // 无扩展名
-	.action((_, options) => {
+	.option('--output [outputFileName]', '压缩文件名', 'dist') // 无扩展名
+	.action((options) => {
 		// log('addFragment', filename, options)
 		// checkFragment(path.resolve(process.cwd(), options.file)).then(() => {
 		// 	addFragment(filename, options)
 		// }).catch((error) => {
 		// 	log('error', error)
 		// })
-		archiver(options)
+		archiverFn(options)
 	})
 
 // // 检查模板文件和碎片文件
