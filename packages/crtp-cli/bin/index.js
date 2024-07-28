@@ -86,6 +86,18 @@ let createDir = (sourcePath, targetPath) => {
 	})
 }
 
+// 格式化
+let runPrettier = (file) => {
+	return new Promise((s, j) => {
+		childProcess.exec(`npx prettier --write ${file}`, (err) => {
+			if (err) {
+				j(err)
+			} else {
+				s()
+			}
+		})
+	})
+}
 // 考虑使用流处理
 let initFile = (fileType, userOption) => {
 	// console.log(userOption)
@@ -94,7 +106,7 @@ let initFile = (fileType, userOption) => {
 	let maxLen = fileList.reduce((r, c) => {
 		return Math.max(r, c.length)
 	}, 0)
-	pReadFile(path.resolve(__dirname, `../assets/${fileType}`), 'utf-8').then((textContent) => {
+	return pReadFile(path.resolve(__dirname, `../assets/${fileType}`), 'utf-8').then((textContent) => {
 		return fileList.map(item => {
 			return mkdirp(path.resolve(process.cwd(), path.dirname(item))).then(() => {
 				// 替换
@@ -121,6 +133,7 @@ let initFile = (fileType, userOption) => {
 				// 写入
 				return pWriteFile(path.resolve(process.cwd(), item), textContent, 'utf-8').then(() => {
 					log(chalk.blue(`创建${utils.fillEmpty(item, maxLen)} - 完成`))
+					return true
 				})
 			}).catch(() => {
 				log(chalk.red(`创建${utils.fillEmpty(item, maxLen)} - 失败`))
@@ -1260,6 +1273,7 @@ let insertFragment = (fragment, filePath, grammerSugar) => {
 		return true
 	}).then(() => {
 		log(chalk.blue(`插入${fragment} - 完成`))
+		return
 	})
 }
 
@@ -1347,7 +1361,14 @@ program
 	// .option('--config [configFilePath]', '指定配置文件的路径', './crtp.config.json')
 	.option('--registry [registry]', '指定注册器。可选项: npm(default), yarn, tencent, cnpm, taobao, npmMirror, guazi', 'npm')
 	.action((fileType, options) => {
-		initFile(fileType, options)
+		initFile(fileType, options).then(() => {
+			let fileList = options.file || [`./${fileType}`]
+			fileList.map(item => {
+				let p = path.resolve(process.cwd(), item)
+				runPrettier(p)
+				log(chalk.blue(`格式化文件${item} - 完成`))
+			})
+		})
 	})
 
 // crtp addFile <filename> --file <path/to/file.ext>
@@ -1542,7 +1563,9 @@ program
 			return checkFile(filePath, config.grammerSugar).then(b => {
 				if (b) {
 					log('开始插入')
-					insertFragment(fragment, filePath, config.grammerSugar)
+					insertFragment(fragment, filePath, config.grammerSugar).then(() => {
+						runPrettier(filePath)
+					})
 				} else {
 					log(chalk.red(`${filePath}缺少相关界碑，无法执行此命令。`))
 				}

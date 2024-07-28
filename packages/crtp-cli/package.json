@@ -1,6 +1,6 @@
 {
   "name": "crtp-cli",
-  "version": "0.0.15-beta.1",
+  "version": "0.0.15-beta.3",
   "description": "manager template&fragment",
   "keywords": [
     "init",
@@ -55,5 +55,8 @@
   "gitHead": "7a4a9ffb4986e881f4e175b3b8c1ca97f69db83c",
   "devDependencies": {
     "rollup": "^4.4.1"
+  },
+  "peerDependencies": {
+    "prettier": "^3.1.0"
   }
 }

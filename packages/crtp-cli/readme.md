@@ -23,7 +23,8 @@ crtp initFile readme.md --file ./first/readme.md
 # 添加自定义的模板文件
 crtp addFile first.json --file ./first/projName/package.json
 # 为指定文件插入碎片
-crtp insert button --file ./first/first.vue
+crtp insert button --file ./first/first.vue # 把碎片插入到defineCompnent定义的组件中
+crtp insert button --file ./first/first.vue --grammerSugar setup # 把碎片插入到setup语法糖的组件中
 # 添加自定义碎片
 crtp addFragment mb --file ./first.cjs
 ```
@@ -83,6 +84,7 @@ crtp addFragment mb --file ./first.cjs
 |insert|||在指定的文件中插入代码片段（亦称“碎片”）||||0.0.14-beta.2+ 非gamma版本有效。|
 ||`<fragment>`|||指定碎片||||
 ||--file|||指定文件||||
+||--grammerSugar|setup||目标文件使用setup语法糖时必须使用此选项||||
 |addFragment|||添加自定义碎片||||0.0.14-beta.10+ 非gamma版本有效。|
 ||`<fragment>`|||碎片的名称||||
 ||--file|||指定文件。只支持`*.cjs`格式||||

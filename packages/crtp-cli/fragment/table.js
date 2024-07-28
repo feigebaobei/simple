@@ -196,7 +196,7 @@ let obj = {
     }],
     check: {
         importUtils: {
-            vue: ["reactive"],
+            vue: ["reactive", 'h'],
         },
         importComponents: {
             'ms-ui': ["MsDataTable", "MsPagination", "MsSpace", "MsButton", "MsPopconfirm"],

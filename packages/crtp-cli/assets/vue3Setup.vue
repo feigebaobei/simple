@@ -35,6 +35,7 @@
     })
     // let emit = defineEmits(['eventName'])
     // inject
+    // hooks
     // variable
     // ref
     let elementRef = ref()

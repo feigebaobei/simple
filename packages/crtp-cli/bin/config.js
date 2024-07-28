@@ -13,7 +13,7 @@ module.exports = {
 		contentConstructorStringEnum: ['String'],
 	},
 	script: {
-		positionEnum: ['setup.ref', "setup.eventFn",
+		positionEnum: ['setup.ref', "setup.eventFn", "setup.method",
 			"setup.return.ref", "setup.return.eventFn",
 			'custom',
 		],
