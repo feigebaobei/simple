@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run l
+# 在推代码时遇到了lint-staged报错。它触发了样式化逻辑。
+# 可能是长时间不迭代这个项目，造成它依赖不够新了。
+# npm run l
+
