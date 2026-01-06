@@ -51,7 +51,7 @@ interface IDoublyChain<T> {
   length: N
   createNode: (v: T, p: N) => DoublyChainElement<T>
   append: (p: T) => Error | N
-  insert: (v: T, p: N) => B
+  insert: (v: T, p: N) => Error | B
   removeAt: (p: N) => T | undefined
   toArray: () => T[]
   clear: () => void

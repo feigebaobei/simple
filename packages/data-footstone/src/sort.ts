@@ -47,6 +47,7 @@ let selectSort = (arr: A[], order: OrderType = 'asc') => {
   return arr
 }
 // 归并
+// nlogn
 let merge = (leftArr: A[], rightArr: A[], order: OrderType = 'asc') => {
   let res = []
   while (leftArr.length && rightArr.length) {
@@ -70,7 +71,6 @@ let merge = (leftArr: A[], rightArr: A[], order: OrderType = 'asc') => {
   res = [...res, ...leftArr, ...rightArr]
   return res
 }
-// nlogn
 let mergeSort = (arr: A[], order: OrderType = 'asc') => {
   if (arr.length < 2) {
     return arr

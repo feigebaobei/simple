@@ -55,6 +55,7 @@ class Queue<T> extends BaseQueue implements Q<T> {
   //   this.items.push(...p)
   //   return this.size()
   // }
+  // todo 所有添加数据时，都应该考虑容量。
   enqueue(p: T) {
     if (this.isFull()) {
       return new Error('has full')

@@ -26,10 +26,10 @@ class Cache<K, V> implements C<K, V> {
   constructor({ size, policy = 'lru', expiration = 5, period = 10000 }: CO) {
     this.box = new Map()
     this.size = size
-    this.policy = policy
+    this.policy = policy         // 缓存策略
     this.expiration = expiration
     this.period = period
-    this.expirationTime = this.expiration * this.period
+    this.expirationTime = this.expiration * this.period // 过期时长
     this._setIntervalFlush()
   }
   get(k: K) {
@@ -128,14 +128,50 @@ class Fifo<K, V> implements FF<K, V> {
 
 // 最近最少使用算法
 // 如果数据最近被访问过，那么将来被访问的几率也更高
+// least recently used
+// 淘汰最近最少使用的数据
+// 它维护一个缓存的访问顺序链表，当有新的数据被访问时，
+// 如果数据已经在缓存中，则将其移到链表头部；
+// 如果数据不在缓存中，则将其添加到链表头部。
+// 当需要淘汰数据时，选择链表尾部的数据进行淘汰，因为尾部的数据是最近最少被访问的数据。
 class Lru<K, V> {
   capacity: N
   chain: DoublyChain<{ key: K; value: V }>
   map: Map<K, DCE<{ key: K; value: V }>>
-  constructor(capacity: N) {
+  constructor(capacity: N = 100) {
     this.capacity = capacity
-    this.chain = new DoublyChain<{ key: K; value: V }>()
-    this.map = new Map()
+    // this.chain = new DoublyChain<{ key: K; value: V }>()
+    // this.map = new Map()
+    this.chain = new DoublyChain(capacity)
+  }
+  get(k: K): V | undefined {
+    let cur = this.chain.head
+    let node
+    while (cur) {
+      if (cur.value.key === k) {
+        node = cur
+        break;
+      }
+      cur = cur.next
+      // index++
+    }
+    if (node) {
+      this.chain.removeAt(node.position)
+      this.chain.insert(this._createNode(node.value.key, node.value.value), 0)
+      return node.value.value
+    } else {
+      return undefined
+    }
+  }
+  put(k: K, v: V) {
+    // this.chain.append(this._createNode(k, v))
+    if (this.chain.isFull()) {
+      this.chain.removeAt(this.chain.length - 1)
+    }
+    this.chain.insert(this._createNode(k, v), 0)
+  }
+  size() {
+    return this.chain.length
   }
   _createNode(k: K, v: V) {
     return {
@@ -143,95 +179,49 @@ class Lru<K, V> {
       value: v,
     }
   }
-  get(k: K) {
-    let node = this.map.get(k)
-    let res: V | undefined
-    if (node) {
-      res = node.value.value
-      this.chain.removeAt(node.position)
-      this.chain.append(this._createNode(node.value.key, node.value.value))
-    } else {
-      res = undefined
-    }
-    return res
-  }
-  put(k: K, v: V) {
-    let node = this.map.get(k)
-    if (node) {
-      this.chain.removeAt(node.position)
-      this.chain.append(this._createNode(k, v))
-    } else {
-      this.chain.append(this._createNode(k, v))
-      this.map.set(k, this.chain.tail)
-      while (this.map.size > this.capacity) {
-        this.map.delete(this.chain.head.value.key)
-        this.chain.removeAt(0)
-      }
-    }
-    return this.size()
-  }
-  remove(k: K) {
-    let node = this.map.get(k)
-    let res = undefined
-    if (node) {
-      this.chain.removeAt(node.position)
-      this.map.delete(node.value.key)
-      res = node.value.value
-    }
-    return res
-  }
-  size() {
-    return this.chain.length
-  }
 }
 // 最近多频使用
 // 如果数据过去被访问多次，那么将来被访问的频率也更高
+// least frequently used
+// 它维护一个缓存对象的访问频次，
+// 对于每个访问到的对象，增加其访问频次。
+// 当需要淘汰数据时，选择访问频次最低的数据进行淘汰。
 class Lfu<K, V> implements L<K, V> {
   capacity: N
   chain: DC<LN<K, V>>
-  constructor(capacity: N) {
+  constructor(capacity: N = 100) {
     this.capacity = capacity
-    this.chain = new DoublyChain<LN<K, V>>()
+    this.chain = new DoublyChain<LN<K, V>>(capacity)
   }
   _createNode(k: K, v: V, count: N = 0): LN<K, V> {
     return {
       key: k,
       value: v,
-      count,
+      count, // 使用频次
     }
   }
   _get(k: K): DCE<LN<K, V>> {
     let res = undefined
     let cur = this.chain.head
-    if (cur) {
-      while (cur) {
-        if (cur.value.key === k) {
-          break
-        }
-        cur = cur.next
+    while (cur) {
+      if (cur.value.key === k) {
+        res = cur
+        break
       }
-      res = cur
+      cur = cur.next
     }
     return res
   }
   get(k: K) {
-    let node = this._get(k)
+    let node = this._get(k) // 链表的节点
     let res = undefined
     if (node) {
       res = node.value.value
       // 整理结构
       this.chain.removeAt(node.position)
-      let newCount = node.value.count + 1
-      let newNode = this._createNode(node.value.key, node.value.value, newCount)
-      if (this.chain.length) {
-        if (this.chain.tail.value.count > newCount) {
-          this.chain.append(newNode)
-        } else {
-          this._insert(newNode)
-        }
-      } else {
-        this.chain.append(newNode)
-      }
+      let newNode = this._createNode(node.value.key, node.value.value, node.value.count + 1)
+      // chain中一定有元素
+      this._insert(newNode)
     }
     return res
   }
@@ -246,12 +236,12 @@ class Lfu<K, V> implements L<K, V> {
     this.chain.insert(node, cur.position)
   }
   put(k: K, v: V) {
-    let node = this._get(k)
+    let node = this._get(k) // 链表上的节点
     if (node) {
       // 有
-      this.chain.removeAt(node.position)
-      node.value.count++
       node.value.value = v
+      node.value.count++
+      this.chain.removeAt(node.position)
       this._insert(node.value)
     } else {
       // 没有
@@ -291,7 +281,11 @@ class Lfu<K, V> implements L<K, V> {
 }
 export {
   // Cache,
-  Fifo,
+  Fifo, // first in first out
   Lru,
   Lfu,
+  // Rand, // random replacement
+  // Arc, // adaptive replacement
+  // Mru, // most recently used
+
 }

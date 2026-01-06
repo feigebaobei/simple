@@ -48,6 +48,9 @@ class BaseChain<T> implements BC<T> {
   isFull() {
     return this.length === this.capacity
   }
+  // size() {
+  //   return this.length
+  // }
 }
 
 class SingleChain<T> extends BaseChain<T> implements SC<T> {
@@ -69,7 +72,7 @@ class SingleChain<T> extends BaseChain<T> implements SC<T> {
       position: p, // 负数表示不在链上
     }
   }
-  // 对外不暴露数据结构。所心不提供appendNode方法。
+  // 对外不暴露数据结构。所以不提供appendNode方法。
   append(p: T) {
     if (this.isFull()) {
       return new Error('has full')
@@ -237,9 +240,13 @@ class DoublyChain<T> extends BaseChain<T> implements DC<T> {
     return this.length
   }
   insert(v: T, p: N) {
+    if (this.isFull()) {
+      return new Error('has full')
+    }
     let res = false
     if (this.isValidRange(p)) {
       let node = this.createNode(v, p)
+      // 也可以先插入，再处理head
       if (p === 0) {
         node.next = this.head
         this.head.prev = node
