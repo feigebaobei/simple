@@ -12,6 +12,7 @@ import {
   IDoublyChain as DC,
   LfuNode as LN,
   Lfu as L,
+  F,
   // DoublyChainElement,
 } from '../typings'
 
@@ -136,13 +137,20 @@ class Fifo<K, V> implements FF<K, V> {
 // 当需要淘汰数据时，选择链表尾部的数据进行淘汰，因为尾部的数据是最近最少被访问的数据。
 class Lru<K, V> {
   capacity: N
+  reqFn: F
   chain: DoublyChain<{ key: K; value: V }>
   map: Map<K, DCE<{ key: K; value: V }>>
-  constructor(capacity: N = 100) {
+  constructor(capacity: N = 100, reqFn: F) {
     this.capacity = capacity
+    this.reqFn = reqFn
     // this.chain = new DoublyChain<{ key: K; value: V }>()
     // this.map = new Map()
-    this.chain = new DoublyChain(capacity)
+    this.chain = new DoublyChain(capacity) // 单向链表也行
+  }
+  req(k: K) {
+    // this.reqFn(k)
+    let v = 'x'
+    return Promise.resolve(v)
   }
   get(k: K): V | undefined {
     let cur = this.chain.head
@@ -153,18 +161,23 @@ class Lru<K, V> {
         break;
       }
       cur = cur.next
-      // index++
     }
     if (node) {
       this.chain.removeAt(node.position)
       this.chain.insert(this._createNode(node.value.key, node.value.value), 0)
       return node.value.value
     } else {
+      // 去别的地方拿来数据v，再执行 this.push(k, v)
+      // return this.req(k).then((v) => {
+      //    this.push(v)
+            // return v
+      // })
       return undefined
     }
   }
   put(k: K, v: V) {
     // this.chain.append(this._createNode(k, v))
+    this.chain.isFull
     if (this.chain.isFull()) {
       this.chain.removeAt(this.chain.length - 1)
     }
@@ -187,11 +200,18 @@ class Lru<K, V> {
 // 对于每个访问到的对象，增加其访问频次。
 // 当需要淘汰数据时，选择访问频次最低的数据进行淘汰。
 class Lfu<K, V> implements L<K, V> {
+  reqFn: F
   capacity: N
-  chain: DC<LN<K, V>>
-  constructor(capacity: N = 100) {
+  // chain: DC<LN<K, V>>
+  chain: DoublyChain<LN<K, V>>
+  // chain: DoublyChain<{key: K, value: V, count: N}>
+  constructor(capacity: N = 100, reqFn: F) {
+    this.reqFn = reqFn
     this.capacity = capacity
-    this.chain = new DoublyChain<LN<K, V>>(capacity)
+    this.chain = new DoublyChain<LN<K, V>>(capacity) // 单向链表也行
+  }
+  req(k: K) {
+    return this.reqFn(k)
   }
   _createNode(k: K, v: V, count: N = 0): LN<K, V> {
     return {
@@ -222,6 +242,11 @@ class Lfu<K, V> implements L<K, V> {
       let newNode = this._createNode(node.value.key, node.value.value, node.value.count + 1)
       // chain中一定有元素
       this._insert(newNode)
+    } else {
+      return this.req(k).then(v => {
+        this.put(k, v)
+        return v
+      })
     }
     return res
   }
@@ -245,7 +270,7 @@ class Lfu<K, V> implements L<K, V> {
       this._insert(node.value)
     } else {
       // 没有
-      while (this.chain.length >= this.capacity) {
+      while (this.chain.isFull()) {
         this.chain.removeAt(this.chain.length - 1)
       }
       let newNode = this._createNode(k, v, 1)

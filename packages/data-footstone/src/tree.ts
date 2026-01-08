@@ -583,7 +583,7 @@
 //     if (!n) {
 //       return true
 //     } else {
-//       return Math.abs(this.height(n.left) - this.height(n.right)) <= 1
+//       return Math.abs(this.height(n.left) - this.height(n.right)) <= 1 // todo 可以改为平衡因子的绝对值小于等于1
 //     }
 //   }
 //   // 插入时使用旋转
